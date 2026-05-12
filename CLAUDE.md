@@ -29,20 +29,23 @@ npm run test:e2e          # playwright e2e (builds first)
 ## Architecture
 
 ### Deployment Target
+
 The app targets **Cloudflare Workers** via `@sveltejs/adapter-cloudflare`. The Cloudflare runtime context (`env`, `cf`, `ctx`) is typed in `src/app.d.ts` under `App.Platform` and available in server-side SvelteKit load functions and API routes as `event.platform`.
 
 When adding Cloudflare bindings (KV, D1, R2, etc.), define them in `wrangler.jsonc` and run `npm run cf-typegen` to regenerate `src/worker-configuration.d.ts`.
 
 ### Svelte 5 Runes Mode
+
 Runes mode is **forced project-wide** in `svelte.config.js`. All components must use the Svelte 5 runes API (`$props()`, `$state()`, `$derived()`, `$effect()`, etc.) — the legacy Options API is not available in this project.
 
 ### Test Split (Two Vitest Projects)
+
 `vite.config.ts` defines two separate test projects that run with different environments:
 
-| Project | File pattern | Environment |
-|---------|-------------|-------------|
-| `client` | `src/**/*.svelte.{test,spec}.{js,ts}` | Chromium (headless) via `vitest-browser-svelte` |
-| `server` | `src/**/*.{test,spec}.{js,ts}` (excluding `.svelte.` files) | Node |
+| Project  | File pattern                                                | Environment                                     |
+| -------- | ----------------------------------------------------------- | ----------------------------------------------- |
+| `client` | `src/**/*.svelte.{test,spec}.{js,ts}`                       | Chromium (headless) via `vitest-browser-svelte` |
+| `server` | `src/**/*.{test,spec}.{js,ts}` (excluding `.svelte.` files) | Node                                            |
 
 Use `*.svelte.spec.ts` for component tests that need DOM rendering (`render` from `vitest-browser-svelte`). Use `*.spec.ts` for pure logic/utility tests.
 
