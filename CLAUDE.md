@@ -18,6 +18,10 @@ npm run deploy       # build + wrangler deploy to Cloudflare
 npm run check        # svelte-kit sync + svelte-check (type checking)
 npm run cf-typegen   # regenerate src/worker-configuration.d.ts from wrangler bindings
 
+# Lint & Format
+npm run lint         # prettier check + eslint
+npm run format       # prettier write
+
 # Tests
 npm run test              # unit + e2e (full suite)
 npm run test:unit         # vitest watch mode
