@@ -1,14 +1,58 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
 ## Project Configuration
 
 - **Language**: TypeScript
 - **Package Manager**: npm
 - **Add-ons**: vitest, playwright, tailwindcss, mcp
 
+## Commands
+
+```bash
+npm run dev          # start dev server
+npm run build        # build for Cloudflare Workers
+npm run preview      # build + run locally via wrangler dev (port 4173)
+npm run deploy       # build + wrangler deploy to Cloudflare
+npm run check        # svelte-kit sync + svelte-check (type checking)
+npm run cf-typegen   # regenerate src/worker-configuration.d.ts from wrangler bindings
+
+# Tests
+npm run test              # unit + e2e (full suite)
+npm run test:unit         # vitest watch mode
+npm run test:unit -- --run               # vitest single run
+npm run test:unit -- --run src/lib/foo   # run a single test file
+npm run test:e2e          # playwright e2e (builds first)
+```
+
+## Architecture
+
+### Deployment Target
+The app targets **Cloudflare Workers** via `@sveltejs/adapter-cloudflare`. The Cloudflare runtime context (`env`, `cf`, `ctx`) is typed in `src/app.d.ts` under `App.Platform` and available in server-side SvelteKit load functions and API routes as `event.platform`.
+
+When adding Cloudflare bindings (KV, D1, R2, etc.), define them in `wrangler.jsonc` and run `npm run cf-typegen` to regenerate `src/worker-configuration.d.ts`.
+
+### Svelte 5 Runes Mode
+Runes mode is **forced project-wide** in `svelte.config.js`. All components must use the Svelte 5 runes API (`$props()`, `$state()`, `$derived()`, `$effect()`, etc.) — the legacy Options API is not available in this project.
+
+### Test Split (Two Vitest Projects)
+`vite.config.ts` defines two separate test projects that run with different environments:
+
+| Project | File pattern | Environment |
+|---------|-------------|-------------|
+| `client` | `src/**/*.svelte.{test,spec}.{js,ts}` | Chromium (headless) via `vitest-browser-svelte` |
+| `server` | `src/**/*.{test,spec}.{js,ts}` (excluding `.svelte.` files) | Node |
+
+Use `*.svelte.spec.ts` for component tests that need DOM rendering (`render` from `vitest-browser-svelte`). Use `*.spec.ts` for pure logic/utility tests.
+
+E2E tests (`*.e2e.ts`) are separate — they run under Playwright and the config builds the app first before running against port 4173.
+
 ---
 
-You are able to use the Svelte MCP server, where you have access to comprehensive Svelte 5 and SvelteKit documentation. Here's how to use the available tools effectively:
+## Svelte MCP Tools
 
-## Available Svelte MCP Tools:
+You have access to the Svelte MCP server with comprehensive Svelte 5 and SvelteKit documentation.
 
 ### 1. list-sections
 
