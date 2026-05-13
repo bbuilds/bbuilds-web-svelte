@@ -189,36 +189,9 @@
 	overflow: visible;
 }
 
-/* Buttons */
-.btn {
-	font-family: var(--mono);
-	font-size: 13px;
-	padding: 14px 22px;
-	border-radius: 999px;
-	border: 1px solid var(--ink);
-	background: var(--ink);
-	color: var(--paper);
-	text-decoration: none;
-	display: inline-flex;
-	align-items: center;
-	gap: 10px;
-	cursor: pointer;
-	transition:
-		transform 0.2s ease,
-		background 0.2s ease,
-		color 0.2s ease;
-}
-
-.btn:hover {
-	transform: translateY(-2px);
-}
-
-.btn.ghost {
-	background: transparent;
-	color: var(--ink);
-}
-
-.btn.ghost:hover {
-	background: var(--ink);
-	color: var(--paper);
+/* Prevent content from hiding under the mobile bottom nav */
+@media (max-width: 767px) {
+	body {
+		padding-bottom: calc(3.5rem + env(safe-area-inset-bottom));
+	}
 }
