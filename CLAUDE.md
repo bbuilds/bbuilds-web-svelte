@@ -57,6 +57,15 @@ E2E tests (`*.e2e.ts`) are separate — they run under Playwright and the config
 
 ---
 
+## Code Style
+
+### CSS / Sizing
+
+- **Use `rem` for all size measurements — never `px`.** This applies to Tailwind arbitrary values (e.g. `text-[0.8125rem]`, `h-[1.375rem]`), custom CSS properties, and inline styles. Standard Tailwind scale utilities (`px-4`, `py-2`, `text-sm`, `h-5`, etc.) are rem-based already and are fine as-is.
+- Conversion reference: divide px value by 16 (e.g. 13px → 0.8125rem, 22px → 1.375rem).
+
+---
+
 ## Svelte MCP Tools
 
 You have access to the Svelte MCP server with comprehensive Svelte 5 and SvelteKit documentation.
