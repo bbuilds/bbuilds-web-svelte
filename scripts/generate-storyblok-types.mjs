@@ -1,11 +1,8 @@
 import { execSync } from 'node:child_process';
 import fs from 'node:fs';
-import os from 'node:os';
-import path from 'node:path';
 
 const spaceId = process.env.STORYBLOK_SPACE_ID;
 const token = process.env.STORYBLOK_PERSONAL_ACCESS_TOKEN;
-const region = process.env.STORYBLOK_REGION ?? 'eu';
 
 if (!spaceId) {
 	console.error('Error: STORYBLOK_SPACE_ID is not set in the environment.');
@@ -16,28 +13,34 @@ if (!token) {
 	process.exit(1);
 }
 
-const typesDir = 'src/lib/types';
-const outputFile = path.join(typesDir, 'storyblok.d.ts');
-const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'storyblok-'));
+const run = (cmd) => execSync(cmd, { stdio: 'inherit' });
 
-const env = { ...process.env, STORYBLOK_PERSONAL_ACCESS_TOKEN: token };
-const run = (cmd) => execSync(cmd, { stdio: 'inherit', env });
+run(`storyblok login --token ${token}`);
 
-try {
-	run(`storyblok login --token ${token} --region ${region}`);
+console.log(`Pulling components from space ${spaceId}…`);
+run(`storyblok components pull --space ${spaceId}`);
 
-	console.log(`Pulling components from space ${spaceId}…`);
-	run(`storyblok --path ${tmpDir} components pull --space ${spaceId}`);
+console.log('Generating types…');
+run(`storyblok types generate --space ${spaceId}`);
 
-	console.log('Generating types…');
-	run(
-		`storyblok --path ${tmpDir} types generate --space ${spaceId} --filename storyblok.d.ts --strict --type-prefix Storyblok`
-	);
+// Merge base utility types + space-specific component interfaces into one file.
+// The CLI splits them across two files with a cross-file import; we inline everything.
+let base = fs.readFileSync('.storyblok/types/storyblok.d.ts', 'utf8');
+const componentPath = `.storyblok/types/${spaceId}/storyblok.d.ts.d.ts`;
+let components = fs.existsSync(componentPath) ? fs.readFileSync(componentPath, 'utf8') : '';
 
-	fs.mkdirSync(typesDir, { recursive: true });
-	fs.copyFileSync(path.join(tmpDir, 'types', 'storyblok.d.ts'), outputFile);
+// Convert trailing `export type { ... }` block to inline exports on each declaration
+base = base
+	.replace(/\nexport type \{[\s\S]*?\};?\s*$/, '')
+	.replace(/^interface /gm, 'export interface ')
+	.replace(/^type /gm, 'export type ');
 
-	console.log(`Types written to ${outputFile}`);
-} finally {
-	fs.rmSync(tmpDir, { recursive: true, force: true });
-}
+// Drop the generated header and cross-file import from the component file
+components = components.replace(/^(\/\/.*\n)*import type .+;\n/, '').trimStart();
+
+const merged = base.trimEnd() + (components ? '\n\n' + components : '\n');
+
+fs.mkdirSync('src/lib/types', { recursive: true });
+fs.writeFileSync('src/lib/types/storyblok.d.ts', merged);
+
+console.log('Types written to src/lib/types/storyblok.d.ts');

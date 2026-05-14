@@ -2,8 +2,8 @@
 // DO NOT MODIFY THIS FILE BY HAND.
 import type { ISbStoryData } from '@storyblok/js';
 
-type StoryblokPropertyType = 'asset' | 'multiasset' | 'multilink' | 'table' | 'richtext';
-interface StoryblokAsset {
+export type StoryblokPropertyType = 'asset' | 'multiasset' | 'multilink' | 'table' | 'richtext';
+export interface StoryblokAsset {
 	alt: string | null;
 	copyright: string | null;
 	fieldtype: 'asset';
@@ -24,8 +24,8 @@ interface StoryblokAsset {
 	public_id: string | null;
 	content_type: string;
 }
-interface StoryblokMultiasset extends Array<StoryblokAsset> {}
-interface StoryblokMultilinkStory {
+export interface StoryblokMultiasset extends Array<StoryblokAsset> {}
+export interface StoryblokMultilinkStory {
 	name: string;
 	created_at: string;
 	published_at: string;
@@ -49,7 +49,7 @@ interface StoryblokMultilinkStory {
 	default_full_slug?: string | null;
 	translated_slugs?: any[] | null;
 }
-interface StoryblokMultilinkLink {
+export interface StoryblokMultilinkLink {
 	id: number;
 	uuid: string;
 	slug: string;
@@ -62,7 +62,7 @@ interface StoryblokMultilinkLink {
 	position: number;
 	real_path: string;
 }
-interface StoryblokMultilinkUrl {
+export interface StoryblokMultilinkUrl {
 	name: string;
 	id: number;
 	uuid: string;
@@ -70,7 +70,7 @@ interface StoryblokMultilinkUrl {
 	url: string;
 	full_slug: string;
 }
-interface StoryblokMultilinkBase {
+export interface StoryblokMultilinkBase {
 	fieldtype: 'multilink';
 	id: string;
 	url: string;
@@ -81,7 +81,7 @@ interface StoryblokMultilinkBase {
 	title?: string;
 	prep?: string;
 }
-type StoryblokMultilink =
+export type StoryblokMultilink =
 	| (StoryblokMultilinkBase & {
 			linktype: 'story';
 			story?: StoryblokMultilinkStory | StoryblokMultilinkLink | StoryblokMultilinkUrl;
@@ -96,7 +96,7 @@ type StoryblokMultilink =
 	| (StoryblokMultilinkBase & {
 			linktype: 'asset';
 	  });
-interface StoryblokTable {
+export interface StoryblokTable {
 	fieldtype: 'table';
 	thead: Array<{
 		_uid: string;
@@ -116,7 +116,7 @@ interface StoryblokTable {
 		}>;
 	}>;
 }
-interface StoryblokRichtext {
+export interface StoryblokRichtext {
 	type: string;
 	content?: StoryblokRichtext[];
 	marks?: StoryblokRichtext[];
@@ -124,14 +124,42 @@ interface StoryblokRichtext {
 	text?: string;
 }
 
-export type {
-	StoryblokAsset,
-	StoryblokMultiasset,
-	StoryblokMultilink,
-	StoryblokMultilinkLink,
-	StoryblokMultilinkStory,
-	StoryblokMultilinkUrl,
-	StoryblokPropertyType,
-	StoryblokRichtext,
-	StoryblokTable
-};
+export interface StoryblokHomePage {
+	hero_eyebrow?: string;
+	hero_taglines?: (
+		| ''
+		| 'hardened-systems'
+		| 'immersive-experiences'
+		| 'captivating-stories'
+		| 'sexy-interfaces'
+		| 'intelligent-workflows'
+	)[];
+	hero_copy?: string;
+	hero_cta_text?: string;
+	seo?: StoryblokSEO[];
+	hero_cta_url?: Exclude<StoryblokMultilink, { linktype?: 'email' } | { linktype?: 'asset' }>;
+	component: 'Home Page';
+	_uid: string;
+}
+
+export interface StoryblokPage {
+	body?: (StoryblokHomePage | StoryblokPage | StoryblokSEO)[];
+	component: 'page';
+	_uid: string;
+}
+
+export interface StoryblokSEO {
+	og_title?: string;
+	og_image?: StoryblokAsset;
+	meta_title?: string;
+	meta_description?: string;
+	canonical_url?: string;
+	og_url?: string;
+	no_index?: boolean;
+	no_follow?: boolean;
+	json_structured_data?: StoryblokRichtext;
+	component: 'SEO';
+	_uid: string;
+}
+
+export type ContentType = StoryblokHomePage | StoryblokPage;
