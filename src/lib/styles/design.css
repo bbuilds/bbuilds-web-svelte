@@ -1,6 +1,5 @@
 /* =============================================================================
    Design Tokens — BrandenBuilds
-   Source: llm_docs/brandenbuilds-claude-design/project/index.html
    ============================================================================= */
 
 /* --- Tailwind v4 theme: maps brand tokens to utility classes ---
@@ -10,6 +9,10 @@
 	--color-teal: #01fdf6;
 	--color-ink: #1a1a1a;
 	--color-ink-soft: #292929;
+	--color-charcoal: #5d543f;
+	--color-body: #3a3528;
+	--color-muted: #7a6f55;
+	--color-muted-dark: #8a8676;
 	--color-paper: #f4ede0;
 	--color-paper-2: #ece3d2;
 	--color-paper-line: #d8cdb6;
@@ -21,12 +24,16 @@
 	--font-hand: 'Caveat', cursive;
 }
 
-/* --- Raw CSS variables (short aliases matching the design file) --- */
+/* --- Raw CSS variables (short aliases for non-Tailwind contexts) --- */
 :root {
 	--yellow: #ffcd67;
 	--teal: #01fdf6;
 	--ink: #1a1a1a;
 	--ink-soft: #292929;
+	--charcoal: #5d543f;
+	--body: #3a3528;
+	--muted: #7a6f55;
+	--muted-dark: #8a8676;
 	--paper: #f4ede0;
 	--paper-2: #ece3d2;
 	--paper-line: #d8cdb6;
@@ -36,6 +43,9 @@
 	--sans: 'Geist', 'Inter', system-ui, sans-serif;
 	--mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
 	--hand: 'Caveat', cursive;
+
+	--container-max: 80rem;
+	--container-gutter: 1.5rem;
 }
 
 /* =============================================================================
@@ -74,17 +84,17 @@
 	}
 
 	h1 {
-		font-size: clamp(48px, 8vw, 128px);
+		font-size: clamp(3rem, 8vw, 8rem);
 		line-height: 0.92;
 	}
 
 	h2 {
-		font-size: clamp(34px, 4.6vw, 72px);
+		font-size: clamp(2.125rem, 4.6vw, 4.5rem);
 		line-height: 1;
 	}
 
 	h3 {
-		font-size: clamp(20px, 1.8vw, 28px);
+		font-size: clamp(1.25rem, 1.8vw, 1.75rem);
 	}
 }
 
@@ -92,11 +102,39 @@
    Utility Classes
    ============================================================================= */
 
-/* Layout */
+/* Tablet */
+@media (min-width: 48rem) {
+	:root {
+		--container-gutter: 2rem;
+	}
+}
+
+/* Desktop */
+@media (min-width: 64rem) {
+	:root {
+		--container-gutter: 2.5rem;
+		--container-max: 85rem;
+	}
+}
+
+/* Large desktop — MBP 14" XDR (~94.5rem logical) */
+@media (min-width: 90rem) {
+	:root {
+		--container-gutter: 3rem;
+		--container-max: 88rem;
+	}
+}
+
+/* Ultra-wide */
+@media (min-width: 100rem) {
+	:root {
+		--container-max: 96rem;
+	}
+}
+
 .container {
-	max-width: 1280px;
-	margin: 0 auto;
-	padding: 0 32px;
+	width: min(100% - (var(--container-gutter) * 2), var(--container-max));
+	margin-inline: auto;
 	position: relative;
 	z-index: 1;
 }
@@ -104,8 +142,9 @@
 /* Backgrounds */
 .paper-bg {
 	background:
-		radial-gradient(1200px 600px at 15% 0%, rgba(255, 205, 103, 0.18), transparent 60%),
-		radial-gradient(900px 500px at 85% 20%, rgba(1, 253, 246, 0.06), transparent 60%), var(--paper);
+		radial-gradient(75rem 37.5rem at 15% 0%, rgba(255, 205, 103, 0.18), transparent 60%),
+		radial-gradient(56.25rem 31.25rem at 85% 20%, rgba(1, 253, 246, 0.06), transparent 60%),
+		var(--paper);
 	position: relative;
 }
 
@@ -121,8 +160,9 @@
 
 .ink-bg {
 	background:
-		radial-gradient(1200px 700px at 80% 10%, rgba(1, 253, 246, 0.07), transparent 60%),
-		radial-gradient(900px 500px at 10% 90%, rgba(255, 205, 103, 0.08), transparent 60%), var(--ink);
+		radial-gradient(75rem 43.75rem at 80% 10%, rgba(1, 253, 246, 0.07), transparent 60%),
+		radial-gradient(56.25rem 31.25rem at 10% 90%, rgba(255, 205, 103, 0.08), transparent 60%),
+		var(--ink);
 	color: var(--paper);
 	position: relative;
 }
@@ -136,43 +176,6 @@
 	opacity: 0.6;
 }
 
-/* Typography utilities */
-.meta {
-	font-family: var(--mono);
-	font-size: 12px;
-	letter-spacing: 0.06em;
-	text-transform: uppercase;
-	color: #7a6f55;
-}
-
-.ink-bg .meta {
-	color: #8a8676;
-}
-
-.meta-dot::before {
-	content: '●';
-	color: var(--yellow);
-	margin-right: 8px;
-}
-
-.hand {
-	font-family: var(--hand);
-}
-
-/* Terminal cursor */
-.cursor::after {
-	content: '▍';
-	color: var(--teal);
-	margin-left: 4px;
-	animation: blink 1.05s steps(1, end) infinite;
-}
-
-@keyframes blink {
-	50% {
-		opacity: 0;
-	}
-}
-
 /* Hand-drawn underline (wrap text in .scribble, inject SVG as child) */
 .scribble {
 	position: relative;
@@ -183,14 +186,14 @@
 	position: absolute;
 	left: -6%;
 	right: -6%;
-	bottom: -14px;
+	bottom: -0.875rem;
 	width: 112%;
-	height: 18px;
+	height: 1.125rem;
 	overflow: visible;
 }
 
 /* Prevent content from hiding under the mobile bottom nav */
-@media (max-width: 767px) {
+@media (max-width: 47.9375rem) {
 	body {
 		padding-bottom: calc(3.5rem + env(safe-area-inset-bottom));
 	}

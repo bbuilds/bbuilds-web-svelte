@@ -17,7 +17,7 @@
 			class="flex items-center gap-2.5 font-mono font-bold tracking-tight text-ink no-underline"
 		>
 			<svg
-				class="h-[1.375rem] w-auto fill-current"
+				class="h-5.5 w-auto fill-current"
 				viewBox="0 0 178.565 291.148"
 				xmlns="http://www.w3.org/2000/svg"
 				aria-hidden="true"
@@ -45,7 +45,7 @@
 		</div>
 
 		<div class="hidden items-center gap-2 md:flex">
-			<span class="flex items-center gap-2 text-xs text-[#5d543f]">
+			<span class="flex items-center gap-2 text-xs text-charcoal">
 				<span class="relative inline-flex h-2 w-2">
 					<span
 						class="absolute inline-flex h-full w-full animate-ping rounded-full bg-green opacity-75"
