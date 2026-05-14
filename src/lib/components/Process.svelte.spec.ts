@@ -41,14 +41,16 @@ describe('Process', () => {
 
 	it('first phase is active by default', async () => {
 		render(Process);
-		const firstCard = page.getByRole('article').nth(0);
+		const cards = page.getByRole('group', { name: /phase cards/i });
+		const firstCard = cards.getByRole('button').nth(0);
 		await expect.element(firstCard).toHaveClass('is-active');
 	});
 
 	it('clicking a different phase makes it active and deactivates the first', async () => {
 		render(Process);
-		const firstCard = page.getByRole('article').nth(0);
-		const secondCard = page.getByRole('article').nth(1);
+		const cards = page.getByRole('group', { name: /phase cards/i });
+		const firstCard = cards.getByRole('button').nth(0);
+		const secondCard = cards.getByRole('button').nth(1);
 
 		await expect.element(firstCard).toHaveClass('is-active');
 		await secondCard.click();
@@ -58,7 +60,8 @@ describe('Process', () => {
 
 	it('clicking a dot activates that phase', async () => {
 		render(Process);
-		await page.getByRole('tab', { name: /go to step 03 create/i }).click();
-		await expect.element(page.getByRole('article').nth(2)).toHaveClass('is-active');
+		await page.getByRole('button', { name: /go to step 03 create/i }).click();
+		const cards = page.getByRole('group', { name: /phase cards/i });
+		await expect.element(cards.getByRole('button').nth(2)).toHaveClass('is-active');
 	});
 });
