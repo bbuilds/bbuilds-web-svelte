@@ -26,3 +26,7 @@ test-results
 
 .dev.vars*
 !.dev.vars.example
+
+# Storyblok – intermediate type-gen artifact
+src/lib/types/components.*.json
+.storyblok
