@@ -10,8 +10,10 @@ export async function load() {
 	});
 
 	const storyblokAPI = await useStoryblokApi();
+	const version: 'draft' | 'published' = import.meta.env.DEV ? 'draft' : 'published';
 
 	return {
-		storyblokAPI
+		storyblokAPI,
+		version
 	};
 }
