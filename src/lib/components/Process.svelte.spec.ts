@@ -12,7 +12,7 @@ describe('Process', () => {
 	it('renders the h2', async () => {
 		render(Process);
 		await expect
-			.element(page.getByRole('heading', { level: 2, name: /how we work together/i }))
+			.element(page.getByRole('heading', { level: 2, name: /the creative process/i }))
 			.toBeInTheDocument();
 	});
 
