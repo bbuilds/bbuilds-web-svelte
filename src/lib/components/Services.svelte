@@ -115,7 +115,7 @@
 	<div class="container">
 		<div class="mb-12">
 			<div
-				class="font-mono text-sm tracking-[0.06em] text-muted uppercase before:mr-2 before:text-yellow before:content-['●']"
+				class="font-mono text-sm tracking-wider text-muted uppercase before:mr-2 before:text-yellow before:content-['●']"
 			>
 				// 02.services
 			</div>
@@ -123,7 +123,7 @@
 			<p class="mt-3.5 max-w-140 font-mono text-[0.8125rem] leading-[1.7] text-charcoal">
 				Together, we bridge the gap between creative discovery and high-performance engineering to
 				scale your vision. Whether we're hardening a single pillar or architecting your entire
-				stack, we ensure every detail is hardened, polished, and resilent.
+				stack, we ensure every detail is hardened, polished, and resilient.
 			</p>
 		</div>
 
@@ -138,7 +138,7 @@
 						onclick={() => toggle(i)}
 						aria-expanded={isOpen}
 						aria-controls={bodyId}
-						class="ease grid w-full cursor-pointer grid-cols-[3.75rem_1fr_auto] items-center gap-6 px-1 py-4.5 text-left transition-[padding,background] duration-350 hover:bg-yellow/12 hover:pl-7 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ink aria-expanded:pb-2 md:grid-cols-[5rem_1fr_auto] md:px-2 md:py-6.5 md:aria-expanded:pb-2"
+						class="grid w-full cursor-pointer grid-cols-[3.75rem_1fr_auto] items-center gap-6 px-1 py-4.5 text-left transition-[padding,background] duration-350 ease-in-out hover:bg-yellow/12 hover:pl-7 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ink aria-expanded:pb-2 md:grid-cols-[5rem_1fr_auto] md:px-2 md:py-6.5 md:aria-expanded:pb-2"
 					>
 						<span class="font-mono text-[0.875rem] text-muted">{s.n}</span>
 						<h3 id={titleId} class="text-[clamp(1.75rem,3vw,3rem)] font-medium tracking-[-0.02em]">
@@ -183,7 +183,7 @@
 												d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17"
 											/>
 										</svg>
-										<span><b class="font-bold text-ink">{it.b}.</b> {it.t}</span>
+										<span><strong class="text-ink">{it.b}.</strong> {it.t}</span>
 									</div>
 								{/each}
 							</div>
