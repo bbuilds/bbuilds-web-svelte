@@ -5,7 +5,7 @@
 /* --- Tailwind v4 theme: maps brand tokens to utility classes ---
    bg-yellow, text-ink, font-mono, border-paper-line, etc.          */
 @theme {
-	--color-yellow: #ffcd67;
+	--color-yellow: #b8821a;
 	--color-teal: #01fdf6;
 	--color-ink: #1a1a1a;
 	--color-ink-soft: #292929;
@@ -26,7 +26,7 @@
 
 /* --- Raw CSS variables (short aliases for non-Tailwind contexts) --- */
 :root {
-	--yellow: #ffcd67;
+	--yellow: #b8821a;
 	--teal: #01fdf6;
 	--ink: #1a1a1a;
 	--ink-soft: #292929;
