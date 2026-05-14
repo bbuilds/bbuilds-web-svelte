@@ -148,14 +148,18 @@
 							cy="50"
 							r="7"
 							fill="#1a1a1a"
-							stroke={nodeActive ? '#ffcd67' : nodeDone ? '#7ba87b' : 'rgba(255,255,255,0.35)'}
+							style:stroke={nodeActive
+								? 'var(--yellow)'
+								: nodeDone
+									? 'var(--green)'
+									: 'rgba(255,255,255,0.35)'}
 							stroke-width="1.5"
 						/>
 						{#if nodeActive}
 							<circle cx={x} cy="50" r="3.5" fill="#ffcd67" />
 						{/if}
 						{#if nodeDone}
-							<circle cx={x} cy="50" r="3.5" fill="#7ba87b" />
+							<circle cx={x} cy="50" r="3.5" style:fill="var(--green)" />
 						{/if}
 					</g>
 				{/each}
@@ -176,11 +180,10 @@
 			{#each PROCESS as p, i (p.n)}
 				{@const isActive = i === active}
 				{@const isDone = i < active}
-				<!-- svelte-ignore a11y_click_events_have_key_events -->
-				<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-				<article
+				<button
+					type="button"
 					class={[
-						'phase relative flex min-h-60 cursor-pointer flex-col overflow-hidden rounded-[0.875rem] border border-white/8 bg-white/2.5 px-5.5 pt-5.5 pb-5.5',
+						'phase relative flex min-h-60 w-full cursor-pointer flex-col overflow-hidden rounded-[0.875rem] border border-white/8 bg-white/2.5 px-5.5 pt-5.5 pb-5.5 text-left',
 						isActive && 'is-active',
 						isDone && 'is-done'
 					]}
@@ -188,13 +191,13 @@
 					onclick={() => (active = i)}
 					aria-current={isActive ? 'step' : undefined}
 				>
-					<header class="mb-7 flex items-center">
+					<div class="mb-7 flex items-center">
 						<span class="phase-no font-mono text-[0.6875rem] tracking-[0.08em] text-muted-dark"
 							>{p.n}</span
 						>
-					</header>
+					</div>
 					<h3 class="text-[1.75rem] font-medium tracking-[-0.02em] text-paper">{p.title}</h3>
-					<p class="mt-2.5 mb-5.5 flex-1 font-mono text-[0.78125rem] leading-[1.65] text-[#cfc4ad]">
+					<p class="mt-2.5 mb-5.5 flex-1 font-mono text-[0.78125rem] leading-[1.65]">
 						{p.copy}
 					</p>
 					<div class="phase-track absolute inset-x-0 bottom-0 h-0.75 bg-white/6" aria-hidden="true">
@@ -207,14 +210,13 @@
 									: 'width 0.35s ease'}"
 						></div>
 					</div>
-				</article>
+				</button>
 			{/each}
 		</div>
 
 		<div
 			class="mt-6 flex items-center justify-center gap-3.5 font-mono text-[0.6875rem] text-muted-dark"
-			role="tablist"
-			aria-label="process step"
+			aria-label="process steps"
 		>
 			{#each PROCESS as p, i (p.n)}
 				<button
@@ -224,7 +226,7 @@
 						i === active && 'on'
 					]}
 					onclick={() => (active = i)}
-					role="tab"
+					aria-pressed={i === active}
 					aria-label={`go to step ${p.n} ${p.title}`}
 				>
 					<span>{p.n}</span>
@@ -252,6 +254,14 @@
 		}
 	}
 
+	section {
+		--phase-copy: #cfc4ad;
+	}
+
+	.phase p {
+		color: var(--phase-copy);
+	}
+
 	.loop-badge svg {
 		animation: spin 28s linear infinite;
 	}
@@ -265,6 +275,11 @@
 			background 0.35s ease,
 			border-color 0.35s ease,
 			box-shadow 0.35s ease;
+	}
+
+	.phase:focus-visible {
+		outline: 0.125rem solid var(--yellow);
+		outline-offset: 0.125rem;
 	}
 
 	.phase:hover {
@@ -312,7 +327,7 @@
 	}
 
 	.phase.is-done .phase-no::before {
-		background: #7ba87b;
+		background: var(--green);
 	}
 
 	.phase-fill {
@@ -322,7 +337,7 @@
 	}
 
 	.phase.is-done .phase-fill {
-		background: rgba(123, 168, 123, 0.55);
+		background: color-mix(in srgb, var(--green) 55%, transparent);
 		box-shadow: none;
 	}
 
