@@ -17,6 +17,7 @@
 		"test:e2e:ci": "playwright test",
 		"deploy": "npm run build && wrangler deploy",
 		"cf-typegen": "wrangler types ./src/worker-configuration.d.ts",
+		"types:storyblok": "node --env-file=.env scripts/generate-storyblok-types.mjs",
 		"lint": "prettier --check . && eslint .",
 		"format": "prettier --write ."
 	},
@@ -52,6 +53,7 @@
 		"prettier": "^3.8.1",
 		"prettier-plugin-svelte": "^3.5.1",
 		"prettier-plugin-tailwindcss": "^0.8.0",
+		"storyblok": "^4.17.4",
 		"svelte": "^5.55.2",
 		"svelte-check": "^4.4.6",
 		"tailwindcss": "^4.2.2",
