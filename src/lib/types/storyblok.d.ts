@@ -124,7 +124,12 @@ export interface StoryblokRichtext {
 	text?: string;
 }
 
+import type { StoryblokRichtext, StoryblokAsset, StoryblokMultilink } from '../storyblok.d.ts';
 export interface StoryblokHomePage {
+	services_section_eyebrow?: string;
+	services_section_title?: string;
+	services_section_copy?: string;
+	featured_services?: (ISbStoryData<StoryblokServicesTemplate> | string)[];
 	hero_eyebrow?: string;
 	hero_taglines?: (
 		| ''
@@ -143,7 +148,7 @@ export interface StoryblokHomePage {
 }
 
 export interface StoryblokPage {
-	body?: (StoryblokHomePage | StoryblokPage | StoryblokSEO)[];
+	body?: (StoryblokHomePage | StoryblokPage | StoryblokSEO | StoryblokServicesTemplate)[];
 	component: 'page';
 	_uid: string;
 }
@@ -162,4 +167,14 @@ export interface StoryblokSEO {
 	_uid: string;
 }
 
-export type ContentType = StoryblokHomePage | StoryblokPage;
+export interface StoryblokServicesTemplate {
+	hero_title?: string;
+	hero_copy?: string;
+	page_content?: StoryblokRichtext;
+	card_title?: string;
+	card_list_items?: StoryblokRichtext;
+	component: 'Services Template';
+	_uid: string;
+}
+
+export type ContentType = StoryblokHomePage | StoryblokPage | StoryblokServicesTemplate;

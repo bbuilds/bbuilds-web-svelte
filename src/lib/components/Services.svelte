@@ -1,108 +1,206 @@
 <script lang="ts">
+	import type { ISbStoryData } from '@storyblok/js';
+	import type {
+		StoryblokHomePage,
+		StoryblokRichtext,
+		StoryblokServicesTemplate
+	} from '$lib/types/storyblok';
+
+	interface Props {
+		content?: StoryblokHomePage;
+	}
+	let { content }: Props = $props();
+
+	type Run = { text: string; bold: boolean; href?: string };
+	type Item = { runs: Run[] };
+	type Chapter = {
+		n: string;
+		title: string;
+		items: ReadonlyArray<Item>;
+	};
+	type StaticItem = { b: string; t: string };
+	type StaticChapter = {
+		n: string;
+		title: string;
+		items: ReadonlyArray<StaticItem>;
+	};
+
+	function parseListItems(doc: StoryblokRichtext | undefined): Item[] {
+		const list = doc?.content?.find((n: StoryblokRichtext) => n.type === 'bullet_list');
+		if (!list?.content) return [];
+		return list.content
+			.filter((li: StoryblokRichtext) => li.type === 'list_item')
+			.map((li: StoryblokRichtext): Item => {
+				const paragraph = li.content?.find((n: StoryblokRichtext) => n.type === 'paragraph');
+				const runs: Run[] = [];
+				for (const node of paragraph?.content ?? []) {
+					if (node.type !== 'text' || !node.text) continue;
+					const marks = node.marks ?? [];
+					const bold = marks.some((m: StoryblokRichtext) => m.type === 'bold');
+					const href = marks.find((m: StoryblokRichtext) => m.type === 'link')?.attrs?.href as
+						| string
+						| undefined;
+					runs.push({ text: node.text, bold, href });
+				}
+				return { runs };
+			})
+			.filter((it: Item) => it.runs.length > 0);
+	}
+
 	const SERVICES = [
 		{
 			n: '01',
-			title: 'Discovery & Architecture',
-			sub: 'The Foundation',
+			title: 'Discovery & Transformation',
 			items: [
 				{
 					b: 'AI Strategy & Roadmap Discovery',
-					t: 'Auditing workflows to find high-impact AI integration points.'
+					t: 'Precision auditing to identify high-leverage AI integration points. We skip the hype and map out the technical path from manual friction to intelligent automation.'
 				},
 				{
 					b: 'Systems Architecture & Audits',
-					t: 'Mapping scalable infrastructure, fixing spaghetti codebases.'
+					t: "Whether untangling legacy spaghetti or architecting greenfield infrastructure, we build for the scale you're headed toward. Structural integrity is non-negotiable."
 				},
 				{
-					b: 'Database Design',
-					t: 'Relational (PostgreSQL) and Vector (Pinecone / Milvus) modeling.'
+					b: 'Mixed-methods research',
+					t: 'Merging quantitative data with qualitative insights to reveal high-fidelity opportunities. We find the "why" behind the metrics to inform every engineering decision.'
 				},
 				{
-					b: 'Security & Scalability Consulting',
-					t: 'Building the foundation so the vision can scale.'
+					b: 'Product innovation',
+					t: 'Breathing production-grade life into experimental ideas. We blend technical foresight with business logic to carve out your niche in the digital era.'
 				}
 			]
 		},
 		{
 			n: '02',
 			title: 'Product Engineering',
-			sub: 'The Build',
 			items: [
 				{
 					b: 'Frontend Development',
-					t: 'High-performance React / Next.js apps with nerdy UX details.'
+					t: 'High-performance TypeScript applications built with "nerdy" UX precision. We deliver lag-free, visually stunning interfaces across React, Next.js, and beyond.'
 				},
 				{
 					b: 'Backend & API Development',
-					t: 'Robust Node.js / Python services and third-party integrations.'
+					t: 'Hardened Node.js and PHP services with clean separation of concerns. Robust, well-documented APIs that your frontend—and your AI agents—can actually depend on.'
 				},
 				{
 					b: 'Headless CMS Implementation',
-					t: 'Flexible content modeling via Sanity, Contentful, Strapi.'
+					t: 'Modular content infrastructure via Sanity, Contentful, or Strapi. We build flexible modeling systems that empower creators without compromising the engineering.'
 				},
-				{ b: 'E-commerce & Point of Sale', t: 'Custom Stripe + unified POS / online systems.' },
-				{ b: 'DevOps & Deployment', t: 'Automated CI/CD via Vercel, AWS, GitHub Actions.' }
+				{
+					b: 'E-commerce & Point of Sale',
+					t: 'Custom Stripe-powered engines and unified POS systems. We close the loop between digital and physical commerce, engineered to handle every edge case.'
+				},
+				{
+					b: 'Mobile Deployment',
+					t: 'Cross-platform iOS and Android with native-level polish. We build mobile products that feel like high-performance hardware, not a web app in a costume.'
+				}
 			]
 		},
 		{
 			n: '03',
 			title: 'Applied Intelligence',
-			sub: 'The Edge',
 			items: [
 				{
-					b: 'Retrieval-Augmented Generation',
-					t: 'Custom knowledge bases and model fine-tuning.'
+					b: 'AI Strategy & Integration',
+					t: 'We audit your stack to find genuine leverage, not pitch-deck fluff. You get a concrete execution plan for deploying intelligence where it moves the needle.'
+				},
+				{
+					b: 'Retrieval-Augmented Generation (RAG) & Knowledge Systems',
+					t: 'Transforming institutional data into a grounded intelligence layer. Your models stop hallucinating and start answering with cited, queryable precision.'
 				},
 				{
 					b: 'Agentic Workflows',
-					t: 'Chatbots and support systems that actually perform tasks.'
+					t: 'Moving beyond chatbots to autonomous systems. We build agents that execute multi-step tasks, interact with your APIs, and fail gracefully when necessary.'
 				},
-				{ b: 'Production-Ready AI', t: 'Hardening vibe-coded prototypes for enterprise use.' },
-				{ b: 'Model Context Protocol', t: 'Custom tools that extend LLM capabilities.' },
-				{ b: 'Semantic Search', t: 'Moving beyond keywords to intent-based discovery.' }
+				{
+					b: 'Model Context Protocol',
+					t: 'Custom MCP servers that give your AI systems live, proprietary context. We extend what language models can do without the overhead of retraining.'
+				},
+				{
+					b: 'Fix AI Slop',
+					t: 'Hardening "vibe-coded" prototypes into enterprise-grade reality. We audit the architecture, close security gaps, and add the observability needed to survive real users.'
+				}
 			]
 		},
 		{
 			n: '04',
 			title: 'Identity & Experience',
-			sub: 'The Interface',
 			items: [
 				{
 					b: 'Brand Strategy & Positioning',
-					t: 'Market research and competitive differentiation.'
+					t: 'Clarity before creativity. We engineer a memorable position in the market that is honest enough to hold up and specific enough to scale.'
 				},
-				{ b: 'Visual Identity', t: 'Logos, typography, UX-first design systems.' },
 				{
-					b: 'High-Fidelity Prototyping',
-					t: 'Validating ideas with interactive mocks first.'
+					b: 'Visual Identity',
+					t: 'A coherent system of typography, motion, and design resolved for the digital-first context. We build brand assets that live in code, not just in PDFs.'
 				},
-				{ b: 'Interactive Design', t: 'Micro-interactions and motion that enhance the UX.' }
+				{
+					b: 'Content strategy and information architecture (IA)',
+					t: 'Organizing the digital landscape for clear wayfinding. We treat information architecture as the foundational infrastructure of the user experience.'
+				},
+				{
+					b: 'User Experience (UX)',
+					t: "High-fidelity design meets technical precision. To us, UX is a cross-disciplinary commitment to making the interface feel 'clean and sexy' at every touchpoint."
+				},
+				{
+					b: 'Design Systems & Component Libraries',
+					t: 'Atomized design as infrastructure. We deliver tokens, components, and documentation that allow your engineering team to build with total confidence.'
+				}
 			]
 		},
 		{
 			n: '05',
 			title: 'Continuity & Growth',
-			sub: 'The Lifecycle',
 			items: [
 				{
-					b: 'Generative Engine Optimization',
-					t: 'Ensuring your brand is cited and surfaced by LLMs.'
+					b: 'Generative Engine Optimization (GEO)',
+					t: 'Structuring your brand signals so that AI systems—ChatGPT, Perplexity, Gemini—surface you as the definitive authority in the next era of search.'
 				},
 				{
 					b: 'Technical SEO',
-					t: 'Local, Maps, deep structured content + schema markup.'
+					t: 'Deep indexability work and schema markup that most agencies skip. We make your content legible to both the LLMs and the humans they direct to you.'
 				},
 				{
 					b: 'Core Web Vitals & Performance',
-					t: 'Targeted optimization for speed and lighthouse.'
+					t: 'Targeted engineering for speed and efficiency. We treat Lighthouse scores as a performance metric and a core part of the user experience.'
 				},
 				{
 					b: 'Maintenance & Evolution',
-					t: 'Ongoing support and iterative feature development.'
+					t: 'Strategic partnership over help-desk support. We keep your product performant, secure, and evolving alongside your business goals.'
 				}
 			]
 		}
-	] as const;
+	] as const satisfies ReadonlyArray<StaticChapter>;
+
+	const eyebrow = $derived(content?.services_section_eyebrow ?? '02.services');
+	const title = $derived(content?.services_section_title ?? 'Diving deep into digital.');
+	const copy = $derived(
+		content?.services_section_copy ??
+			"Together, we bridge the gap between creative discovery and high-performance engineering to scale your vision. Whether we're hardening a single pillar or architecting your entire stack, we ensure every detail is hardened, polished, and resilient."
+	);
+
+	const chapters = $derived.by<ReadonlyArray<Chapter>>(() => {
+		const resolved = (content?.featured_services ?? []).filter(
+			(s): s is ISbStoryData<StoryblokServicesTemplate> => typeof s !== 'string'
+		);
+		if (resolved.length === 0) {
+			return SERVICES.map((s) => ({
+				n: s.n,
+				title: s.title,
+				items: s.items.map((it) => ({
+					runs: [
+						{ text: `${it.b}.`, bold: true },
+						{ text: ` ${it.t}`, bold: false }
+					]
+				}))
+			}));
+		}
+		return resolved.map((story, i) => ({
+			n: String(i + 1).padStart(2, '0'),
+			title: story.content.card_title ?? '',
+			items: parseListItems(story.content.card_list_items)
+		}));
+	});
 
 	let openIdx = $state(0);
 
@@ -117,18 +215,16 @@
 			<div
 				class="font-mono text-sm tracking-wider text-muted uppercase before:mr-2 before:text-yellow before:content-['●']"
 			>
-				// 02.services
+				// {eyebrow}
 			</div>
-			<h2 class="mt-2">Diving deep into digital.</h2>
+			<h2 class="mt-2">{title}</h2>
 			<p class="mt-3.5 max-w-140 font-mono text-[0.8125rem] leading-[1.7] text-charcoal">
-				Together, we bridge the gap between creative discovery and high-performance engineering to
-				scale your vision. Whether we're hardening a single pillar or architecting your entire
-				stack, we ensure every detail is hardened, polished, and resilient.
+				{copy}
 			</p>
 		</div>
 
 		<div class="border-t border-ink">
-			{#each SERVICES as s, i (s.n)}
+			{#each chapters as s, i (s.n)}
 				{@const isOpen = openIdx === i}
 				{@const bodyId = `chapter-body-${s.n}`}
 				{@const titleId = `chapter-title-${s.n}`}
@@ -158,7 +254,7 @@
 					>
 						<div>
 							<div class="grid grid-cols-1 gap-4.5 pt-2 pb-8 md:grid-cols-2 md:pl-26">
-								{#each s.items as it (it.b)}
+								{#each s.items as it, idx (idx)}
 									<div
 										class="grid grid-cols-[1.125rem_1fr] gap-2.5 font-mono text-[0.78125rem] leading-[1.6] text-body"
 									>
@@ -183,7 +279,15 @@
 												d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17"
 											/>
 										</svg>
-										<span><strong class="text-ink">{it.b}.</strong> {it.t}</span>
+										<span
+											>{#each it.runs as run, ri (ri)}{#if run.href}<a
+														href={run.href}
+														class="underline hover:no-underline"
+														>{#if run.bold}<strong class="text-ink">{run.text}</strong
+															>{:else}{run.text}{/if}</a
+													>{:else if run.bold}<strong class="text-ink">{run.text}</strong
+													>{:else}{run.text}{/if}{/each}</span
+										>
 									</div>
 								{/each}
 							</div>

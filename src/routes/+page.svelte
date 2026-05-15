@@ -5,8 +5,9 @@
 	import type { StoryblokHomePage } from '$lib/types/storyblok';
 
 	let { data } = $props();
+	const content = $derived(data.story?.content as StoryblokHomePage | undefined);
 </script>
 
-<Hero content={data.story?.content as StoryblokHomePage | undefined} />
-<Services />
+<Hero {content} />
+<Services {content} />
 <Process />
