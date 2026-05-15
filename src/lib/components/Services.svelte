@@ -2,24 +2,24 @@
 	const SERVICES = [
 		{
 			n: '01',
-			title: 'Discovery & Architecture',
-			sub: 'The Foundation',
+			title: 'Discovery & Transformation',
+			sub: 'The Blueprint',
 			items: [
 				{
 					b: 'AI Strategy & Roadmap Discovery',
-					t: 'Auditing workflows to find high-impact AI integration points.'
+					t: 'Precision auditing to identify high-leverage AI integration points. We skip the hype and map out the technical path from manual friction to intelligent automation.'
 				},
 				{
 					b: 'Systems Architecture & Audits',
-					t: 'Mapping scalable infrastructure, fixing spaghetti codebases.'
+					t: "Whether untangling legacy spaghetti or architecting greenfield infrastructure, we build for the scale you're headed toward. Structural integrity is non-negotiable."
 				},
 				{
-					b: 'Database Design',
-					t: 'Relational (PostgreSQL) and Vector (Pinecone / Milvus) modeling.'
+					b: 'Mixed-methods research',
+					t: 'Merging quantitative data with qualitative insights to reveal high-fidelity opportunities. We find the "why" behind the metrics to inform every engineering decision.'
 				},
 				{
-					b: 'Security & Scalability Consulting',
-					t: 'Building the foundation so the vision can scale.'
+					b: 'Product innovation',
+					t: 'Breathing production-grade life into experimental ideas. We blend technical foresight with business logic to carve out your niche in the digital era.'
 				}
 			]
 		},
@@ -30,18 +30,24 @@
 			items: [
 				{
 					b: 'Frontend Development',
-					t: 'High-performance React / Next.js apps with nerdy UX details.'
+					t: 'High-performance TypeScript applications built with "nerdy" UX precision. We deliver lag-free, visually stunning interfaces across React, Next.js, and beyond.'
 				},
 				{
 					b: 'Backend & API Development',
-					t: 'Robust Node.js / Python services and third-party integrations.'
+					t: 'Hardened Node.js and PHP services with clean separation of concerns. Robust, well-documented APIs that your frontend—and your AI agents—can actually depend on.'
 				},
 				{
 					b: 'Headless CMS Implementation',
-					t: 'Flexible content modeling via Sanity, Contentful, Strapi.'
+					t: 'Modular content infrastructure via Sanity, Contentful, or Strapi. We build flexible modeling systems that empower creators without compromising the engineering.'
 				},
-				{ b: 'E-commerce & Point of Sale', t: 'Custom Stripe + unified POS / online systems.' },
-				{ b: 'DevOps & Deployment', t: 'Automated CI/CD via Vercel, AWS, GitHub Actions.' }
+				{
+					b: 'E-commerce & Point of Sale',
+					t: 'Custom Stripe-powered engines and unified POS systems. We close the loop between digital and physical commerce, engineered to handle every edge case.'
+				},
+				{
+					b: 'Mobile Deployment',
+					t: 'Cross-platform iOS and Android with native-level polish. We build mobile products that feel like high-performance hardware, not a web app in a costume.'
+				}
 			]
 		},
 		{
@@ -50,16 +56,25 @@
 			sub: 'The Edge',
 			items: [
 				{
-					b: 'Retrieval-Augmented Generation',
-					t: 'Custom knowledge bases and model fine-tuning.'
+					b: 'AI Strategy & Integration',
+					t: 'We audit your stack to find genuine leverage, not pitch-deck fluff. You get a concrete execution plan for deploying intelligence where it moves the needle.'
+				},
+				{
+					b: 'Retrieval-Augmented Generation (RAG) & Knowledge Systems',
+					t: 'Transforming institutional data into a grounded intelligence layer. Your models stop hallucinating and start answering with cited, queryable precision.'
 				},
 				{
 					b: 'Agentic Workflows',
-					t: 'Chatbots and support systems that actually perform tasks.'
+					t: 'Moving beyond chatbots to autonomous systems. We build agents that execute multi-step tasks, interact with your APIs, and fail gracefully when necessary.'
 				},
-				{ b: 'Production-Ready AI', t: 'Hardening vibe-coded prototypes for enterprise use.' },
-				{ b: 'Model Context Protocol', t: 'Custom tools that extend LLM capabilities.' },
-				{ b: 'Semantic Search', t: 'Moving beyond keywords to intent-based discovery.' }
+				{
+					b: 'Model Context Protocol',
+					t: 'Custom MCP servers that give your AI systems live, proprietary context. We extend what language models can do without the overhead of retraining.'
+				},
+				{
+					b: 'Fix AI Slop',
+					t: 'Hardening "vibe-coded" prototypes into enterprise-grade reality. We audit the architecture, close security gaps, and add the observability needed to survive real users.'
+				}
 			]
 		},
 		{
@@ -69,14 +84,24 @@
 			items: [
 				{
 					b: 'Brand Strategy & Positioning',
-					t: 'Market research and competitive differentiation.'
+					t: 'Clarity before creativity. We engineer a memorable position in the market that is honest enough to hold up and specific enough to scale.'
 				},
-				{ b: 'Visual Identity', t: 'Logos, typography, UX-first design systems.' },
 				{
-					b: 'High-Fidelity Prototyping',
-					t: 'Validating ideas with interactive mocks first.'
+					b: 'Visual Identity',
+					t: 'A coherent system of typography, motion, and design resolved for the digital-first context. We build brand assets that live in code, not just in PDFs.'
 				},
-				{ b: 'Interactive Design', t: 'Micro-interactions and motion that enhance the UX.' }
+				{
+					b: 'Content strategy and information architecture (IA)',
+					t: 'Organizing the digital landscape for clear wayfinding. We treat information architecture as the foundational infrastructure of the user experience.'
+				},
+				{
+					b: 'User Experience (UX)',
+					t: "High-fidelity design meets technical precision. To us, UX is a cross-disciplinary commitment to making the interface feel 'clean and sexy' at every touchpoint."
+				},
+				{
+					b: 'Design Systems & Component Libraries',
+					t: 'Atomized design as infrastructure. We deliver tokens, components, and documentation that allow your engineering team to build with total confidence.'
+				}
 			]
 		},
 		{
@@ -85,20 +110,20 @@
 			sub: 'The Lifecycle',
 			items: [
 				{
-					b: 'Generative Engine Optimization',
-					t: 'Ensuring your brand is cited and surfaced by LLMs.'
+					b: 'Generative Engine Optimization (GEO)',
+					t: 'Structuring your brand signals so that AI systems—ChatGPT, Perplexity, Gemini—surface you as the definitive authority in the next era of search.'
 				},
 				{
 					b: 'Technical SEO',
-					t: 'Local, Maps, deep structured content + schema markup.'
+					t: 'Deep indexability work and schema markup that most agencies skip. We make your content legible to both the LLMs and the humans they direct to you.'
 				},
 				{
 					b: 'Core Web Vitals & Performance',
-					t: 'Targeted optimization for speed and lighthouse.'
+					t: 'Targeted engineering for speed and efficiency. We treat Lighthouse scores as a performance metric and a core part of the user experience.'
 				},
 				{
 					b: 'Maintenance & Evolution',
-					t: 'Ongoing support and iterative feature development.'
+					t: 'Strategic partnership over help-desk support. We keep your product performant, secure, and evolving alongside your business goals.'
 				}
 			]
 		}
