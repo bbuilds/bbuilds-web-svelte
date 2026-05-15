@@ -162,6 +162,13 @@
 		}
 	] as const satisfies ReadonlyArray<Chapter>;
 
+	const eyebrow = $derived(content?.services_section_eyebrow ?? '02.services');
+	const title = $derived(content?.services_section_title ?? 'Diving deep into digital.');
+	const copy = $derived(
+		content?.services_section_copy ??
+			"Together, we bridge the gap between creative discovery and high-performance engineering to scale your vision. Whether we're hardening a single pillar or architecting your entire stack, we ensure every detail is hardened, polished, and resilient."
+	);
+
 	const chapters = $derived.by<ReadonlyArray<Chapter>>(() => {
 		const resolved = (content?.featured_services ?? []).filter(
 			(s): s is ISbStoryData<StoryblokServicesTemplate> => typeof s !== 'string'
@@ -187,13 +194,11 @@
 			<div
 				class="font-mono text-sm tracking-wider text-muted uppercase before:mr-2 before:text-yellow before:content-['●']"
 			>
-				// 02.services
+				// {eyebrow}
 			</div>
-			<h2 class="mt-2">Diving deep into digital.</h2>
+			<h2 class="mt-2">{title}</h2>
 			<p class="mt-3.5 max-w-140 font-mono text-[0.8125rem] leading-[1.7] text-charcoal">
-				Together, we bridge the gap between creative discovery and high-performance engineering to
-				scale your vision. Whether we're hardening a single pillar or architecting your entire
-				stack, we ensure every detail is hardened, polished, and resilient.
+				{copy}
 			</p>
 		</div>
 
