@@ -50,18 +50,18 @@
 			{ x: 90, h: 158, tilt: 14 }
 		],
 		[
-			{ x: 60, h: 168, tilt: 6 },
-			{ x: 82, h: 202, tilt: -6 },
+			{ x: 60, h: 168, tilt: -8 },
+			{ x: 82, h: 202, tilt: 4 },
 			{ x: 100, h: 174, tilt: 10 },
-			{ x: 72, h: 153, tilt: -16 },
+			{ x: 72, h: 153, tilt: -14 },
 			{ x: 88, h: 163, tilt: 14 }
 		],
 		[
-			{ x: 64, h: 176, tilt: -8 },
-			{ x: 78, h: 212, tilt: 2 },
-			{ x: 96, h: 166, tilt: 12 },
-			{ x: 68, h: 150, tilt: -18 },
-			{ x: 92, h: 160, tilt: 8 }
+			{ x: 62, h: 176, tilt: -8 },
+			{ x: 80, h: 212, tilt: 2 },
+			{ x: 100, h: 166, tilt: 12 },
+			{ x: 70, h: 150, tilt: -16 },
+			{ x: 90, h: 160, tilt: 10 }
 		]
 	] as const;
 
@@ -82,20 +82,22 @@
 		class="plant-snake plant-snake-0 pointer-events-none absolute opacity-25 md:opacity-100"
 		style="right: -1.875rem; bottom: -1.25rem; transform-origin: bottom right;"
 	>
-		<svg viewBox="0 0 160 220" style="width:11.25rem" aria-hidden="true">
-			{#each SNAKE_ROWS[0] as b, i (i)}
-				<g transform="translate({b.x} {220 - b.h}) rotate({b.tilt} 0 {b.h})">
-					<path
-						d="M0 0 C -12 {b.h * 0.4}, -12 {b.h * 0.7}, 0 {b.h} C 12 {b.h * 0.7}, 12 {b.h *
-							0.4}, 0 0 Z"
-						fill="#557a55"
-						stroke="#1a1a1a"
-						stroke-width="1.4"
-					/>
-				</g>
-			{/each}
-			<path d="M40 218 L120 218" stroke="#1a1a1a" stroke-width="2" />
-		</svg>
+		<div class="plant-sway plant-sway-0" style="transform-origin: bottom right;">
+			<svg viewBox="0 0 160 220" style="width:11.25rem" aria-hidden="true">
+				{#each SNAKE_ROWS[0] as b, i (i)}
+					<g transform="translate({b.x} {220 - b.h}) rotate({b.tilt} 0 {b.h})">
+						<path
+							d="M0 0 C -12 {b.h * 0.4}, -12 {b.h * 0.7}, 0 {b.h} C 12 {b.h * 0.7}, 12 {b.h *
+								0.4}, 0 0 Z"
+							fill="#557a55"
+							stroke="#1a1a1a"
+							stroke-width="1.4"
+						/>
+					</g>
+				{/each}
+				<path d="M40 218 L120 218" stroke="#1a1a1a" stroke-width="2" />
+			</svg>
+		</div>
 	</div>
 
 	<!-- Sun sticker -->
@@ -112,20 +114,22 @@
 			class="plant-snake plant-snake-{i + 1} pointer-events-none absolute hidden md:block"
 			style="right: {p.right}; bottom: -1.25rem; transform-origin: bottom right;"
 		>
-			<svg viewBox="0 0 160 220" style="width:11.25rem" aria-hidden="true">
-				{#each SNAKE_ROWS[p.row] as b, j (j)}
-					<g transform="translate({b.x} {220 - b.h}) rotate({b.tilt} 0 {b.h})">
-						<path
-							d="M0 0 C -12 {b.h * 0.4}, -12 {b.h * 0.7}, 0 {b.h} C 12 {b.h * 0.7}, 12 {b.h *
-								0.4}, 0 0 Z"
-							fill="#557a55"
-							stroke="#1a1a1a"
-							stroke-width="1.4"
-						/>
-					</g>
-				{/each}
-				<path d="M40 218 L120 218" stroke="#1a1a1a" stroke-width="2" />
-			</svg>
+			<div class="plant-sway plant-sway-{i + 1}" style="transform-origin: bottom right;">
+				<svg viewBox="0 0 160 220" style="width:11.25rem" aria-hidden="true">
+					{#each SNAKE_ROWS[p.row] as b, j (j)}
+						<g transform="translate({b.x} {220 - b.h}) rotate({b.tilt} 0 {b.h})">
+							<path
+								d="M0 0 C -12 {b.h * 0.4}, -12 {b.h * 0.7}, 0 {b.h} C 12 {b.h * 0.7}, 12 {b.h *
+									0.4}, 0 0 Z"
+								fill="#557a55"
+								stroke="#1a1a1a"
+								stroke-width="1.4"
+							/>
+						</g>
+					{/each}
+					<path d="M40 218 L120 218" stroke="#1a1a1a" stroke-width="2" />
+				</svg>
+			</div>
 		</div>
 	{/each}
 
@@ -232,19 +236,63 @@
 	}
 
 	.plant-snake-0 {
-		animation: sway 9s ease-in-out infinite reverse;
+		animation: growIn 1.4s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 	}
 	.plant-snake-1 {
-		animation: sway 7s ease-in-out -1s infinite;
+		animation: growIn 1.5s 0.1s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 	}
 	.plant-snake-2 {
-		animation: sway 8.5s ease-in-out -3s infinite reverse;
+		animation: growIn 1.6s 0.18s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 	}
 	.plant-snake-3 {
-		animation: sway 6.5s ease-in-out -0.5s infinite;
+		animation: growIn 1.7s 0.26s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 	}
 	.plant-snake-4 {
-		animation: sway 10s ease-in-out -2s infinite reverse;
+		animation: growIn 1.8s 0.34s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+	}
+
+	.plant-sway-0 {
+		animation:
+			sway 9s ease-in-out infinite reverse,
+			fadeIn 1.4s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+	}
+	.plant-sway-1 {
+		animation:
+			sway 7s ease-in-out -1s infinite,
+			fadeIn 1.5s 0.1s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+	}
+	.plant-sway-2 {
+		animation:
+			sway 8.5s ease-in-out -3s infinite reverse,
+			fadeIn 1.6s 0.18s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+	}
+	.plant-sway-3 {
+		animation:
+			sway 6.5s ease-in-out -0.5s infinite,
+			fadeIn 1.7s 0.26s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+	}
+	.plant-sway-4 {
+		animation:
+			sway 10s ease-in-out -2s infinite reverse,
+			fadeIn 1.8s 0.34s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+	}
+
+	@keyframes growIn {
+		from {
+			transform: translateY(40%) scaleY(0.4);
+		}
+		to {
+			transform: translateY(0) scaleY(1);
+		}
+	}
+
+	@keyframes fadeIn {
+		from {
+			opacity: 0;
+		}
+		to {
+			opacity: 1;
+		}
 	}
 
 	@keyframes wordFade {
