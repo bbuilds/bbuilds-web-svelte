@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import Button from '$lib/components/Button.svelte';
-	import type { StoryblokHomePage, StoryblokMultilink } from '$lib/types/storyblok';
+	import { resolveMultilink } from '$lib/utils/links';
+	import type { StoryblokHomePage } from '$lib/types/storyblok';
 
 	interface Props {
 		content?: StoryblokHomePage;
@@ -18,11 +19,6 @@
 
 	const slugToWord = (slug: string) => slug.replace(/-/g, ' ');
 
-	const multilinkToHref = (link: StoryblokMultilink | undefined): string | undefined => {
-		if (!link) return undefined;
-		return link.cached_url || link.url || undefined;
-	};
-
 	const eyebrow = $derived(content?.hero_eyebrow ?? "greetings, I'm Branden Builds");
 	const words = $derived(
 		content?.hero_taglines?.filter(Boolean).map(slugToWord) ?? [...HERO_WORDS]
@@ -32,7 +28,7 @@
 			'I turn ambitious ideas into high-performance digital reality. I bridge creative discovery and hardened engineering with intelligent workflows and "nerdy" UX. Precise engineering meets high-fidelity design. Always clean, always sexy.'
 	);
 	const ctaText = $derived(content?.hero_cta_text ?? 'start a project →');
-	const ctaHref = $derived(multilinkToHref(content?.hero_cta_url) ?? '#contact');
+	const cta = $derived(resolveMultilink(content?.hero_cta_url));
 
 	const SNAKE_ROWS = [
 		[
@@ -163,7 +159,7 @@
 		</p>
 
 		<div class="mt-8 flex flex-wrap gap-3.5">
-			<Button href={ctaHref}>{ctaText}</Button>
+			<Button href={cta?.href ?? '#contact'} target={cta?.target} rel={cta?.rel}>{ctaText}</Button>
 		</div>
 	</div>
 </section>

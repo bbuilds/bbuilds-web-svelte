@@ -6,6 +6,8 @@
 
 	interface Props {
 		href?: string;
+		target?: string;
+		rel?: string;
 		type?: 'button' | 'submit' | 'reset';
 		variant?: Variant;
 		size?: Size;
@@ -17,6 +19,8 @@
 
 	let {
 		href,
+		target,
+		rel,
 		type = 'button',
 		variant = 'primary',
 		size = 'md',
@@ -48,7 +52,7 @@
 </script>
 
 {#if href}
-	<a {href} class={classes} aria-disabled={disabled || undefined} {onclick}>
+	<a {href} {target} {rel} class={classes} aria-disabled={disabled || undefined} {onclick}>
 		<span class="btn-inner">{@render children()}</span>
 	</a>
 {:else}
