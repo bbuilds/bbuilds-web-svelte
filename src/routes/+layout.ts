@@ -4,7 +4,7 @@ export async function load() {
 	storyblokInit({
 		accessToken: import.meta.env.VITE_STORYBLOK_DELIVERY_API_TOKEN,
 		apiOptions: {
-			region: 'eu'
+			region: (import.meta.env.VITE_STORYBLOK_REGION ?? 'eu') as 'eu' | 'us' | 'cn' | 'ca' | 'ap'
 		},
 		use: [apiPlugin]
 	});

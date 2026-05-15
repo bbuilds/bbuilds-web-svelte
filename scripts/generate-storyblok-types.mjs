@@ -15,7 +15,10 @@ if (!token) {
 
 const run = (cmd) => execSync(cmd, { stdio: 'inherit' });
 
-run(`storyblok login --token ${token}`);
+execSync('storyblok login', {
+	env: { ...process.env, STORYBLOK_PERSONAL_ACCESS_TOKEN: token },
+	stdio: 'inherit'
+});
 
 console.log(`Pulling components from space ${spaceId}…`);
 run(`storyblok components pull --space ${spaceId}`);
