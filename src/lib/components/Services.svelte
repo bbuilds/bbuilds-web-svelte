@@ -1,9 +1,46 @@
 <script lang="ts">
+	import type { ISbStoryData } from '@storyblok/js';
+	import type {
+		StoryblokHomePage,
+		StoryblokRichtext,
+		StoryblokServicesTemplate
+	} from '$lib/types/storyblok';
+
+	interface Props {
+		content?: StoryblokHomePage;
+	}
+	let { content }: Props = $props();
+
+	type Item = { b: string; t: string };
+	type Chapter = {
+		n: string;
+		title: string;
+		items: ReadonlyArray<Item>;
+	};
+
+	function parseListItems(doc: StoryblokRichtext | undefined): Item[] {
+		const list = doc?.content?.find((n: StoryblokRichtext) => n.type === 'bullet_list');
+		if (!list?.content) return [];
+		return list.content
+			.filter((li: StoryblokRichtext) => li.type === 'list_item')
+			.map((li: StoryblokRichtext): Item => {
+				const paragraph = li.content?.find((n: StoryblokRichtext) => n.type === 'paragraph');
+				let bold = '';
+				let plain = '';
+				for (const node of paragraph?.content ?? []) {
+					if (node.type !== 'text' || !node.text) continue;
+					if (node.marks?.some((m: StoryblokRichtext) => m.type === 'bold')) bold += node.text;
+					else plain += node.text;
+				}
+				return { b: bold.replace(/\.\s*$/, '').trim(), t: plain.trim() };
+			})
+			.filter((it: Item) => it.b || it.t);
+	}
+
 	const SERVICES = [
 		{
 			n: '01',
 			title: 'Discovery & Transformation',
-			sub: 'The Blueprint',
 			items: [
 				{
 					b: 'AI Strategy & Roadmap Discovery',
@@ -26,7 +63,6 @@
 		{
 			n: '02',
 			title: 'Product Engineering',
-			sub: 'The Build',
 			items: [
 				{
 					b: 'Frontend Development',
@@ -53,7 +89,6 @@
 		{
 			n: '03',
 			title: 'Applied Intelligence',
-			sub: 'The Edge',
 			items: [
 				{
 					b: 'AI Strategy & Integration',
@@ -80,7 +115,6 @@
 		{
 			n: '04',
 			title: 'Identity & Experience',
-			sub: 'The Interface',
 			items: [
 				{
 					b: 'Brand Strategy & Positioning',
@@ -107,7 +141,6 @@
 		{
 			n: '05',
 			title: 'Continuity & Growth',
-			sub: 'The Lifecycle',
 			items: [
 				{
 					b: 'Generative Engine Optimization (GEO)',
@@ -127,7 +160,19 @@
 				}
 			]
 		}
-	] as const;
+	] as const satisfies ReadonlyArray<Chapter>;
+
+	const chapters = $derived.by<ReadonlyArray<Chapter>>(() => {
+		const resolved = (content?.featured_services ?? []).filter(
+			(s): s is ISbStoryData<StoryblokServicesTemplate> => typeof s !== 'string'
+		);
+		if (resolved.length === 0) return SERVICES;
+		return resolved.map((story, i) => ({
+			n: String(i + 1).padStart(2, '0'),
+			title: story.content.card_title ?? '',
+			items: parseListItems(story.content.card_list_items)
+		}));
+	});
 
 	let openIdx = $state(0);
 
@@ -153,7 +198,7 @@
 		</div>
 
 		<div class="border-t border-ink">
-			{#each SERVICES as s, i (s.n)}
+			{#each chapters as s, i (s.n)}
 				{@const isOpen = openIdx === i}
 				{@const bodyId = `chapter-body-${s.n}`}
 				{@const titleId = `chapter-title-${s.n}`}

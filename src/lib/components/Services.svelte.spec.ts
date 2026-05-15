@@ -1,7 +1,75 @@
 import { page } from 'vitest/browser';
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
+import type { ISbStoryData } from '@storyblok/js';
+import type { StoryblokHomePage, StoryblokServicesTemplate } from '$lib/types/storyblok';
 import Services from './Services.svelte';
+
+function makeServiceStory(
+	uid: string,
+	cardTitle: string,
+	bulletLabel: string,
+	bulletText: string
+): ISbStoryData<StoryblokServicesTemplate> {
+	return {
+		name: cardTitle,
+		uuid: uid,
+		id: 0,
+		slug: uid,
+		full_slug: `services/${uid}`,
+		created_at: '',
+		published_at: null,
+		first_published_at: null,
+		sort_by_date: null,
+		position: 0,
+		tag_list: [],
+		is_startpage: false,
+		parent_id: null,
+		meta_data: null,
+		group_id: '',
+		lang: '',
+		path: null,
+		alternates: [],
+		default_full_slug: null,
+		translated_slugs: null,
+		content: {
+			_uid: uid,
+			component: 'Services Template',
+			card_title: cardTitle,
+			card_list_items: {
+				type: 'doc',
+				content: [
+					{
+						type: 'bullet_list',
+						content: [
+							{
+								type: 'list_item',
+								content: [
+									{
+										type: 'paragraph',
+										content: [
+											{ type: 'text', text: bulletLabel, marks: [{ type: 'bold' }] },
+											{ type: 'text', text: ` ${bulletText}` }
+										]
+									}
+								]
+							}
+						]
+					}
+				]
+			}
+		}
+	} as unknown as ISbStoryData<StoryblokServicesTemplate>;
+}
+
+const mockContent: StoryblokHomePage = {
+	_uid: 'home',
+	component: 'Home Page',
+	featured_services: [
+		makeServiceStory('s1', 'Mock Practice One', 'Alpha.', 'first bullet description.'),
+		makeServiceStory('s2', 'Mock Practice Two', 'Beta.', 'second bullet description.')
+	]
+};
 
 describe('Services', () => {
 	it('renders the eyebrow text', async () => {
@@ -26,7 +94,7 @@ describe('Services', () => {
 	it('renders all five practice titles as h3s', async () => {
 		render(Services);
 		await expect
-			.element(page.getByRole('heading', { level: 3, name: /discovery & architecture/i }))
+			.element(page.getByRole('heading', { level: 3, name: /discovery & transformation/i }))
 			.toBeInTheDocument();
 		await expect
 			.element(page.getByRole('heading', { level: 3, name: /product engineering/i }))
@@ -44,13 +112,13 @@ describe('Services', () => {
 
 	it('first practice is open by default', async () => {
 		render(Services);
-		const btn = page.getByRole('button', { name: /discovery & architecture/i });
+		const btn = page.getByRole('button', { name: /discovery & transformation/i });
 		await expect.element(btn).toHaveAttribute('aria-expanded', 'true');
 	});
 
 	it('clicking a different practice opens it and closes the first', async () => {
 		render(Services);
-		const first = page.getByRole('button', { name: /discovery & architecture/i });
+		const first = page.getByRole('button', { name: /discovery & transformation/i });
 		const second = page.getByRole('button', { name: /product engineering/i });
 
 		await expect.element(first).toHaveAttribute('aria-expanded', 'true');
@@ -61,9 +129,26 @@ describe('Services', () => {
 
 	it('clicking an open practice closes it', async () => {
 		render(Services);
-		const first = page.getByRole('button', { name: /discovery & architecture/i });
+		const first = page.getByRole('button', { name: /discovery & transformation/i });
 		await expect.element(first).toHaveAttribute('aria-expanded', 'true');
 		await first.click();
 		await expect.element(first).toHaveAttribute('aria-expanded', 'false');
+	});
+
+	it('renders chapter titles and richtext bullets from Storyblok content when provided', async () => {
+		render(Services, { content: mockContent });
+
+		await expect
+			.element(page.getByRole('heading', { level: 3, name: /mock practice one/i }))
+			.toBeInTheDocument();
+		await expect
+			.element(page.getByRole('heading', { level: 3, name: /mock practice two/i }))
+			.toBeInTheDocument();
+
+		await expect
+			.element(page.getByRole('heading', { level: 3, name: /discovery & transformation/i }))
+			.not.toBeInTheDocument();
+
+		await expect.element(page.getByText('Alpha.').first()).toBeInTheDocument();
 	});
 });
