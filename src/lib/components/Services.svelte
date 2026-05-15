@@ -11,11 +11,18 @@
 	}
 	let { content }: Props = $props();
 
-	type Item = { b: string; t: string };
+	type Run = { text: string; bold: boolean; href?: string };
+	type Item = { runs: Run[] };
 	type Chapter = {
 		n: string;
 		title: string;
 		items: ReadonlyArray<Item>;
+	};
+	type StaticItem = { b: string; t: string };
+	type StaticChapter = {
+		n: string;
+		title: string;
+		items: ReadonlyArray<StaticItem>;
 	};
 
 	function parseListItems(doc: StoryblokRichtext | undefined): Item[] {
@@ -25,16 +32,19 @@
 			.filter((li: StoryblokRichtext) => li.type === 'list_item')
 			.map((li: StoryblokRichtext): Item => {
 				const paragraph = li.content?.find((n: StoryblokRichtext) => n.type === 'paragraph');
-				let bold = '';
-				let plain = '';
+				const runs: Run[] = [];
 				for (const node of paragraph?.content ?? []) {
 					if (node.type !== 'text' || !node.text) continue;
-					if (node.marks?.some((m: StoryblokRichtext) => m.type === 'bold')) bold += node.text;
-					else plain += node.text;
+					const marks = node.marks ?? [];
+					const bold = marks.some((m: StoryblokRichtext) => m.type === 'bold');
+					const href = marks.find((m: StoryblokRichtext) => m.type === 'link')?.attrs?.href as
+						| string
+						| undefined;
+					runs.push({ text: node.text, bold, href });
 				}
-				return { b: bold.replace(/\.\s*$/, '').trim(), t: plain.trim() };
+				return { runs };
 			})
-			.filter((it: Item) => it.b || it.t);
+			.filter((it: Item) => it.runs.length > 0);
 	}
 
 	const SERVICES = [
@@ -160,7 +170,7 @@
 				}
 			]
 		}
-	] as const satisfies ReadonlyArray<Chapter>;
+	] as const satisfies ReadonlyArray<StaticChapter>;
 
 	const eyebrow = $derived(content?.services_section_eyebrow ?? '02.services');
 	const title = $derived(content?.services_section_title ?? 'Diving deep into digital.');
@@ -173,7 +183,18 @@
 		const resolved = (content?.featured_services ?? []).filter(
 			(s): s is ISbStoryData<StoryblokServicesTemplate> => typeof s !== 'string'
 		);
-		if (resolved.length === 0) return SERVICES;
+		if (resolved.length === 0) {
+			return SERVICES.map((s) => ({
+				n: s.n,
+				title: s.title,
+				items: s.items.map((it) => ({
+					runs: [
+						{ text: `${it.b}.`, bold: true },
+						{ text: ` ${it.t}`, bold: false }
+					]
+				}))
+			}));
+		}
 		return resolved.map((story, i) => ({
 			n: String(i + 1).padStart(2, '0'),
 			title: story.content.card_title ?? '',
@@ -233,7 +254,7 @@
 					>
 						<div>
 							<div class="grid grid-cols-1 gap-4.5 pt-2 pb-8 md:grid-cols-2 md:pl-26">
-								{#each s.items as it (it.b)}
+								{#each s.items as it, idx (idx)}
 									<div
 										class="grid grid-cols-[1.125rem_1fr] gap-2.5 font-mono text-[0.78125rem] leading-[1.6] text-body"
 									>
@@ -258,7 +279,15 @@
 												d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17"
 											/>
 										</svg>
-										<span><strong class="text-ink">{it.b}.</strong> {it.t}</span>
+										<span
+											>{#each it.runs as run, ri (ri)}{#if run.href}<a
+														href={run.href}
+														class="underline hover:no-underline"
+														>{#if run.bold}<strong class="text-ink">{run.text}</strong
+															>{:else}{run.text}{/if}</a
+													>{:else if run.bold}<strong class="text-ink">{run.text}</strong
+													>{:else}{run.text}{/if}{/each}</span
+										>
 									</div>
 								{/each}
 							</div>
