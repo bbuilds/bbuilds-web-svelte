@@ -124,8 +124,12 @@ export interface StoryblokRichtext {
 	text?: string;
 }
 
-import type { StoryblokRichtext, StoryblokMultilink, StoryblokAsset } from '../storyblok.d.ts';
+import type { StoryblokRichtext, StoryblokAsset, StoryblokMultilink } from '../storyblok.d.ts';
 export interface StoryblokHomePage {
+	services_section_eyebrow?: string;
+	services_section_title?: string;
+	services_section_copy?: string;
+	featured_services?: (ISbStoryData<StoryblokServicesTemplate> | string)[];
 	hero_eyebrow?: string;
 	hero_taglines?: (
 		| ''
@@ -139,7 +143,6 @@ export interface StoryblokHomePage {
 	hero_cta_text?: string;
 	seo?: StoryblokSEO[];
 	hero_cta_url?: Exclude<StoryblokMultilink, { linktype?: 'email' } | { linktype?: 'asset' }>;
-	featured_services?: (ISbStoryData<StoryblokServicesTemplate> | string)[];
 	component: 'Home Page';
 	_uid: string;
 }
