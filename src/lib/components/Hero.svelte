@@ -1,6 +1,12 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import Button from '$lib/components/Button.svelte';
+	import type { StoryblokHomePage, StoryblokMultilink } from '$lib/types/storyblok';
+
+	interface Props {
+		content?: StoryblokHomePage;
+	}
+	let { content }: Props = $props();
 
 	const HERO_WORDS = [
 		'hardened systems',
@@ -9,6 +15,24 @@
 		'sexy interfaces',
 		'intelligent workflows'
 	] as const;
+
+	const slugToWord = (slug: string) => slug.replace(/-/g, ' ');
+
+	const multilinkToHref = (link: StoryblokMultilink | undefined): string | undefined => {
+		if (!link) return undefined;
+		return link.cached_url || link.url || undefined;
+	};
+
+	const eyebrow = $derived(content?.hero_eyebrow ?? "greetings, I'm Branden Builds");
+	const words = $derived(
+		content?.hero_taglines?.filter(Boolean).map(slugToWord) ?? [...HERO_WORDS]
+	);
+	const copy = $derived(
+		content?.hero_copy ??
+			'I turn ambitious ideas into high-performance digital reality. I bridge creative discovery and hardened engineering with intelligent workflows and "nerdy" UX. Precise engineering meets high-fidelity design. Always clean, always sexy.'
+	);
+	const ctaText = $derived(content?.hero_cta_text ?? 'start a project →');
+	const ctaHref = $derived(multilinkToHref(content?.hero_cta_url) ?? '#contact');
 
 	const SNAKE_ROWS = [
 		[
@@ -44,8 +68,9 @@
 	let wi = $state(0);
 
 	onMount(() => {
+		if (words.length === 0) return;
 		const id = setInterval(() => {
-			wi = (wi + 1) % HERO_WORDS.length;
+			wi = (wi + 1) % words.length;
 		}, 2400);
 		return () => clearInterval(id);
 	});
@@ -108,13 +133,13 @@
 		<div
 			class="mb-4.5 font-mono text-sm tracking-[0.06em] text-muted uppercase before:mr-2 before:text-yellow before:content-['●'] md:text-base"
 		>
-			greetings, I'm Branden Builds
+			{eyebrow}
 		</div>
 		<h1>
 			I enjoy building <span class="font-hand font-medium text-charcoal">↳</span><br />
 			<span class="scribble whitespace-nowrap">
 				{#key wi}
-					<em class="rot inline-block text-ink not-italic">{HERO_WORDS[wi]}</em>
+					<em class="rot inline-block text-ink not-italic">{words[wi]}</em>
 				{/key}
 				<svg viewBox="0 0 400 22" preserveAspectRatio="none" aria-hidden="true">
 					<path
@@ -130,13 +155,11 @@
 		</h1>
 
 		<p class="mt-9 max-w-140 font-mono text-[0.875rem] leading-[1.7] text-body">
-			I turn ambitious ideas into high-performance digital reality. I bridge creative discovery and
-			hardened engineering with intelligent workflows and "nerdy" UX. Precise engineering meets
-			high-fidelity design. Always clean, always sexy.
+			{copy}
 		</p>
 
 		<div class="mt-8 flex flex-wrap gap-3.5">
-			<Button href="#contact">start a project →</Button>
+			<Button href={ctaHref}>{ctaText}</Button>
 		</div>
 	</div>
 </section>
