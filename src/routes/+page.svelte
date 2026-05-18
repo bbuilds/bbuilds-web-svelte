@@ -4,6 +4,7 @@
 	import Process from '$lib/components/Process.svelte';
 	import Quote from '$lib/components/Quote.svelte';
 	import Blog from '$lib/components/Blog.svelte';
+	import Contact from '$lib/components/Contact.svelte';
 	import type { StoryblokHomePage } from '$lib/types/storyblok';
 
 	let { data } = $props();
@@ -15,3 +16,4 @@
 <Process />
 <Quote />
 <Blog />
+<Contact />
