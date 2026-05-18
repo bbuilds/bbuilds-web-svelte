@@ -1,9 +1,11 @@
 <script lang="ts">
 	import Button from '$lib/components/Button.svelte';
+	import PostCard from '$lib/components/PostCard.svelte';
 
 	const POSTS = [
 		{
 			tag: 'SEO',
+			datetime: '2022-02-11',
 			date: 'Feb 11, 2022',
 			title: 'Local SEO Guide: Google Business Profile',
 			blurb:
@@ -12,6 +14,7 @@
 		},
 		{
 			tag: 'Performance',
+			datetime: '2022-01-16',
 			date: 'Jan 16, 2022',
 			title: 'Detecting Memory Leaks in Web Apps',
 			blurb:
@@ -20,6 +23,7 @@
 		},
 		{
 			tag: 'Talks',
+			datetime: '2021-10-14',
 			date: 'Oct 14, 2021',
 			title: 'Headless WP & Gatsby at Seattle WP Meetup',
 			blurb:
@@ -53,7 +57,7 @@
 						</svg>
 					</span>.
 				</h2>
-				<p class="mt-3.5 max-w-128 font-mono text-[0.8125rem] leading-[1.7] text-charcoal">
+				<p class="mt-3.5 max-w-lg font-mono text-[0.8125rem] leading-[1.7] text-charcoal">
 					Field notes, deep dives, and the occasional unhinged opinion. Written between projects.
 				</p>
 			</div>
@@ -62,52 +66,8 @@
 
 		<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 			{#each POSTS as p, i (p.title)}
-				<a
-					href={p.href}
-					class="post-card group flex flex-col overflow-hidden rounded-2xl border border-paper-line bg-white/40 text-inherit no-underline transition-[transform,box-shadow,border-color] duration-350 hover:-translate-y-1.5 hover:border-ink hover:shadow-[0_1.5rem_3rem_-1.5rem_rgba(0,0,0,0.25)]"
-					style="--i: {i}"
-				>
-					<div class="aspect-[16/9] overflow-hidden bg-ink"></div>
-					<div class="flex flex-1 flex-col gap-2.5 px-5 pt-5 pb-6">
-						<div class="flex items-center gap-2 font-mono text-[0.6875rem] text-muted">
-							<span
-								class="rounded-full bg-yellow/10 px-2 py-0.5 font-semibold tracking-[0.04em] text-yellow uppercase"
-								>{p.tag}</span
-							>
-							<span class="tracking-[0.04em]">{p.date}</span>
-						</div>
-						<h3 class="text-xl leading-tight font-semibold tracking-[-0.015em] text-ink">
-							{p.title}
-						</h3>
-						<p class="m-0 flex-1 font-mono text-xs leading-[1.65] text-body">{p.blurb}</p>
-						<span
-							class="mt-1.5 inline-flex items-center gap-1.5 font-mono text-xs font-semibold text-ink"
-						>
-							read post
-							<span class="transition-transform duration-250 group-hover:translate-x-1">→</span>
-						</span>
-					</div>
-				</a>
+				<PostCard {...p} index={i} />
 			{/each}
 		</div>
 	</div>
 </section>
-
-<style>
-	@keyframes postIn {
-		from {
-			opacity: 0;
-			transform: translateY(1rem);
-		}
-		to {
-			opacity: 1;
-			transform: none;
-		}
-	}
-
-	.post-card {
-		opacity: 0;
-		animation: postIn 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
-		animation-delay: calc(var(--i, 0) * 80ms);
-	}
-</style>
