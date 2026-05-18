@@ -30,3 +30,6 @@ test-results
 # Storyblok – intermediate type-gen artifact
 src/lib/types/components.*.json
 .storyblok
+
+#LLM scratch
+/llm_docs
