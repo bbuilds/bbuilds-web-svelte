@@ -38,7 +38,7 @@
 				class="mt-6 inline-flex flex-wrap items-center justify-center gap-2 font-mono text-[0.8125rem] text-charcoal"
 			>
 				<a
-					class="quote-name ease font-semibold text-ink no-underline transition-opacity duration-200 hover:opacity-75 focus-visible:rounded-xs focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-yellow"
+					class="quote-name font-semibold text-ink no-underline transition-opacity duration-200 ease-in-out hover:opacity-75 focus-visible:rounded-xs focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-yellow"
 					href={QUOTE.href}
 					target="_blank"
 					rel="noopener noreferrer"
@@ -78,6 +78,12 @@
 
 	.quote-body {
 		animation: quoteIn 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.quote-body {
+			animation: none;
+		}
 	}
 
 	.quote-name :global(.scribble svg) {
