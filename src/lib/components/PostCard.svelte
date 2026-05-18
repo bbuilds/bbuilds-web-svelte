@@ -56,4 +56,11 @@
 		animation: postIn 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 		animation-delay: calc(var(--i, 0) * 80ms);
 	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.post-card {
+			animation: none;
+			opacity: 1;
+		}
+	}
 </style>
