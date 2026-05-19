@@ -46,7 +46,7 @@
 				>
 					// 03.process
 				</div>
-				<h2 class="mt-2 text-paper">The creative <span class="text-teal">process</span>.</h2>
+				<h2 class="mt-2 text-paper">The runtime <span class="text-teal">loop</span>.</h2>
 				<p class="mt-3.5 max-w-145 font-mono text-[0.8125rem] leading-[1.7] text-muted-dark">
 					Every engagement runs the same loop. Tight, transparent, and biased toward shipping — then
 					we do it again.
