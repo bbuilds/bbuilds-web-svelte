@@ -1,4 +1,6 @@
 <script lang="ts">
+	import type { Attachment } from 'svelte/attachments';
+
 	const SLOTS = [
 		{ words: ['Svelte,', 'tears,', 'terminal,'] },
 		{ words: ['Cloudflare,', 'coffee,', 'speed,'] },
@@ -9,10 +11,6 @@
 	const DURATION_MS = 320;
 	const STAGGER_BUDGET_MS = 180;
 	const EASING = 'cubic-bezier(0.65, 0, 0.35, 1)';
-
-	let slot0: HTMLElement;
-	let slot1: HTMLElement;
-	let slot2: HTMLElement;
 
 	function staggerFor(length: number): number {
 		return Math.min(STAGGER_BUDGET_MS / Math.max(length - 1, 1), 35);
@@ -44,6 +42,8 @@
 			}, i * outStagger);
 		});
 
+		// Hold the slot width steady until out-chars have mostly cleared, then resize and
+		// start the in-chars after a small gap so they don't visibly overlap mid-exit.
 		const widthDelay = Math.max(DURATION_MS * 0.45, 120);
 		setTimeout(() => {
 			el.style.width = `${nextWord.length}ch`;
@@ -72,66 +72,46 @@
 		return inChars;
 	}
 
-	$effect(() => {
-		const els = [slot0, slot1, slot2];
-		const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-		const timeoutIds: ReturnType<typeof setTimeout>[] = [];
-		const intervalIds: ReturnType<typeof setInterval>[] = [];
+	function animateSlot(slotDef: (typeof SLOTS)[number], index: number): Attachment<HTMLElement> {
+		return (el) => {
+			const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+			let timeoutId: ReturnType<typeof setTimeout> | undefined;
+			let intervalId: ReturnType<typeof setInterval> | undefined;
+			let currentChars: HTMLSpanElement[] = [];
+			let currentIndex = 0;
 
-		function startAnimations() {
-			if (mq.matches) return;
-
-			SLOTS.forEach((slotDef, i) => {
-				const el = els[i];
-				if (!el) return;
-
-				el.innerHTML = '';
+			function start() {
+				if (timeoutId) clearTimeout(timeoutId);
+				if (intervalId) clearInterval(intervalId);
+				el.replaceChildren();
 				el.style.width = `${slotDef.words[0].length}ch`;
-
-				let currentIndex = 0;
-				let currentChars = buildChars(slotDef.words[0], '0');
+				currentIndex = 0;
+				currentChars = buildChars(slotDef.words[0], '0');
 				currentChars.forEach((c) => el.appendChild(c));
 
-				const tid = setTimeout(
+				if (mq.matches) return;
+
+				timeoutId = setTimeout(
 					() => {
-						const iid = setInterval(() => {
+						intervalId = setInterval(() => {
 							currentIndex = (currentIndex + 1) % slotDef.words.length;
 							currentChars = swapWord(el, slotDef.words[currentIndex], currentChars);
 						}, CYCLE_MS);
-						intervalIds.push(iid);
 					},
-					CYCLE_MS + i * 600
+					CYCLE_MS + index * 600
 				);
+			}
 
-				timeoutIds.push(tid);
-			});
-		}
+			mq.addEventListener('change', start);
+			start();
 
-		function cleanup() {
-			timeoutIds.splice(0).forEach(clearTimeout);
-			intervalIds.splice(0).forEach(clearInterval);
-		}
-
-		function handleMotionChange() {
-			cleanup();
-			SLOTS.forEach((slotDef, i) => {
-				const el = els[i];
-				if (!el) return;
-				el.innerHTML = '';
-				el.style.width = `${slotDef.words[0].length}ch`;
-				el.textContent = slotDef.words[0];
-			});
-			startAnimations();
-		}
-
-		mq.addEventListener('change', handleMotionChange);
-		startAnimations();
-
-		return () => {
-			cleanup();
-			mq.removeEventListener('change', handleMotionChange);
+			return () => {
+				if (timeoutId) clearTimeout(timeoutId);
+				if (intervalId) clearInterval(intervalId);
+				mq.removeEventListener('change', start);
+			};
 		};
-	});
+	}
 </script>
 
 <footer class="border-t border-paper-line pt-6 text-center">
@@ -159,22 +139,25 @@
 				<span>BrandenBuilds<span class="text-teal">.</span></span>
 			</a>
 
-			<p class="built-with flex items-center gap-1">
-				<span>&gt; built with </span><span
-					class="bw-slot"
-					bind:this={slot0}
-					aria-live="polite"
-					style="width: {SLOTS[0].words[0].length}ch">{SLOTS[0].words[0]}</span
-				><span
-					class="bw-slot"
-					bind:this={slot1}
-					aria-live="polite"
-					style="width: {SLOTS[1].words[0].length}ch">{SLOTS[1].words[0]}</span
-				><span> and </span><span
-					class="bw-slot"
-					bind:this={slot2}
-					aria-live="polite"
-					style="width: {SLOTS[2].words[0].length}ch">{SLOTS[2].words[0]}</span
+			<p class="built-with">
+				<span class="sr-only">built with Svelte, Cloudflare and Claude</span>
+				<span aria-hidden="true"
+					>&gt; built with <span
+						class="bw-slot"
+						{@attach animateSlot(SLOTS[0], 0)}
+						style="width: {SLOTS[0].words[0].length}ch">{SLOTS[0].words[0]}</span
+					>
+					<span
+						class="bw-slot"
+						{@attach animateSlot(SLOTS[1], 1)}
+						style="width: {SLOTS[1].words[0].length}ch">{SLOTS[1].words[0]}</span
+					>
+					and
+					<span
+						class="bw-slot"
+						{@attach animateSlot(SLOTS[2], 2)}
+						style="width: {SLOTS[2].words[0].length}ch">{SLOTS[2].words[0]}</span
+					></span
 				>
 			</p>
 
