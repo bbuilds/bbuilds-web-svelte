@@ -1,4 +1,6 @@
 <script lang="ts">
+	import type { StoryblokHomePage } from '$lib/types/storyblok';
+
 	const PROCESS = [
 		{
 			n: '01',
@@ -24,6 +26,26 @@
 
 	const DURATION = 4200;
 
+	interface Props {
+		content?: StoryblokHomePage;
+	}
+	let { content }: Props = $props();
+
+	const eyebrow = $derived(content?.process_eyebrow ?? '// 03.process');
+	const sectionCopy = $derived(
+		content?.process_copy ??
+			'Every engagement runs the same loop. Tight, transparent, and biased toward shipping — then we do it again.'
+	);
+	const phases = $derived.by(() => {
+		const cards = content?.process_cards ?? [];
+		if (cards.length === 0) return PROCESS;
+		return cards.map((c, i) => ({
+			n: String(i + 1).padStart(2, '0'),
+			title: c.title ?? '',
+			copy: c.copy ?? ''
+		}));
+	});
+
 	let active = $state(0);
 	let paused = $state(false);
 
@@ -44,12 +66,11 @@
 				<div
 					class="font-mono text-sm tracking-wider text-muted-dark uppercase before:mr-2 before:text-yellow before:content-['●']"
 				>
-					// 03.process
+					{eyebrow}
 				</div>
 				<h2 class="mt-2 text-paper">The runtime <span class="text-teal">loop</span>.</h2>
 				<p class="mt-3.5 max-w-145 font-mono text-[0.8125rem] leading-[1.7] text-muted-dark">
-					Every engagement runs the same loop. Tight, transparent, and biased toward shipping — then
-					we do it again.
+					{sectionCopy}
 				</p>
 			</div>
 			<div class="loop-badge" aria-hidden="true">
@@ -177,7 +198,7 @@
 			onmouseenter={() => (paused = true)}
 			onmouseleave={() => (paused = false)}
 		>
-			{#each PROCESS as p, i (p.n)}
+			{#each phases as p, i (p.n)}
 				{@const isActive = i === active}
 				{@const isDone = i < active}
 				<button
@@ -218,7 +239,7 @@
 			class="mt-6 flex items-center justify-center gap-3.5 font-mono text-[0.6875rem] text-muted-dark"
 			aria-label="process steps"
 		>
-			{#each PROCESS as p, i (p.n)}
+			{#each phases as p, i (p.n)}
 				<button
 					type="button"
 					class={[
