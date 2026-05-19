@@ -13,7 +13,7 @@
 
 <Hero {content} />
 <Services {content} />
-<Process />
+<Process {content} />
 <Quote />
 <Blog />
 <Contact />

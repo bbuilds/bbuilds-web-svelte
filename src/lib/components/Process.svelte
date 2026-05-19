@@ -1,35 +1,27 @@
 <script lang="ts">
-	const PROCESS = [
-		{
-			n: '01',
-			title: 'Discover',
-			copy: 'Aligning on the actual problem. Not the brief. Audits, stakeholder interviews, and a one-pager you can take to the board.'
-		},
-		{
-			n: '02',
-			title: 'Research',
-			copy: "Survey the landscape. Competitors, prior art, technical constraints. Quick prototype if a question can't be answered with a doc."
-		},
-		{
-			n: '03',
-			title: 'Create',
-			copy: 'Design and build in vertical slices. PRs you can ship every Friday. Demo + retro every other week.'
-		},
-		{
-			n: '04',
-			title: 'Ship',
-			copy: 'Production rollout, instrumentation, then iterate. I leave teams better than I found them — every project ships with documentation.'
-		}
-	] as const;
+	import type { StoryblokHomePage } from '$lib/types/storyblok';
 
 	const DURATION = 4200;
+
+	interface Props {
+		content?: StoryblokHomePage;
+	}
+	let { content }: Props = $props();
+
+	const phases = $derived(
+		(content?.process_cards ?? []).map((c, i) => ({
+			n: String(i + 1).padStart(2, '0'),
+			title: c.title ?? '',
+			copy: c.copy ?? ''
+		}))
+	);
 
 	let active = $state(0);
 	let paused = $state(false);
 
 	$effect(() => {
-		const next = (active + 1) % PROCESS.length;
-		if (paused) return;
+		if (paused || phases.length === 0) return;
+		const next = (active + 1) % phases.length;
 		const id = setTimeout(() => {
 			active = next;
 		}, DURATION);
@@ -44,16 +36,20 @@
 				<div
 					class="font-mono text-sm tracking-wider text-muted-dark uppercase before:mr-2 before:text-yellow before:content-['●']"
 				>
-					// 03.process
+					{content?.process_eyebrow}
 				</div>
-				<h2 class="mt-2 text-paper">The creative <span class="text-teal">process</span>.</h2>
+				<h2 class="mt-2 text-paper">The runtime <span class="text-teal">loop</span>.</h2>
 				<p class="mt-3.5 max-w-145 font-mono text-[0.8125rem] leading-[1.7] text-muted-dark">
-					Every engagement runs the same loop. Tight, transparent, and biased toward shipping — then
-					we do it again.
+					{content?.process_copy}
 				</p>
 			</div>
-			<div class="loop-badge" aria-hidden="true">
-				<svg viewBox="0 0 80 80" width="4rem" height="4rem">
+			<div class="hidden md:block" aria-hidden="true">
+				<svg
+					class="animate-[spin_28s_linear_infinite]"
+					viewBox="0 0 80 80"
+					width="4rem"
+					height="4rem"
+				>
 					<defs>
 						<path id="loopArc" d="M 40 8 A 32 32 0 1 1 39.99 8" fill="none" />
 					</defs>
@@ -90,46 +86,54 @@
 						</textPath>
 					</text>
 				</svg>
-				<div class="mt-1.5 text-center font-mono text-[0.625rem] tracking-widest text-muted-dark">
-					↻ iterative
-				</div>
 			</div>
 		</header>
 
-		<div class="phase-gittree relative mb-1.5 hidden h-16 md:block" aria-hidden="true">
+		<div class="relative mb-1.5 hidden h-20 md:block" aria-hidden="true">
 			<svg
-				viewBox="0 0 1000 70"
+				viewBox="0 0 1000 80"
 				preserveAspectRatio="none"
 				style="width:100%;height:100%;display:block;overflow:visible"
 			>
-				<defs>
-					<marker id="gh" markerWidth="8" markerHeight="8" refX="5" refY="4" orient="auto">
-						<path
-							d="M0,1 L6,4 L0,7"
-							fill="none"
-							stroke="#ffcd67"
-							stroke-width="1.5"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-						/>
-					</marker>
-				</defs>
 				<line
-					x1="125"
-					y1="50"
-					x2="875"
-					y2="50"
-					stroke="rgba(255,255,255,0.18)"
-					stroke-width="1.5"
-				/>
-				<path
-					d="M 875 50 C 880 14, 920 8, 500 8 C 80 8, 120 14, 125 50"
-					fill="none"
+					x1="500"
+					y1="8"
+					x2="500"
+					y2="25"
 					stroke="#ffcd67"
 					stroke-width="1.5"
 					stroke-dasharray="5 5"
 					opacity="0.7"
-					marker-end="url(#gh)"
+				/>
+				<line
+					x1="125"
+					y1="25"
+					x2="875"
+					y2="25"
+					stroke="#ffcd67"
+					stroke-width="1.5"
+					stroke-dasharray="5 5"
+					opacity="0.7"
+				/>
+				{#each [125, 375, 625, 875] as x (x)}
+					<line
+						x1={x}
+						y1="25"
+						x2={x}
+						y2="55"
+						stroke="#ffcd67"
+						stroke-width="1.5"
+						stroke-dasharray="5 5"
+						opacity="0.7"
+					/>
+				{/each}
+				<line
+					x1="125"
+					y1="55"
+					x2="875"
+					y2="55"
+					stroke="rgba(255,255,255,0.18)"
+					stroke-width="1.5"
 				/>
 				{#each [125, 375, 625, 875] as x, i (x)}
 					{@const nodeActive = i === active}
@@ -137,15 +141,15 @@
 					<g>
 						<line
 							x1={x}
-							y1="50"
+							y1="55"
 							x2={x}
-							y2="70"
+							y2="80"
 							stroke="rgba(255,255,255,0.18)"
 							stroke-width="1.5"
 						/>
 						<circle
 							cx={x}
-							cy="50"
+							cy="55"
 							r="7"
 							fill="#1a1a1a"
 							style:stroke={nodeActive
@@ -156,17 +160,19 @@
 							stroke-width="1.5"
 						/>
 						{#if nodeActive}
-							<circle cx={x} cy="50" r="3.5" fill="#ffcd67" />
+							<circle cx={x} cy="55" r="3.5" fill="#ffcd67" />
 						{/if}
 						{#if nodeDone}
-							<circle cx={x} cy="50" r="3.5" style:fill="var(--green)" />
+							<circle cx={x} cy="55" r="3.5" style:fill="var(--green)" />
 						{/if}
 					</g>
 				{/each}
 			</svg>
-			<span class="phase-gittree-label">
-				<span class="phase-gittree-prompt">$</span>
-				<span>npm run iterate --repeat</span>
+			<span
+				class="absolute -top-3.5 left-1/2 inline-flex -translate-x-1/2 items-center gap-1.5 bg-ink px-3.5 py-0.75 font-mono text-[0.6875rem] tracking-[0.04em] whitespace-nowrap text-[#a8a08a]"
+			>
+				<span class="text-teal">$</span>
+				<span>npm run branden:builds --repeat</span>
 			</span>
 		</div>
 
@@ -177,32 +183,49 @@
 			onmouseenter={() => (paused = true)}
 			onmouseleave={() => (paused = false)}
 		>
-			{#each PROCESS as p, i (p.n)}
+			{#each phases as p, i (p.n)}
 				{@const isActive = i === active}
 				{@const isDone = i < active}
 				<button
 					type="button"
 					class={[
-						'phase relative flex min-h-60 w-full cursor-pointer flex-col overflow-hidden rounded-[0.875rem] border border-white/8 bg-white/2.5 px-5.5 pt-5.5 pb-5.5 text-left',
-						isActive && 'is-active',
-						isDone && 'is-done'
+						'relative flex min-h-60 w-full cursor-pointer flex-col overflow-hidden rounded-[0.875rem] border border-white/8 bg-white/2.5 px-5.5 pt-5.5 pb-5.5 text-left',
+						'animate-[phase-enter_0.6s_cubic-bezier(0.2,0.7,0.2,1)_both]',
+						'[transition:transform_0.4s_cubic-bezier(0.2,0.7,0.2,1),background_0.35s_ease,border-color_0.35s_ease,box-shadow_0.35s_ease]',
+						'hover:-translate-y-1 hover:border-yellow/40 hover:bg-white/4',
+						'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow focus-visible:outline-solid',
+						isActive &&
+							'is-active border-yellow/55 bg-yellow/6 shadow-[0_1.875rem_3.75rem_-1.875rem_rgba(255,205,103,0.25),inset_0_0_0_0.0625rem_rgba(255,205,103,0.18)]',
+						isDone && 'border-white/18'
 					]}
-					style="--i: {i}"
+					style="--i: {i}; animation-delay: calc(var(--i) * 90ms)"
 					onclick={() => (active = i)}
 					aria-current={isActive ? 'step' : undefined}
 				>
 					<div class="mb-7 flex items-center">
-						<span class="phase-no font-mono text-[0.6875rem] tracking-[0.08em] text-muted-dark"
-							>{p.n}</span
+						<span
+							class={[
+								"inline-flex items-center gap-2 font-mono text-[0.6875rem] tracking-[0.08em] before:inline-block before:size-2 before:rounded-full before:transition-[background,box-shadow] before:duration-350 before:content-['']",
+								isActive
+									? 'text-yellow before:bg-yellow before:shadow-[0_0_0_0.25rem_rgba(255,205,103,0.18)]'
+									: isDone
+										? 'text-muted-dark before:bg-green'
+										: 'text-muted-dark before:bg-[#3a3a3a]'
+							]}>{p.n}</span
 						>
 					</div>
 					<h3 class="text-[1.75rem] font-medium tracking-[-0.02em] text-paper">{p.title}</h3>
-					<p class="mt-2.5 mb-5.5 flex-1 font-mono text-[0.78125rem] leading-[1.65]">
+					<p class="mt-2.5 mb-5.5 flex-1 font-mono text-[0.78125rem] leading-[1.65] text-[#cfc4ad]">
 						{p.copy}
 					</p>
-					<div class="phase-track absolute inset-x-0 bottom-0 h-0.75 bg-white/6" aria-hidden="true">
+					<div class="absolute inset-x-0 bottom-0 h-0.75 bg-white/6" aria-hidden="true">
 						<div
-							class="phase-fill"
+							class={[
+								'h-full',
+								isDone
+									? 'bg-[color-mix(in_srgb,var(--green)_55%,transparent)] shadow-none'
+									: 'bg-linear-to-r from-yellow to-[#ffd982] shadow-[0_0_0.75rem_rgba(255,205,103,0.4)]'
+							]}
 							style="width: {isActive || isDone ? '100%' : '0%'}; transition: {isActive
 								? `width ${DURATION}ms linear`
 								: isDone
@@ -218,12 +241,14 @@
 			class="mt-6 flex items-center justify-center gap-3.5 font-mono text-[0.6875rem] text-muted-dark"
 			aria-label="process steps"
 		>
-			{#each PROCESS as p, i (p.n)}
+			{#each phases as p, i (p.n)}
 				<button
 					type="button"
 					class={[
-						'cursor-pointer rounded-full border border-white/20 bg-transparent px-3 py-1.25 font-mono text-[0.6875rem] tracking-[0.06em] text-muted-dark transition-all duration-250 hover:border-yellow/60 hover:text-paper',
-						i === active && 'on'
+						'cursor-pointer rounded-full border px-3 py-1.25 font-mono text-[0.6875rem] tracking-[0.06em] transition-all duration-250',
+						i === active
+							? 'border-yellow bg-yellow text-ink'
+							: 'border-white/20 bg-transparent text-muted-dark hover:border-yellow/60 hover:text-paper'
 					]}
 					onclick={() => (active = i)}
 					aria-pressed={i === active}
@@ -237,12 +262,6 @@
 </section>
 
 <style>
-	@keyframes spin {
-		to {
-			transform: rotate(360deg);
-		}
-	}
-
 	@keyframes phase-enter {
 		from {
 			opacity: 0;
@@ -252,119 +271,5 @@
 			opacity: 1;
 			transform: none;
 		}
-	}
-
-	section {
-		--phase-copy: #cfc4ad;
-	}
-
-	.phase p {
-		color: var(--phase-copy);
-	}
-
-	.loop-badge svg {
-		animation: spin 28s linear infinite;
-	}
-
-	.phase {
-		opacity: 0;
-		animation: phase-enter 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
-		animation-delay: calc(var(--i, 0) * 90ms);
-		transition:
-			transform 0.4s cubic-bezier(0.2, 0.7, 0.2, 1),
-			background 0.35s ease,
-			border-color 0.35s ease,
-			box-shadow 0.35s ease;
-	}
-
-	.phase:focus-visible {
-		outline: 0.125rem solid var(--yellow);
-		outline-offset: 0.125rem;
-	}
-
-	.phase:hover {
-		transform: translateY(-0.25rem);
-		background: rgba(255, 255, 255, 0.04);
-		border-color: rgba(255, 205, 103, 0.4);
-	}
-
-	.phase.is-active {
-		background: rgba(255, 205, 103, 0.06);
-		border-color: rgba(255, 205, 103, 0.55);
-		box-shadow:
-			0 1.875rem 3.75rem -1.875rem rgba(255, 205, 103, 0.25),
-			inset 0 0 0 0.0625rem rgba(255, 205, 103, 0.18);
-	}
-
-	.phase.is-done {
-		border-color: rgba(255, 255, 255, 0.18);
-	}
-
-	.phase-no {
-		display: inline-flex;
-		align-items: center;
-		gap: 0.5rem;
-	}
-
-	.phase-no::before {
-		content: '';
-		width: 0.5rem;
-		height: 0.5rem;
-		border-radius: 50%;
-		background: #3a3a3a;
-		transition:
-			background 0.35s ease,
-			box-shadow 0.35s ease;
-	}
-
-	.phase.is-active .phase-no {
-		color: var(--yellow);
-	}
-
-	.phase.is-active .phase-no::before {
-		background: var(--yellow);
-		box-shadow: 0 0 0 0.25rem rgba(255, 205, 103, 0.18);
-	}
-
-	.phase.is-done .phase-no::before {
-		background: var(--green);
-	}
-
-	.phase-fill {
-		height: 100%;
-		background: linear-gradient(90deg, var(--yellow), #ffd982);
-		box-shadow: 0 0 0.75rem rgba(255, 205, 103, 0.4);
-	}
-
-	.phase.is-done .phase-fill {
-		background: color-mix(in srgb, var(--green) 55%, transparent);
-		box-shadow: none;
-	}
-
-	.phase-gittree-label {
-		position: absolute;
-		left: 50%;
-		top: -0.125rem;
-		transform: translateX(-50%);
-		background: var(--ink);
-		padding: 0.1875rem 0.875rem;
-		font-family: var(--mono);
-		font-size: 0.6875rem;
-		letter-spacing: 0.04em;
-		color: #a8a08a;
-		display: inline-flex;
-		align-items: center;
-		gap: 0.375rem;
-		white-space: nowrap;
-	}
-
-	.phase-gittree-prompt {
-		color: var(--teal);
-	}
-
-	button.on {
-		background: var(--yellow);
-		color: var(--ink);
-		border-color: var(--yellow);
 	}
 </style>

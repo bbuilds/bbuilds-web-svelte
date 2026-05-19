@@ -143,13 +143,29 @@ export interface StoryblokHomePage {
 	hero_cta_text?: string;
 	seo?: StoryblokSEO[];
 	hero_cta_url?: Exclude<StoryblokMultilink, { linktype?: 'email' } | { linktype?: 'asset' }>;
+	process_eyebrow?: string;
+	process_copy?: string;
+	process_cards?: StoryblokProcessCards[];
 	component: 'Home Page';
 	_uid: string;
 }
 
 export interface StoryblokPage {
-	body?: (StoryblokHomePage | StoryblokPage | StoryblokSEO | StoryblokServicesTemplate)[];
+	body?: (
+		| StoryblokHomePage
+		| StoryblokPage
+		| StoryblokProcessCards
+		| StoryblokSEO
+		| StoryblokServicesTemplate
+	)[];
 	component: 'page';
+	_uid: string;
+}
+
+export interface StoryblokProcessCards {
+	title?: string;
+	copy?: string;
+	component: 'Process Cards';
 	_uid: string;
 }
 
