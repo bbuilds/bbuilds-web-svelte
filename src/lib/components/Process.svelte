@@ -20,8 +20,8 @@
 	let paused = $state(false);
 
 	$effect(() => {
+		if (paused || phases.length === 0) return;
 		const next = (active + 1) % phases.length;
-		if (paused) return;
 		const id = setTimeout(() => {
 			active = next;
 		}, DURATION);
