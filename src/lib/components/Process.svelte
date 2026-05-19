@@ -86,9 +86,6 @@
 						</textPath>
 					</text>
 				</svg>
-				<div class="mt-1.5 text-center font-mono text-[0.625rem] tracking-widest text-muted-dark">
-					↻ iterative
-				</div>
 			</div>
 		</header>
 
@@ -187,7 +184,7 @@
 						'hover:-translate-y-1 hover:border-yellow/40 hover:bg-white/4',
 						'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow focus-visible:outline-solid',
 						isActive &&
-							'border-yellow/55 bg-yellow/6 shadow-[0_1.875rem_3.75rem_-1.875rem_rgba(255,205,103,0.25),inset_0_0_0_0.0625rem_rgba(255,205,103,0.18)]',
+							'is-active border-yellow/55 bg-yellow/6 shadow-[0_1.875rem_3.75rem_-1.875rem_rgba(255,205,103,0.25),inset_0_0_0_0.0625rem_rgba(255,205,103,0.18)]',
 						isDone && 'border-white/18'
 					]}
 					style="--i: {i}; animation-delay: calc(var(--i) * 90ms)"
