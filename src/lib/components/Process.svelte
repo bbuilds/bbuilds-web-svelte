@@ -43,7 +43,7 @@
 					{content?.process_copy}
 				</p>
 			</div>
-			<div aria-hidden="true">
+			<div class="hidden md:block" aria-hidden="true">
 				<svg
 					class="animate-[spin_28s_linear_infinite]"
 					viewBox="0 0 80 80"
@@ -89,40 +89,51 @@
 			</div>
 		</header>
 
-		<div class="relative mb-1.5 hidden h-16 md:block" aria-hidden="true">
+		<div class="relative mb-1.5 hidden h-20 md:block" aria-hidden="true">
 			<svg
-				viewBox="0 0 1000 70"
+				viewBox="0 0 1000 80"
 				preserveAspectRatio="none"
 				style="width:100%;height:100%;display:block;overflow:visible"
 			>
-				<defs>
-					<marker id="gh" markerWidth="8" markerHeight="8" refX="5" refY="4" orient="auto">
-						<path
-							d="M0,1 L6,4 L0,7"
-							fill="none"
-							stroke="#ffcd67"
-							stroke-width="1.5"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-						/>
-					</marker>
-				</defs>
 				<line
-					x1="125"
-					y1="50"
-					x2="875"
-					y2="50"
-					stroke="rgba(255,255,255,0.18)"
-					stroke-width="1.5"
-				/>
-				<path
-					d="M 875 50 C 880 14, 920 8, 500 8 C 80 8, 120 14, 125 50"
-					fill="none"
+					x1="500"
+					y1="8"
+					x2="500"
+					y2="25"
 					stroke="#ffcd67"
 					stroke-width="1.5"
 					stroke-dasharray="5 5"
 					opacity="0.7"
-					marker-end="url(#gh)"
+				/>
+				<line
+					x1="125"
+					y1="25"
+					x2="875"
+					y2="25"
+					stroke="#ffcd67"
+					stroke-width="1.5"
+					stroke-dasharray="5 5"
+					opacity="0.7"
+				/>
+				{#each [125, 375, 625, 875] as x (x)}
+					<line
+						x1={x}
+						y1="25"
+						x2={x}
+						y2="55"
+						stroke="#ffcd67"
+						stroke-width="1.5"
+						stroke-dasharray="5 5"
+						opacity="0.7"
+					/>
+				{/each}
+				<line
+					x1="125"
+					y1="55"
+					x2="875"
+					y2="55"
+					stroke="rgba(255,255,255,0.18)"
+					stroke-width="1.5"
 				/>
 				{#each [125, 375, 625, 875] as x, i (x)}
 					{@const nodeActive = i === active}
@@ -130,15 +141,15 @@
 					<g>
 						<line
 							x1={x}
-							y1="50"
+							y1="55"
 							x2={x}
-							y2="70"
+							y2="80"
 							stroke="rgba(255,255,255,0.18)"
 							stroke-width="1.5"
 						/>
 						<circle
 							cx={x}
-							cy="50"
+							cy="55"
 							r="7"
 							fill="#1a1a1a"
 							style:stroke={nodeActive
@@ -149,19 +160,19 @@
 							stroke-width="1.5"
 						/>
 						{#if nodeActive}
-							<circle cx={x} cy="50" r="3.5" fill="#ffcd67" />
+							<circle cx={x} cy="55" r="3.5" fill="#ffcd67" />
 						{/if}
 						{#if nodeDone}
-							<circle cx={x} cy="50" r="3.5" style:fill="var(--green)" />
+							<circle cx={x} cy="55" r="3.5" style:fill="var(--green)" />
 						{/if}
 					</g>
 				{/each}
 			</svg>
 			<span
-				class="absolute -top-0.5 left-1/2 inline-flex -translate-x-1/2 items-center gap-1.5 bg-ink px-3.5 py-0.75 font-mono text-[0.6875rem] tracking-[0.04em] whitespace-nowrap text-[#a8a08a]"
+				class="absolute -top-3.5 left-1/2 inline-flex -translate-x-1/2 items-center gap-1.5 bg-ink px-3.5 py-0.75 font-mono text-[0.6875rem] tracking-[0.04em] whitespace-nowrap text-[#a8a08a]"
 			>
 				<span class="text-teal">$</span>
-				<span>npm run iterate --repeat</span>
+				<span>npm run branden:builds --repeat</span>
 			</span>
 		</div>
 
