@@ -22,7 +22,7 @@
 	});
 
 	const linkClass = (href: string) =>
-		`flex flex-1 items-center justify-center py-3 no-underline transition-colors duration-150 ${activeHref === href ? 'text-teal' : 'text-ink/45 hover:text-ink'}`;
+		`flex flex-1 items-center justify-center py-3 no-underline transition-colors duration-150 ${activeHref === href ? 'bg-paper-line text-ink' : 'text-ink/45 hover:text-ink'}`;
 </script>
 
 <svelte:window bind:scrollY />
