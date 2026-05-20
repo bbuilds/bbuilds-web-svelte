@@ -34,5 +34,9 @@ export const resolveMultilink = (
 		return { href };
 	}
 
+	if (link.linktype === 'email') {
+		return { href: `mailto:${link.email}` };
+	}
+
 	return undefined;
 };

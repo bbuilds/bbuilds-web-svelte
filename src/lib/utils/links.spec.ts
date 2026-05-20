@@ -101,4 +101,18 @@ describe('resolveMultilink', () => {
 			expect(resolveMultilink(urlLink())).toBeUndefined();
 		});
 	});
+
+	describe('email linktype', () => {
+		it('returns a mailto href from the email field', () => {
+			const link = {
+				fieldtype: 'multilink',
+				id: '',
+				url: 'hello@brandenbuilds.com',
+				cached_url: 'hello@brandenbuilds.com',
+				linktype: 'email',
+				email: 'hello@brandenbuilds.com'
+			} as Extract<StoryblokMultilink, { linktype: 'email' }>;
+			expect(resolveMultilink(link)).toEqual({ href: 'mailto:hello@brandenbuilds.com' });
+		});
+	});
 });

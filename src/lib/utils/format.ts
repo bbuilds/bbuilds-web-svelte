@@ -32,25 +32,25 @@ export const kickerTag = (post: Post): string => {
 	return 'Writing';
 };
 
-export type TitleSegment = { text: string; underline: boolean };
+export type TitleSegment = { text: string; underline: boolean; hand: boolean };
 
-const UN_TAG = /<un>([\s\S]*?)<\/un>/g;
+const TAG = /<(un|ha)>([\s\S]*?)<\/\1>/g;
 
 export const parseTitleSegments = (title: string | null | undefined): TitleSegment[] => {
 	if (!title) return [];
 	const segments: TitleSegment[] = [];
 	let lastIndex = 0;
 	let match: RegExpExecArray | null;
-	UN_TAG.lastIndex = 0;
-	while ((match = UN_TAG.exec(title)) !== null) {
+	TAG.lastIndex = 0;
+	while ((match = TAG.exec(title)) !== null) {
 		if (match.index > lastIndex) {
-			segments.push({ text: title.slice(lastIndex, match.index), underline: false });
+			segments.push({ text: title.slice(lastIndex, match.index), underline: false, hand: false });
 		}
-		segments.push({ text: match[1], underline: true });
+		segments.push({ text: match[2], underline: match[1] === 'un', hand: match[1] === 'ha' });
 		lastIndex = match.index + match[0].length;
 	}
 	if (lastIndex < title.length) {
-		segments.push({ text: title.slice(lastIndex), underline: false });
+		segments.push({ text: title.slice(lastIndex), underline: false, hand: false });
 	}
 	return segments;
 };

@@ -147,8 +147,17 @@ export interface StoryblokBlogPost {
 
 export interface StoryblokCTA {
 	label?: string;
-	link?: Exclude<StoryblokMultilink, { linktype?: 'email' } | { linktype?: 'asset' }>;
+	link?: Exclude<StoryblokMultilink, { linktype?: 'asset' }>;
 	component: 'CTA';
+	_uid: string;
+}
+
+export interface StoryblokGlobals {
+	contact_eyebrow?: string;
+	contact_title?: string;
+	contact_copy?: string;
+	contact_cta?: StoryblokCTA[];
+	component: 'Globals';
 	_uid: string;
 }
 
@@ -198,6 +207,7 @@ export interface StoryblokPage {
 		| StoryblokBlogIndex
 		| StoryblokBlogPost
 		| StoryblokCTA
+		| StoryblokGlobals
 		| StoryblokHero
 		| StoryblokHomePage
 		| StoryblokPage
@@ -242,6 +252,7 @@ export interface StoryblokServicesTemplate {
 export type ContentType =
 	| StoryblokBlogIndex
 	| StoryblokBlogPost
+	| StoryblokGlobals
 	| StoryblokHomePage
 	| StoryblokPage
 	| StoryblokServicesTemplate;

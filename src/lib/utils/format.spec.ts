@@ -119,45 +119,61 @@ describe('parseTitleSegments', () => {
 
 	it('returns a single non-underlined segment when no tags are present', () => {
 		expect(parseTitleSegments('Recent posts')).toEqual([
-			{ text: 'Recent posts', underline: false }
+			{ text: 'Recent posts', underline: false, hand: false }
 		]);
 	});
 
 	it('marks the wrapped word as underlined and preserves surrounding text', () => {
 		expect(parseTitleSegments('Recent <un>posts</un>')).toEqual([
-			{ text: 'Recent ', underline: false },
-			{ text: 'posts', underline: true }
+			{ text: 'Recent ', underline: false, hand: false },
+			{ text: 'posts', underline: true, hand: false }
 		]);
 	});
 
 	it('handles a tag at the start of the title', () => {
 		expect(parseTitleSegments('<un>Latest</un> writing')).toEqual([
-			{ text: 'Latest', underline: true },
-			{ text: ' writing', underline: false }
+			{ text: 'Latest', underline: true, hand: false },
+			{ text: ' writing', underline: false, hand: false }
 		]);
 	});
 
 	it('handles a tag in the middle of the title', () => {
 		expect(parseTitleSegments('Field <un>notes</un> from the road')).toEqual([
-			{ text: 'Field ', underline: false },
-			{ text: 'notes', underline: true },
-			{ text: ' from the road', underline: false }
+			{ text: 'Field ', underline: false, hand: false },
+			{ text: 'notes', underline: true, hand: false },
+			{ text: ' from the road', underline: false, hand: false }
 		]);
 	});
 
-	it('supports multiple tags in one title', () => {
+	it('supports multiple <un> tags in one title', () => {
 		expect(parseTitleSegments('<un>Field</un> notes from the <un>road</un>')).toEqual([
-			{ text: 'Field', underline: true },
-			{ text: ' notes from the ', underline: false },
-			{ text: 'road', underline: true }
+			{ text: 'Field', underline: true, hand: false },
+			{ text: ' notes from the ', underline: false, hand: false },
+			{ text: 'road', underline: true, hand: false }
 		]);
 	});
 
 	it('supports multi-word tag contents', () => {
 		expect(parseTitleSegments('Some <un>two words</un> here')).toEqual([
-			{ text: 'Some ', underline: false },
-			{ text: 'two words', underline: true },
-			{ text: ' here', underline: false }
+			{ text: 'Some ', underline: false, hand: false },
+			{ text: 'two words', underline: true, hand: false },
+			{ text: ' here', underline: false, hand: false }
+		]);
+	});
+
+	it('marks <ha> segments as hand and not underline', () => {
+		expect(parseTitleSegments('Welcome to <ha>focus.</ha>')).toEqual([
+			{ text: 'Welcome to ', underline: false, hand: false },
+			{ text: 'focus.', underline: false, hand: true }
+		]);
+	});
+
+	it('supports mixed <un> and <ha> tags', () => {
+		expect(parseTitleSegments('Bring your <un>vision</un> into <ha>focus.</ha>')).toEqual([
+			{ text: 'Bring your ', underline: false, hand: false },
+			{ text: 'vision', underline: true, hand: false },
+			{ text: ' into ', underline: false, hand: false },
+			{ text: 'focus.', underline: false, hand: true }
 		]);
 	});
 
