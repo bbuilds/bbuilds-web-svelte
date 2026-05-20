@@ -8,7 +8,7 @@
 </script>
 
 <nav
-	class="top-0 z-50 border-b border-black/10 bg-paper/80 backdrop-blur-md backdrop-saturate-150 md:sticky"
+	class="top-0 z-50 border-b border-black/[0.07] bg-paper/78 backdrop-blur-[0.625rem] backdrop-saturate-150 md:sticky"
 >
 	<div class="container flex items-center justify-between gap-6 py-3.5">
 		<a

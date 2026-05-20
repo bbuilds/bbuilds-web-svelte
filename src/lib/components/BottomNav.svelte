@@ -22,13 +22,13 @@
 	});
 
 	const linkClass = (href: string) =>
-		`flex flex-1 items-center justify-center py-3 no-underline transition-colors duration-150 ${activeHref === href ? 'text-teal' : 'text-ink/35 hover:text-ink'}`;
+		`flex flex-1 items-center justify-center py-3 no-underline transition-colors duration-150 ${activeHref === href ? 'text-teal' : 'text-ink/45 hover:text-ink'}`;
 </script>
 
 <svelte:window bind:scrollY />
 
 <nav
-	class="fixed right-0 bottom-0 left-0 z-50 flex items-center border-t border-paper-line bg-paper/85 backdrop-blur-md backdrop-saturate-150 md:hidden"
+	class="fixed right-0 bottom-0 left-0 z-50 flex items-center border-t border-paper-line bg-paper/85 backdrop-blur-[0.625rem] backdrop-saturate-150 md:hidden"
 	aria-label="Mobile navigation"
 >
 	<a href="/#services" aria-label="Services" class={linkClass('/#services')}>

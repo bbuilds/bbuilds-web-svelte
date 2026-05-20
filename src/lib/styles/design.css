@@ -67,7 +67,6 @@
 		color: var(--ink);
 		font-family: var(--sans);
 		-webkit-font-smoothing: antialiased;
-		overflow-x: hidden;
 	}
 
 	a {
