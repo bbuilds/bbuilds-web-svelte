@@ -99,7 +99,7 @@
 		</p>
 
 		<div class="mt-9 flex flex-wrap justify-center gap-3.5">
-			<Button href="mailto:hi@brandenbuilds.com" variant="primary">hi@brandenbuilds.com →</Button>
+			<Button href="mailto:hi@brandenbuilds.com" variant="primary">hi@brandenbuilds.com</Button>
 		</div>
 	</div>
 </section>

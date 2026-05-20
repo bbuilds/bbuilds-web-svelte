@@ -1,4 +1,7 @@
 <script lang="ts">
+	import type { StoryblokAsset } from '$lib/types/storyblok';
+	import { storyblokImageUrl, storyblokImageSrcset } from '$lib/utils/storyblokImage';
+
 	interface Props {
 		tag: string;
 		date: string;
@@ -7,17 +10,64 @@
 		blurb: string;
 		href: string;
 		index?: number;
+		image?: StoryblokAsset;
+		eager?: boolean;
 	}
 
-	let { tag, date, datetime, title, blurb, href, index = 0 }: Props = $props();
+	let {
+		tag,
+		date,
+		datetime,
+		title,
+		blurb,
+		href,
+		index = 0,
+		image,
+		eager = false
+	}: Props = $props();
 </script>
 
 <article
-	class="post-card relative flex flex-col overflow-hidden rounded-2xl border border-paper-line bg-white/40 transition-[transform,box-shadow,border-color] duration-350 hover:-translate-y-1.5 hover:border-ink hover:shadow-[0_1.5rem_3rem_-1.5rem_rgba(0,0,0,0.25)]"
+	class="post-card group relative flex flex-col overflow-hidden rounded-2xl border border-paper-line bg-white/40 transition-[transform,box-shadow,border-color] duration-350 hover:-translate-y-1.5 hover:border-ink hover:shadow-[0_1.5rem_3rem_-1.5rem_rgba(0,0,0,0.25)]"
 	style="--i: {index}"
 >
 	<header class="flex flex-col">
-		<div class="aspect-video overflow-hidden bg-ink"></div>
+		<div class="relative aspect-video overflow-hidden bg-ink">
+			{#if image?.filename}
+				<img
+					src={storyblokImageUrl(image.filename, { width: 800, height: 450 })}
+					srcset={storyblokImageSrcset(image.filename, [400, 600, 800, 1200], {
+						aspectRatio: 16 / 9
+					})}
+					sizes="(min-width: 64rem) 33vw, (min-width: 48rem) 50vw, 100vw"
+					alt={image.alt ?? ''}
+					width={image.width ?? undefined}
+					height={image.height ?? undefined}
+					loading={eager ? 'eager' : 'lazy'}
+					decoding="async"
+					{...eager ? { fetchpriority: 'high' } : {}}
+					class="h-full w-full object-cover"
+				/>
+				<div
+					class="pointer-events-none absolute inset-0 bg-black opacity-30 transition-opacity duration-300 group-hover:opacity-100"
+				></div>
+				<div
+					class="pointer-events-none absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+				>
+					<svg
+						aria-hidden="true"
+						class="h-10 w-10 text-white"
+						xmlns="http://www.w3.org/2000/svg"
+						viewBox="0 0 512 512"
+					>
+						<path
+							fill="currentColor"
+							d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"
+						></path>
+					</svg>
+				</div>
+			{/if}
+		</div>
 		<h3 class="px-5 pt-5 text-xl leading-tight font-semibold tracking-[-0.015em] text-ink">
 			<a
 				{href}
@@ -31,11 +81,15 @@
 	<p class="mt-2.5 mb-0 flex-1 px-5 font-mono text-xs leading-[1.65] text-body">{blurb}</p>
 
 	<footer class="mt-2.5 flex items-center gap-2 px-5 pb-6 font-mono text-[0.6875rem] text-muted">
-		<span
-			class="rounded-full bg-yellow/10 px-2 py-0.5 font-semibold tracking-[0.04em] text-yellow uppercase"
-			>{tag}</span
-		>
-		<time {datetime} class="tracking-[0.04em]">{date}</time>
+		{#if tag}
+			<span
+				class="rounded-full bg-yellow/10 px-2 py-0.5 font-semibold tracking-[0.04em] text-yellow uppercase"
+				>{tag}</span
+			>
+		{/if}
+		{#if date}
+			<time {datetime} class="tracking-[0.04em]">{date}</time>
+		{/if}
 	</footer>
 </article>
 

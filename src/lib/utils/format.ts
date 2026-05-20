@@ -31,3 +31,26 @@ export const kickerTag = (post: Post): string => {
 	if (post.tag_list.length > 0) return post.tag_list[0];
 	return 'Writing';
 };
+
+export type TitleSegment = { text: string; underline: boolean };
+
+const UN_TAG = /<un>([\s\S]*?)<\/un>/g;
+
+export const parseTitleSegments = (title: string | null | undefined): TitleSegment[] => {
+	if (!title) return [];
+	const segments: TitleSegment[] = [];
+	let lastIndex = 0;
+	let match: RegExpExecArray | null;
+	UN_TAG.lastIndex = 0;
+	while ((match = UN_TAG.exec(title)) !== null) {
+		if (match.index > lastIndex) {
+			segments.push({ text: title.slice(lastIndex, match.index), underline: false });
+		}
+		segments.push({ text: match[1], underline: true });
+		lastIndex = match.index + match[0].length;
+	}
+	if (lastIndex < title.length) {
+		segments.push({ text: title.slice(lastIndex), underline: false });
+	}
+	return segments;
+};

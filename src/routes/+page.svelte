@@ -5,15 +5,14 @@
 	import Quote from '$lib/components/Quote.svelte';
 	import Blog from '$lib/components/Blog.svelte';
 	import Contact from '$lib/components/Contact.svelte';
-	import type { StoryblokHomePage } from '$lib/types/storyblok';
 
 	let { data } = $props();
-	const content = $derived(data.story?.content as StoryblokHomePage | undefined);
+	const content = $derived(data.story?.content);
 </script>
 
 <Hero {content} />
 <Services {content} />
 <Process {content} />
 <Quote />
-<Blog />
+<Blog {content} posts={data.posts} />
 <Contact />
