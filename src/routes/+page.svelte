@@ -4,7 +4,6 @@
 	import Process from '$lib/components/Process.svelte';
 	import Quote from '$lib/components/Quote.svelte';
 	import Blog from '$lib/components/Blog.svelte';
-	import Contact from '$lib/components/Contact.svelte';
 
 	let { data } = $props();
 	const content = $derived(data.story?.content);
@@ -15,4 +14,3 @@
 <Process {content} />
 <Quote />
 <Blog {content} posts={data.posts} />
-<Contact />

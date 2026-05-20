@@ -4,7 +4,8 @@
 	import Header from '$lib/components/Header.svelte';
 	import Footer from '$lib/components/Footer.svelte';
 	import BottomNav from '$lib/components/BottomNav.svelte';
-	let { children } = $props();
+	import Contact from '$lib/components/Contact.svelte';
+	let { children, data } = $props();
 </script>
 
 <svelte:head>
@@ -19,5 +20,6 @@
 
 <Header />
 {@render children()}
+<Contact content={data.globals?.content} />
 <Footer />
 <BottomNav />
