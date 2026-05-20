@@ -154,8 +154,10 @@ export interface StoryblokCTA {
 
 export interface StoryblokHero {
 	title?: string;
+	tagline?: string;
 	copy?: string;
 	CTA?: StoryblokCTA[];
+	image?: StoryblokAsset;
 	component: 'Hero';
 	_uid: string;
 }
@@ -229,7 +231,7 @@ export interface StoryblokSEO {
 }
 
 export interface StoryblokServicesTemplate {
-	hero?: StoryblokCTA[];
+	hero?: StoryblokHero[];
 	page_content?: StoryblokRichtext;
 	card_title?: string;
 	card_list_items?: StoryblokRichtext;
