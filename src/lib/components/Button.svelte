@@ -54,10 +54,12 @@
 {#if href}
 	<a {href} {target} {rel} class={classes} aria-disabled={disabled || undefined} {onclick}>
 		<span class="btn-inner">{@render children()}</span>
+		<span class="btn-arrow" aria-hidden="true">→</span>
 	</a>
 {:else}
 	<button {type} {onclick} {disabled} class={classes}>
 		<span class="btn-inner">{@render children()}</span>
+		<span class="btn-arrow" aria-hidden="true">→</span>
 	</button>
 {/if}
 
@@ -83,6 +85,17 @@
 		position: relative;
 		z-index: 1;
 		mix-blend-mode: difference;
+	}
+
+	.btn-arrow {
+		position: relative;
+		z-index: 1;
+		mix-blend-mode: difference;
+		transition: transform 0.2s ease;
+	}
+
+	.btn:hover .btn-arrow {
+		transform: translateX(0.25rem);
 	}
 
 	/* Primary: ink overlay covers the button, slides away on hover to reveal paper bg */

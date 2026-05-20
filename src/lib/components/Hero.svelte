@@ -27,7 +27,7 @@
 		content?.hero_copy ??
 			'I turn ambitious ideas into high-performance digital reality. I bridge creative discovery and hardened engineering with intelligent workflows and "nerdy" UX. Precise engineering meets high-fidelity design. Always clean, always sexy.'
 	);
-	const ctaText = $derived(content?.hero_cta_text ?? 'start a project →');
+	const ctaText = $derived(content?.hero_cta_text ?? 'start a project');
 	const cta = $derived(resolveMultilink(content?.hero_cta_url));
 
 	const SNAKE_ROWS = [

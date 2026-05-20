@@ -16,6 +16,11 @@
 	const title = $derived(content?.blog_title);
 	const copy = $derived(content?.blog_copy);
 
+	const titleWords = $derived(title ? title.split(' ') : []);
+	const titleFirst = $derived(titleWords.slice(0, 1).join(''));
+	const titleSecond = $derived(titleWords[1] ?? '');
+	const titleRest = $derived(titleWords.slice(2).join(' '));
+
 	const cta = $derived(content?.CTA?.[0]);
 	const ctaLink = $derived(resolveMultilink(cta?.link));
 
@@ -31,7 +36,8 @@
 					date: published ? formatDate(published) : '',
 					title: story.name ?? '',
 					blurb: story.content?.summary ?? '',
-					href: `/${story.slug}`
+					href: `/${story.slug}`,
+					image: story.content?.featured_image
 				};
 			})
 	);
@@ -50,19 +56,23 @@
 				{/if}
 				{#if title}
 					<h2 class="mt-2">
-						<span class="scribble">
-							{title}
-							<svg viewBox="0 0 200 14" preserveAspectRatio="none" aria-hidden="true">
-								<path
-									d="M2 9 C 40 2, 80 12, 120 6 S 180 10, 198 5"
-									stroke="var(--yellow)"
-									stroke-width="4"
-									fill="none"
-									stroke-linecap="round"
-									opacity="0.9"
-								/>
-							</svg>
-						</span>
+						{titleFirst}
+						{#if titleSecond}
+							<span class="scribble">
+								{titleSecond}
+								<svg viewBox="0 0 200 14" preserveAspectRatio="none" aria-hidden="true">
+									<path
+										d="M2 9 C 40 2, 80 12, 120 6 S 180 10, 198 5"
+										stroke="var(--yellow)"
+										stroke-width="4"
+										fill="none"
+										stroke-linecap="round"
+										opacity="0.9"
+									/>
+								</svg>
+							</span>
+						{/if}
+						{#if titleRest}{titleRest}{/if}
 					</h2>
 				{/if}
 				{#if copy}
@@ -73,7 +83,7 @@
 			</div>
 			{#if ctaLink}
 				<Button href={ctaLink.href} target={ctaLink.target} rel={ctaLink.rel} variant="primary">
-					{cta?.label ?? 'view all posts →'}
+					{cta?.label ?? 'view all posts'}
 				</Button>
 			{/if}
 		</header>
@@ -88,6 +98,8 @@
 					blurb={c.blurb}
 					href={c.href}
 					index={i}
+					image={c.image}
+					eager={i === 0}
 				/>
 			{/each}
 		</div>
