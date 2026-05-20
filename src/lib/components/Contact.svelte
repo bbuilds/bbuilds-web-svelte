@@ -1,5 +1,17 @@
 <script lang="ts">
 	import Button from '$lib/components/Button.svelte';
+	import { parseTitleSegments } from '$lib/utils/format';
+	import { resolveMultilink } from '$lib/utils/links';
+	import type { StoryblokGlobals } from '$lib/types/storyblok';
+
+	interface Props {
+		content?: StoryblokGlobals;
+	}
+	let { content }: Props = $props();
+
+	const titleSegments = $derived(parseTitleSegments(content?.contact_title));
+	const cta = $derived(content?.contact_cta?.[0]);
+	const ctaLink = $derived(resolveMultilink(cta?.link));
 
 	const PLANTS = [
 		{ side: 'left', offset: '6%', mobile: true },
@@ -56,53 +68,65 @@
 	</svg>
 {/snippet}
 
-<section id="contact" class="paper-bg relative overflow-hidden pt-22 pb-20 text-center">
-	{#each PLANTS as p, i (i)}
-		<div
-			aria-hidden="true"
-			class="plant plant-{i} pointer-events-none absolute {p.mobile
-				? 'opacity-25 md:opacity-70'
-				: 'hidden md:block md:opacity-70'}"
-			style="bottom: -1.25rem; {p.side}: {p.offset}; transform-origin: bottom center;"
-		>
-			<div class="plant-sway plant-sway-{i}" style="transform-origin: bottom center;">
-				{@render sprout()}
-			</div>
-		</div>
-	{/each}
-
-	<div class="container">
-		<div
-			class="font-mono text-sm tracking-wider text-muted uppercase before:mr-2 before:text-yellow before:content-['●']"
-		>
-			// 06.contact
-		</div>
-
-		<h2 class="mx-auto mt-4 max-w-250">
-			Got a <span class="scribble"
-				>vibe<svg viewBox="0 0 200 22" preserveAspectRatio="none" aria-hidden="true">
-					<path
-						d="M2 14 C 40 4, 80 20, 120 10 S 180 16, 198 8"
-						stroke="var(--yellow)"
-						stroke-width="8"
-						fill="none"
-						stroke-linecap="round"
-					/>
-				</svg></span
+{#if content}
+	<section id="contact" class="paper-bg relative overflow-hidden pt-22 pb-20 text-center">
+		{#each PLANTS as p, i (i)}
+			<div
+				aria-hidden="true"
+				class="plant plant-{i} pointer-events-none absolute {p.mobile
+					? 'opacity-25 md:opacity-70'
+					: 'hidden md:block md:opacity-70'}"
+				style="bottom: -1.25rem; {p.side}: {p.offset}; transform-origin: bottom center;"
 			>
-			that needs <span class="font-hand font-bold text-charcoal">hardening</span>?
-		</h2>
+				<div class="plant-sway plant-sway-{i}" style="transform-origin: bottom center;">
+					{@render sprout()}
+				</div>
+			</div>
+		{/each}
 
-		<p class="mx-auto mt-6 max-w-155 font-mono text-sm leading-[1.7] text-body">
-			Drop me the prototype, the deck, the cocktail-napkin sketch. I'll respond within one business
-			day with the brutally honest read.
-		</p>
+		<div class="container">
+			<div
+				class="font-mono text-sm tracking-wider text-muted uppercase before:mr-2 before:text-yellow before:content-['●']"
+			>
+				{content.contact_eyebrow}
+			</div>
 
-		<div class="mt-9 flex flex-wrap justify-center gap-3.5">
-			<Button href="mailto:hi@brandenbuilds.com" variant="primary">hi@brandenbuilds.com</Button>
+			<h2 class="mx-auto mt-4 max-w-250">
+				{#each titleSegments as seg, i (i)}
+					{#if seg.underline}
+						<span class="scribble"
+							>{seg.text}<svg viewBox="0 0 200 22" preserveAspectRatio="none" aria-hidden="true">
+								<path
+									d="M2 14 C 40 4, 80 20, 120 10 S 180 16, 198 8"
+									stroke="var(--yellow)"
+									stroke-width="8"
+									fill="none"
+									stroke-linecap="round"
+								/>
+							</svg></span
+						>
+					{:else if seg.hand}
+						<span class="font-hand font-bold text-charcoal">{seg.text}</span>
+					{:else}
+						{seg.text}
+					{/if}
+				{/each}
+			</h2>
+
+			{#if content.contact_copy}
+				<p class="mx-auto mt-6 max-w-155 font-mono text-sm leading-[1.7] text-body">
+					{content.contact_copy}
+				</p>
+			{/if}
+
+			{#if cta && ctaLink}
+				<div class="mt-9 flex flex-wrap justify-center gap-3.5">
+					<Button href={ctaLink.href}>{cta.label}</Button>
+				</div>
+			{/if}
 		</div>
-	</div>
-</section>
+	</section>
+{/if}
 
 <style>
 	.plant-0 {
