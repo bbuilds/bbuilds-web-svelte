@@ -13,7 +13,7 @@ export const load: PageLoad = async ({ parent }) => {
 		const story: ISbStoryData<StoryblokHomePage> | undefined = response.data.story;
 		const block = story?.content?.articles?.[0];
 		const explicit = (block?.articles ?? []).filter(
-			(a): a is ISbStoryData<StoryblokBlogPost> => typeof a !== 'string' && a !== null
+			(a): a is ISbStoryData<StoryblokBlogPost> => typeof a !== 'string'
 		);
 
 		let posts: ISbStoryData<StoryblokBlogPost>[] = explicit.slice(0, 3);
