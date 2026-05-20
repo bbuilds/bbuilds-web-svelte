@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { ISbStoryData } from '@storyblok/js';
 	import type { StoryblokHomePage, StoryblokBlogPost } from '$lib/types/storyblok';
-	import { formatDate } from '$lib/utils/format';
+	import { formatDate, parseTitleSegments } from '$lib/utils/format';
 	import { resolveMultilink } from '$lib/utils/links';
 	import Button from '$lib/components/Button.svelte';
 	import PostCard from '$lib/components/PostCard.svelte';
@@ -16,10 +16,7 @@
 	const title = $derived(content?.blog_title);
 	const copy = $derived(content?.blog_copy);
 
-	const titleWords = $derived(title ? title.split(' ') : []);
-	const titleFirst = $derived(titleWords.slice(0, 1).join(''));
-	const titleSecond = $derived(titleWords[1] ?? '');
-	const titleRest = $derived(titleWords.slice(2).join(' '));
+	const titleSegments = $derived(parseTitleSegments(title));
 
 	const cta = $derived(content?.CTA?.[0]);
 	const ctaLink = $derived(resolveMultilink(cta?.link));
@@ -54,25 +51,27 @@
 						// {eyebrow}
 					</div>
 				{/if}
-				{#if title}
+				{#if titleSegments.length}
 					<h2 class="mt-2">
-						{titleFirst}
-						{#if titleSecond}
-							<span class="scribble">
-								{titleSecond}
-								<svg viewBox="0 0 200 14" preserveAspectRatio="none" aria-hidden="true">
-									<path
-										d="M2 9 C 40 2, 80 12, 120 6 S 180 10, 198 5"
-										stroke="var(--yellow)"
-										stroke-width="4"
-										fill="none"
-										stroke-linecap="round"
-										opacity="0.9"
-									/>
-								</svg>
-							</span>
-						{/if}
-						{#if titleRest}{titleRest}{/if}
+						{#each titleSegments as seg, i (i)}
+							{#if seg.underline}
+								<span class="scribble">
+									{seg.text}
+									<svg viewBox="0 0 200 14" preserveAspectRatio="none" aria-hidden="true">
+										<path
+											d="M2 9 C 40 2, 80 12, 120 6 S 180 10, 198 5"
+											stroke="var(--yellow)"
+											stroke-width="4"
+											fill="none"
+											stroke-linecap="round"
+											opacity="0.9"
+										/>
+									</svg>
+								</span>
+							{:else}
+								{seg.text}
+							{/if}
+						{/each}
 					</h2>
 				{/if}
 				{#if copy}

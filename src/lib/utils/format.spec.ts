@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Post, RichTextDoc } from '$lib/types/post';
-import { formatDate, kickerTag, readTime, wordCount } from './format';
+import { formatDate, kickerTag, parseTitleSegments, readTime, wordCount } from './format';
 
 const doc = (...texts: string[]): RichTextDoc => ({
 	type: 'doc',
@@ -107,5 +107,62 @@ describe('kickerTag', () => {
 
 	it('returns "Writing" when both Category and tag_list are empty', () => {
 		expect(kickerTag(post())).toBe('Writing');
+	});
+});
+
+describe('parseTitleSegments', () => {
+	it('returns an empty array for empty/nullish input', () => {
+		expect(parseTitleSegments('')).toEqual([]);
+		expect(parseTitleSegments(null)).toEqual([]);
+		expect(parseTitleSegments(undefined)).toEqual([]);
+	});
+
+	it('returns a single non-underlined segment when no tags are present', () => {
+		expect(parseTitleSegments('Recent posts')).toEqual([
+			{ text: 'Recent posts', underline: false }
+		]);
+	});
+
+	it('marks the wrapped word as underlined and preserves surrounding text', () => {
+		expect(parseTitleSegments('Recent <un>posts</un>')).toEqual([
+			{ text: 'Recent ', underline: false },
+			{ text: 'posts', underline: true }
+		]);
+	});
+
+	it('handles a tag at the start of the title', () => {
+		expect(parseTitleSegments('<un>Latest</un> writing')).toEqual([
+			{ text: 'Latest', underline: true },
+			{ text: ' writing', underline: false }
+		]);
+	});
+
+	it('handles a tag in the middle of the title', () => {
+		expect(parseTitleSegments('Field <un>notes</un> from the road')).toEqual([
+			{ text: 'Field ', underline: false },
+			{ text: 'notes', underline: true },
+			{ text: ' from the road', underline: false }
+		]);
+	});
+
+	it('supports multiple tags in one title', () => {
+		expect(parseTitleSegments('<un>Field</un> notes from the <un>road</un>')).toEqual([
+			{ text: 'Field', underline: true },
+			{ text: ' notes from the ', underline: false },
+			{ text: 'road', underline: true }
+		]);
+	});
+
+	it('supports multi-word tag contents', () => {
+		expect(parseTitleSegments('Some <un>two words</un> here')).toEqual([
+			{ text: 'Some ', underline: false },
+			{ text: 'two words', underline: true },
+			{ text: ' here', underline: false }
+		]);
+	});
+
+	it('is stateless across repeated calls (regex lastIndex reset)', () => {
+		const input = '<un>A</un> b';
+		expect(parseTitleSegments(input)).toEqual(parseTitleSegments(input));
 	});
 });
