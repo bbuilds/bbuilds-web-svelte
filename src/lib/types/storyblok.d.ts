@@ -124,7 +124,16 @@ export interface StoryblokRichtext {
 	text?: string;
 }
 
-import type { StoryblokRichtext, StoryblokAsset, StoryblokMultilink } from '../storyblok.d.ts';
+import type { StoryblokAsset, StoryblokRichtext, StoryblokMultilink } from '../storyblok.d.ts';
+export interface StoryblokBlogPost {
+	featured_image?: StoryblokAsset;
+	summary?: string;
+	Category?: (number | string)[];
+	content?: StoryblokRichtext;
+	component: 'Blog Post';
+	_uid: string;
+}
+
 export interface StoryblokHomePage {
 	services_section_eyebrow?: string;
 	services_section_title?: string;
@@ -152,6 +161,7 @@ export interface StoryblokHomePage {
 
 export interface StoryblokPage {
 	body?: (
+		| StoryblokBlogPost
 		| StoryblokHomePage
 		| StoryblokPage
 		| StoryblokProcessCards
@@ -193,4 +203,8 @@ export interface StoryblokServicesTemplate {
 	_uid: string;
 }
 
-export type ContentType = StoryblokHomePage | StoryblokPage | StoryblokServicesTemplate;
+export type ContentType =
+	| StoryblokBlogPost
+	| StoryblokHomePage
+	| StoryblokPage
+	| StoryblokServicesTemplate;
