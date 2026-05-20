@@ -124,7 +124,18 @@ export interface StoryblokRichtext {
 	text?: string;
 }
 
-import type { StoryblokAsset, StoryblokRichtext, StoryblokMultilink } from '../storyblok.d.ts';
+import type { StoryblokMultilink, StoryblokAsset, StoryblokRichtext } from '../storyblok.d.ts';
+export interface StoryblokArticleCards {
+	articles?: (ISbStoryData<StoryblokBlogPost> | string)[];
+	component: 'Article Cards';
+	_uid: string;
+}
+
+export interface StoryblokBlogIndex {
+	component: 'Blog Index';
+	_uid: string;
+}
+
 export interface StoryblokBlogPost {
 	featured_image?: StoryblokAsset;
 	summary?: string;
@@ -134,7 +145,24 @@ export interface StoryblokBlogPost {
 	_uid: string;
 }
 
+export interface StoryblokCTA {
+	label?: string;
+	link?: Exclude<StoryblokMultilink, { linktype?: 'email' } | { linktype?: 'asset' }>;
+	component: 'CTA';
+	_uid: string;
+}
+
+export interface StoryblokHero {
+	title?: string;
+	copy?: string;
+	CTA?: StoryblokCTA[];
+	component: 'Hero';
+	_uid: string;
+}
+
 export interface StoryblokHomePage {
+	blog_eyebrow?: string;
+	blog_title?: string;
 	services_section_eyebrow?: string;
 	services_section_title?: string;
 	services_section_copy?: string;
@@ -155,13 +183,20 @@ export interface StoryblokHomePage {
 	process_eyebrow?: string;
 	process_copy?: string;
 	process_cards?: StoryblokProcessCards[];
+	blog_copy?: string;
+	articles?: StoryblokArticleCards[];
+	CTA?: StoryblokCTA[];
 	component: 'Home Page';
 	_uid: string;
 }
 
 export interface StoryblokPage {
 	body?: (
+		| StoryblokArticleCards
+		| StoryblokBlogIndex
 		| StoryblokBlogPost
+		| StoryblokCTA
+		| StoryblokHero
 		| StoryblokHomePage
 		| StoryblokPage
 		| StoryblokProcessCards
@@ -194,8 +229,7 @@ export interface StoryblokSEO {
 }
 
 export interface StoryblokServicesTemplate {
-	hero_title?: string;
-	hero_copy?: string;
+	hero?: StoryblokCTA[];
 	page_content?: StoryblokRichtext;
 	card_title?: string;
 	card_list_items?: StoryblokRichtext;
@@ -204,6 +238,7 @@ export interface StoryblokServicesTemplate {
 }
 
 export type ContentType =
+	| StoryblokBlogIndex
 	| StoryblokBlogPost
 	| StoryblokHomePage
 	| StoryblokPage
