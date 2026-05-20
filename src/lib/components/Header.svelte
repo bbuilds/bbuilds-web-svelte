@@ -37,7 +37,7 @@
 			{#each navItems as item (item.href)}
 				<a
 					href={item.href}
-					class="relative px-0.5 py-1.5 text-ink no-underline after:absolute after:right-full after:bottom-[-0.125rem] after:left-0 after:h-0.5 after:bg-ink after:transition-[right] after:duration-200 after:content-[''] hover:after:right-0"
+					class="relative px-0.5 py-1.5 text-ink no-underline after:absolute after:right-full after:-bottom-0.5 after:left-0 after:h-0.5 after:bg-ink after:transition-[right] after:duration-200 after:content-[''] hover:after:right-0"
 				>
 					{item.title}
 				</a>
@@ -55,7 +55,7 @@
 			</span>
 			<a
 				href="/#contact"
-				class="relative px-0.5 py-1.5 text-ink no-underline after:absolute after:right-full after:bottom-[-0.125rem] after:left-0 after:h-0.5 after:bg-ink after:transition-[right] after:duration-200 after:content-[''] hover:after:right-0"
+				class="relative px-0.5 py-1.5 text-ink no-underline after:absolute after:right-full after:-bottom-0.5 after:left-0 after:h-0.5 after:bg-ink after:transition-[right] after:duration-200 after:content-[''] hover:after:right-0"
 				>contact</a
 			>
 		</div>

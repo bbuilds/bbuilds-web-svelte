@@ -19,7 +19,7 @@
 	aria-label="Article sidebar"
 >
 	<div class="mb-3 font-mono text-[0.625rem] tracking-[0.1em] text-muted uppercase">share</div>
-	<div class="flex flex-col gap-1.5">
+	<div class="flex flex-col gap-1.75">
 		<ShareButtons {title} variant="sidebar" />
 	</div>
 

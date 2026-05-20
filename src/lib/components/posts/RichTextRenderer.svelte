@@ -32,12 +32,14 @@
 
 {#each list as node, i (i)}
 	{#if node.type === 'paragraph'}
-		<p class="mb-[1.375rem] font-sans text-[1.0625rem] leading-[1.78] text-pretty text-body">
+		<p
+			class="mb-[1.375rem] font-sans text-base leading-[1.78] text-pretty text-body md:text-[1.0625rem]"
+		>
 			<RichTextRenderer nodes={node.content ?? []} />
 		</p>
 	{:else if node.type === 'heading' && headingLevel(node) === 2}
 		<h2
-			class="mt-12 mb-4 inline-block border-b-2 border-[#ffcd67] pb-2 text-2xl font-bold tracking-[-0.025em] text-ink md:text-3xl"
+			class="mt-12 mb-4 inline-block border-b-2 border-[#ffcd67] pb-2 text-[1.25rem] font-bold tracking-tight text-ink md:text-[clamp(1.375rem,2.4vw,1.875rem)]"
 		>
 			<RichTextRenderer nodes={node.content ?? []} />
 		</h2>
@@ -46,17 +48,17 @@
 			<RichTextRenderer nodes={node.content ?? []} />
 		</h3>
 	{:else if node.type === 'bullet_list'}
-		<ul class="mb-[1.375rem] flex flex-col gap-2">
+		<ul class="mb-5.5 flex flex-col gap-2">
 			{#each node.content ?? [] as item, j (j)}
 				<li
-					class="relative pl-[1.375rem] font-sans text-base leading-[1.72] text-body before:absolute before:top-0.5 before:left-0 before:font-mono before:text-[0.875rem] before:text-yellow before:content-['—']"
+					class="relative pl-5.5 font-sans text-base leading-[1.72] text-body before:absolute before:top-0.5 before:left-0 before:font-mono before:text-[0.875rem] before:text-yellow before:content-['—']"
 				>
 					<RichTextRenderer nodes={listItemNodes(item)} />
 				</li>
 			{/each}
 		</ul>
 	{:else if node.type === 'ordered_list'}
-		<ol class="mb-[1.375rem] flex list-decimal flex-col gap-2 pl-[1.375rem]">
+		<ol class="mb-5.5 flex list-decimal flex-col gap-2 pl-5.5">
 			{#each node.content ?? [] as item, j (j)}
 				<li class="font-sans text-base leading-[1.72] text-body">
 					<RichTextRenderer nodes={listItemNodes(item)} />
@@ -69,7 +71,7 @@
 			data-language={node.attrs?.language as string | undefined}><code>{codeText(node)}</code></pre>
 	{:else if node.type === 'blockquote'}
 		<blockquote
-			class="my-8 rounded-r-lg border-l-[3px] border-[#ffcd67] bg-yellow/5 px-6 py-[1.125rem] font-mono text-[0.9375rem] leading-[1.65] text-body italic"
+			class="my-8 rounded-r-lg border-l-[3px] border-[#ffcd67] bg-yellow/5 px-6 py-4.5 font-mono text-[0.9375rem] leading-[1.65] text-body italic"
 		>
 			<RichTextRenderer nodes={node.content ?? []} />
 		</blockquote>

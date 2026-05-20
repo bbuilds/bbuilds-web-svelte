@@ -13,16 +13,16 @@
 	let { name, kicker, dateDisplay, datetime, readTime, topics }: Props = $props();
 </script>
 
-<header class="paper-bg relative border-b border-paper-line pt-14 pb-11">
+<header class="paper-bg relative border-b border-paper-line pt-8 pb-7 md:pt-14 md:pb-11">
 	<div class="container">
 		<nav
 			class="mb-7 flex flex-wrap items-center gap-2 font-mono text-[0.6875rem] tracking-[0.06em] text-muted uppercase"
 			aria-label="Breadcrumb"
 		>
 			<a href="/" class="no-underline transition-colors hover:text-ink">Home</a>
-			<span class="opacity-35">›</span>
+			<span class="opacity-35">></span>
 			<a href="/#blog" class="no-underline transition-colors hover:text-ink">Blog</a>
-			<span class="opacity-35">›</span>
+			<span class="opacity-35">></span>
 			<span class="text-charcoal">{name}</span>
 		</nav>
 
@@ -39,7 +39,7 @@
 		</div>
 
 		<h1
-			class="mt-2.5 max-w-[34rem] text-[clamp(2rem,5vw,3.75rem)] leading-[1.06] font-bold tracking-[-0.03em] text-ink"
+			class="mt-2.5 max-w-136 text-[clamp(2rem,5vw,3.75rem)] leading-[1.06] font-bold tracking-[-0.03em] text-ink"
 		>
 			{name}
 		</h1>

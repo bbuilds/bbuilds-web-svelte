@@ -33,12 +33,12 @@
 />
 
 <div
-	class="post-wrap mx-auto grid max-w-[88rem] grid-cols-1 px-6 lg:grid-cols-[13.5rem_1fr] lg:gap-x-16 lg:px-10"
+	class="post-wrap mx-auto grid max-w-352 grid-cols-1 px-4.5 md:px-8 lg:grid-cols-[13.5rem_1fr] lg:items-start lg:gap-x-16 lg:px-10"
 >
 	<PostSidebar title={post.name} />
 
-	<article class="min-w-0 pt-11 pb-16">
-		<div class="relative mb-11 aspect-[16/7] overflow-hidden rounded-2xl border border-paper-line">
+	<article class="min-w-0 pt-8 pb-12 md:pt-11 md:pb-16">
+		<div class="relative mb-11 aspect-16/7 overflow-hidden rounded-2xl border border-paper-line">
 			<img
 				src={hero.filename}
 				alt={hero.alt ?? post.name}
@@ -46,7 +46,7 @@
 			/>
 		</div>
 
-		<div class="post-body max-w-[46rem]">
+		<div class="post-body max-w-184">
 			<RichTextRenderer doc={post.content.content} />
 			<NextPostCard />
 		</div>
@@ -55,8 +55,13 @@
 
 <style>
 	.post-body :global(> p:first-of-type) {
-		font-size: 1.125rem;
+		font-size: 1.0625rem;
 		line-height: 1.72;
 		color: var(--ink-soft);
+	}
+	@media (min-width: 48rem) {
+		.post-body :global(> p:first-of-type) {
+			font-size: 1.125rem;
+		}
 	}
 </style>
