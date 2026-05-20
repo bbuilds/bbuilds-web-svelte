@@ -81,11 +81,15 @@
 	<p class="mt-2.5 mb-0 flex-1 px-5 font-mono text-xs leading-[1.65] text-body">{blurb}</p>
 
 	<footer class="mt-2.5 flex items-center gap-2 px-5 pb-6 font-mono text-[0.6875rem] text-muted">
-		<span
-			class="rounded-full bg-yellow/10 px-2 py-0.5 font-semibold tracking-[0.04em] text-yellow uppercase"
-			>{tag}</span
-		>
-		<time {datetime} class="tracking-[0.04em]">{date}</time>
+		{#if tag}
+			<span
+				class="rounded-full bg-yellow/10 px-2 py-0.5 font-semibold tracking-[0.04em] text-yellow uppercase"
+				>{tag}</span
+			>
+		{/if}
+		{#if date}
+			<time {datetime} class="tracking-[0.04em]">{date}</time>
+		{/if}
 	</footer>
 </article>
 
