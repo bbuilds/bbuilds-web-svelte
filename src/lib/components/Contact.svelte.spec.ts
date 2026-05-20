@@ -67,4 +67,11 @@ describe('Contact', () => {
 		const { container } = render(Contact);
 		expect(container.querySelector('section#contact')).toBeNull();
 	});
+
+	it('omits the eyebrow div when contact_eyebrow is empty', async () => {
+		const { container } = render(Contact, {
+			content: { ...mockContent, contact_eyebrow: '' }
+		});
+		expect(container.querySelector('[class*="tracking-wider"]')).toBeNull();
+	});
 });

@@ -85,11 +85,13 @@
 		{/each}
 
 		<div class="container">
-			<div
-				class="font-mono text-sm tracking-wider text-muted uppercase before:mr-2 before:text-yellow before:content-['●']"
-			>
-				{content.contact_eyebrow}
-			</div>
+			{#if content.contact_eyebrow}
+				<div
+					class="font-mono text-sm tracking-wider text-muted uppercase before:mr-2 before:text-yellow before:content-['●']"
+				>
+					{content.contact_eyebrow}
+				</div>
+			{/if}
 
 			<h2 class="mx-auto mt-4 max-w-250">
 				{#each titleSegments as seg, i (i)}
