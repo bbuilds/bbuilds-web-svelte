@@ -213,6 +213,7 @@ export interface StoryblokPage {
 		| StoryblokPage
 		| StoryblokProcessCards
 		| StoryblokSEO
+		| StoryblokServiceOfferCard
 		| StoryblokServicesTemplate
 	)[];
 	component: 'page';
@@ -240,11 +241,22 @@ export interface StoryblokSEO {
 	_uid: string;
 }
 
+export interface StoryblokServiceOfferCard {
+	title?: string;
+	copy?: string;
+	pillar_id?: string;
+	component: 'Service Offer Card';
+	_uid: string;
+}
+
 export interface StoryblokServicesTemplate {
 	hero?: StoryblokHero[];
-	page_content?: StoryblokRichtext;
+	pillars_eyebrow?: string;
+	pillars_title?: string;
 	card_title?: string;
 	card_list_items?: StoryblokRichtext;
+	pillars_copy?: string;
+	pillars?: StoryblokServiceOfferCard[];
 	component: 'Services Template';
 	_uid: string;
 }
