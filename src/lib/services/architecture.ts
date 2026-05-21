@@ -18,23 +18,26 @@ export const architecture: Service = {
 	ctaLabel: 'architect the story',
 	diagram: {
 		title: 'discovery.map',
-		cmd: 'brand-audit --depth=full --output=blueprint',
+		cmd: './discovery-engine.sh --inputs=brand,market,ux,analytics,tech --output=blueprint.md',
 		nodes: [
-			{ id: 'brand', x: 80, y: 60, label: 'BRAND', tag: 'input' },
-			{ id: 'audit', x: 260, y: 60, label: 'AUDIT', tag: 'phase 01' },
-			{ id: 'research', x: 80, y: 170, label: 'RESEARCH', tag: 'qual + quant' },
-			{ id: 'map', x: 260, y: 170, label: 'SYSTEMS MAP' },
-			{ id: 'bp', x: 440, y: 110, label: 'BLUEPRINT', tag: 'output', w: 130, hot: true },
-			{ id: 'ship', x: 260, y: 290, label: 'HARDENED BUILD', tag: 'v1.0', w: 140 }
+			{ id: 'brand', x: 260, y: 60, label: 'BRAND' },
+			{ id: 'market', x: 407, y: 146, label: 'MARKET RESEARCH', w: 150 },
+			{ id: 'ux', x: 351, y: 286, label: 'UX' },
+			{ id: 'analytics', x: 169, y: 286, label: 'ANALYTICS' },
+			{ id: 'tech', x: 113, y: 146, label: 'TECH AUDIT', w: 120 },
+			{ id: 'bp', x: 260, y: 185, label: 'BLUEPRINT', w: 130, hot: true }
 		],
 		edges: [
-			{ from: 'brand', to: 'audit' },
-			{ from: 'brand', to: 'research' },
-			{ from: 'audit', to: 'map' },
-			{ from: 'research', to: 'map' },
-			{ from: 'audit', to: 'bp', hot: true },
-			{ from: 'map', to: 'bp', hot: true },
-			{ from: 'bp', to: 'ship' }
+			{ from: 'brand', to: 'market' },
+			{ from: 'market', to: 'ux' },
+			{ from: 'ux', to: 'analytics' },
+			{ from: 'analytics', to: 'tech' },
+			{ from: 'tech', to: 'brand' },
+			{ from: 'brand', to: 'bp', hot: true },
+			{ from: 'market', to: 'bp', hot: true },
+			{ from: 'ux', to: 'bp', hot: true },
+			{ from: 'analytics', to: 'bp', hot: true },
+			{ from: 'tech', to: 'bp', hot: true }
 		]
 	},
 	pillarsHead: {
