@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { SvelteSet } from 'svelte/reactivity';
+	import { SvelteSet, SvelteMap } from 'svelte/reactivity';
 	import Button from '$lib/components/Button.svelte';
 	import { resolveMultilink } from '$lib/utils/links';
 	import type { StoryblokHomePage } from '$lib/types/storyblok';
@@ -65,6 +65,14 @@
 	let heroEl: HTMLElement;
 	let fallDistance = $state(700);
 
+	const leafBlowEls = new SvelteMap<number, HTMLElement>();
+	const leafOffsets = new SvelteMap<number, { x: number; y: number; vx: number; vy: number }>();
+	let mouseX = 0;
+	let mouseY = 0;
+	let prevMouseX = 0;
+	let prevMouseY = 0;
+	let mouseInside = false;
+
 	let wi = $state(0);
 
 	onMount(() => {
@@ -92,11 +100,83 @@
 				timeouts.add(t);
 			}, 1400);
 
+			// mouse blow interaction
+			const onPointerMove = (e: PointerEvent) => {
+				if (!mouseInside) {
+					prevMouseX = e.clientX;
+					prevMouseY = e.clientY;
+				}
+				mouseX = e.clientX;
+				mouseY = e.clientY;
+				mouseInside = true;
+			};
+			const onPointerLeave = () => {
+				mouseInside = false;
+			};
+			heroEl.addEventListener('pointermove', onPointerMove);
+			heroEl.addEventListener('pointerleave', onPointerLeave);
+
+			let rafId = 0;
+			const tick = () => {
+				const dx = mouseX - prevMouseX;
+				const dy = mouseY - prevMouseY;
+				prevMouseX = mouseX;
+				prevMouseY = mouseY;
+
+				for (const [leafKey, el] of leafBlowEls) {
+					const off = leafOffsets.get(leafKey);
+					if (!off) continue;
+
+					if (mouseInside) {
+						const rect = el.getBoundingClientRect();
+						const cx = rect.left + rect.width / 2;
+						const cy = rect.top + rect.height / 2;
+						const dist = Math.hypot(mouseX - cx, mouseY - cy);
+						const auraRadius = rect.width / 2 + 48;
+						if (dist < auraRadius) {
+							const falloff = 1 - dist / auraRadius;
+							const accel = 0.35 * falloff;
+							off.vx += dx * accel;
+							off.vy += dy * accel;
+						}
+					}
+
+					// gentle restoring force toward natural fall path
+					off.vx -= off.x * 0.012;
+					off.vy -= off.y * 0.012;
+
+					// air drag on velocity
+					off.vx *= 0.92;
+					off.vy *= 0.92;
+
+					// integrate velocity → position
+					off.x += off.vx;
+					off.y += off.vy;
+
+					if (Math.abs(off.x) < 0.1 && Math.abs(off.vx) < 0.05) {
+						off.x = 0;
+						off.vx = 0;
+					}
+					if (Math.abs(off.y) < 0.1 && Math.abs(off.vy) < 0.05) {
+						off.y = 0;
+						off.vy = 0;
+					}
+
+					el.style.setProperty('--blow-x', `${off.x}px`);
+					el.style.setProperty('--blow-y', `${off.y}px`);
+				}
+				rafId = requestAnimationFrame(tick);
+			};
+			rafId = requestAnimationFrame(tick);
+
 			return () => {
 				clearInterval(id);
 				clearInterval(spawnInterval);
 				timeouts.forEach((t) => clearTimeout(t));
 				ro.disconnect();
+				heroEl.removeEventListener('pointermove', onPointerMove);
+				heroEl.removeEventListener('pointerleave', onPointerLeave);
+				cancelAnimationFrame(rafId);
 			};
 		}
 	});
@@ -107,60 +187,72 @@
 	<div class="hero-leaves-layer" style="--hero-fall-distance: {fallDistance}px" aria-hidden="true">
 		{#each leaves as l (l.id)}
 			<div class="falling-leaf" style="left: {l.x}%; --fall-dur: {l.fallDur}s">
-				<div class="leaf-sway" style="--sway-dur: {l.swayDur}s; --sway-amp: {l.swayAmp}rem">
-					<div
-						class="leaf-tumble"
-						style="--tumble-dur: {l.tumbleDur}s; animation-direction: {l.tumbleDir}"
-					>
-						<svg
-							viewBox="0 0 100 140"
-							width={l.size}
-							style="transform: rotate({l.initialRot}deg)"
-							aria-hidden="true"
+				<div
+					class="leaf-blow"
+					{@attach (el) => {
+						leafBlowEls.set(l.id, el as HTMLElement);
+						leafOffsets.set(l.id, { x: 0, y: 0, vx: 0, vy: 0 });
+						return () => {
+							leafBlowEls.delete(l.id);
+							leafOffsets.delete(l.id);
+						};
+					}}
+				>
+					<div class="leaf-sway" style="--sway-dur: {l.swayDur}s; --sway-amp: {l.swayAmp}rem">
+						<div
+							class="leaf-tumble"
+							style="--tumble-dur: {l.tumbleDur}s; animation-direction: {l.tumbleDir}"
 						>
-							<path
-								d="M50 6 C 78 22, 90 70, 60 128 C 52 132, 44 132, 38 128 C 12 90, 18 36, 50 6 Z"
-								fill={l.fill}
-								stroke="#1a1a1a"
-								stroke-width="1.4"
-								stroke-linejoin="round"
-							/>
-							<path
-								d="M50 14 C 50 60, 50 100, 50 128"
-								stroke="#1a1a1a"
-								stroke-width="0.9"
-								fill="none"
-								opacity="0.55"
-							/>
-							<path
-								d="M50 38 Q66 50, 72 70"
-								stroke="#1a1a1a"
-								stroke-width="0.6"
-								fill="none"
-								opacity="0.4"
-							/>
-							<path
-								d="M50 38 Q34 50, 28 70"
-								stroke="#1a1a1a"
-								stroke-width="0.6"
-								fill="none"
-								opacity="0.4"
-							/>
-							<path
-								d="M50 70 Q68 82, 70 100"
-								stroke="#1a1a1a"
-								stroke-width="0.6"
-								fill="none"
-								opacity="0.4"
-							/>
-							<path
-								d="M50 70 Q32 82, 30 100"
-								stroke="#1a1a1a"
-								stroke-width="0.6"
-								fill="none"
-								opacity="0.4"
-							/>
-						</svg>
+							<svg
+								viewBox="0 0 100 140"
+								width={l.size}
+								style="transform: rotate({l.initialRot}deg)"
+								aria-hidden="true"
+							>
+								<path
+									d="M50 6 C 78 22, 90 70, 60 128 C 52 132, 44 132, 38 128 C 12 90, 18 36, 50 6 Z"
+									fill={l.fill}
+									stroke="#1a1a1a"
+									stroke-width="1.4"
+									stroke-linejoin="round"
+								/>
+								<path
+									d="M50 14 C 50 60, 50 100, 50 128"
+									stroke="#1a1a1a"
+									stroke-width="0.9"
+									fill="none"
+									opacity="0.55"
+								/>
+								<path
+									d="M50 38 Q66 50, 72 70"
+									stroke="#1a1a1a"
+									stroke-width="0.6"
+									fill="none"
+									opacity="0.4"
+								/>
+								<path
+									d="M50 38 Q34 50, 28 70"
+									stroke="#1a1a1a"
+									stroke-width="0.6"
+									fill="none"
+									opacity="0.4"
+								/>
+								<path
+									d="M50 70 Q68 82, 70 100"
+									stroke="#1a1a1a"
+									stroke-width="0.6"
+									fill="none"
+									opacity="0.4"
+								/>
+								<path
+									d="M50 70 Q32 82, 30 100"
+									stroke="#1a1a1a"
+									stroke-width="0.6"
+									fill="none"
+									opacity="0.4"
+								/>
+							</svg>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -309,6 +401,11 @@
 		top: -4rem;
 		will-change: transform;
 		animation: leafFall var(--fall-dur, 9s) linear forwards;
+	}
+
+	.leaf-blow {
+		transform: translate(var(--blow-x, 0px), var(--blow-y, 0px));
+		will-change: transform;
 	}
 
 	@keyframes leafFall {
