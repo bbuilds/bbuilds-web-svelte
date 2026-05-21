@@ -38,11 +38,22 @@
 		lg: 'px-7 py-4 text-sm gap-3'
 	};
 
+	const roundedClasses: Record<string, string> = {
+		full: 'rounded-full',
+		lg: 'rounded-lg',
+		md: 'rounded-md',
+		sm: 'rounded-sm',
+		xl: 'rounded-xl',
+		'2xl': 'rounded-2xl',
+		none: 'rounded-none'
+	};
+
 	const classes = $derived(
 		[
 			'btn',
 			`btn-${variant}`,
-			`inline-flex items-center font-mono rounded-${rounded} border no-underline cursor-pointer`,
+			`inline-flex items-center font-mono border no-underline cursor-pointer`,
+			roundedClasses[rounded] ?? 'rounded-full',
 			'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink',
 			disabled ? 'opacity-50 pointer-events-none' : '',
 			sizeClasses[size],

@@ -84,6 +84,10 @@
 	function onBackdropClick(e: MouseEvent) {
 		if (e.target === dialog) close();
 	}
+
+	function inputClass(hasError: string | undefined) {
+		return `w-full rounded-lg border bg-paper px-3 py-2.5 text-sm leading-normal text-ink transition-colors placeholder:text-charcoal focus:outline-none ${hasError ? 'border-red-500 focus:border-red-500' : 'border-black/10 focus:border-ink'}`;
+	}
 </script>
 
 <dialog
@@ -131,9 +135,7 @@
 					onblur={() => onBlur('name')}
 					aria-invalid={errors.name ? 'true' : undefined}
 					aria-describedby={errors.name ? 'contact-name-error' : undefined}
-					class={errors.name
-						? 'w-full rounded-lg border border-red-500 bg-paper px-3 py-2.5 text-sm leading-normal text-ink transition-colors placeholder:text-charcoal focus:border-red-500 focus:outline-none'
-						: 'w-full rounded-lg border border-black/10 bg-paper px-3 py-2.5 text-sm leading-normal text-ink transition-colors placeholder:text-charcoal focus:border-ink focus:outline-none'}
+					class={inputClass(errors.name)}
 				/>
 				{#if errors.name}
 					<p id="contact-name-error" class="font-mono text-xs text-red-400">{errors.name}</p>
@@ -152,9 +154,7 @@
 					onblur={() => onBlur('email')}
 					aria-invalid={errors.email ? 'true' : undefined}
 					aria-describedby={errors.email ? 'contact-email-error' : undefined}
-					class={errors.email
-						? 'w-full rounded-lg border border-red-500 bg-paper px-3 py-2.5 text-sm leading-normal text-ink transition-colors placeholder:text-charcoal focus:border-red-500 focus:outline-none'
-						: 'w-full rounded-lg border border-black/10 bg-paper px-3 py-2.5 text-sm leading-normal text-ink transition-colors placeholder:text-charcoal focus:border-ink focus:outline-none'}
+					class={inputClass(errors.email)}
 				/>
 				{#if errors.email}
 					<p id="contact-email-error" class="font-mono text-xs text-red-400">{errors.email}</p>
@@ -172,9 +172,7 @@
 					onblur={() => onBlur('message')}
 					aria-invalid={errors.message ? 'true' : undefined}
 					aria-describedby={errors.message ? 'contact-message-error' : undefined}
-					class={errors.message
-						? 'w-full resize-y rounded-lg border border-red-500 bg-paper px-3 py-2.5 text-sm leading-normal text-ink transition-colors placeholder:text-charcoal focus:border-red-500 focus:outline-none'
-						: 'w-full resize-y rounded-lg border border-black/10 bg-paper px-3 py-2.5 text-sm leading-normal text-ink transition-colors placeholder:text-charcoal focus:border-ink focus:outline-none'}
+					class="resize-y {inputClass(errors.message)}"
 				></textarea>
 				{#if errors.message}
 					<p id="contact-message-error" class="font-mono text-xs text-red-400">{errors.message}</p>
