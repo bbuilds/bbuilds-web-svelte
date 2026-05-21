@@ -2,9 +2,54 @@
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
 	import Button from '$lib/components/Button.svelte';
+	import { validateName, validateEmail, validateMessage } from '$lib/utils/validation';
 
 	let dialog = $state<HTMLDialogElement | undefined>(undefined);
 	const isOpen = $derived(page.url.hash === '#contact-modal');
+
+	let values = $state({ name: '', email: '', message: '' });
+	let errors = $state<{ name?: string; email?: string; message?: string }>({});
+	let touched = $state<{ name: boolean; email: boolean; message: boolean }>({
+		name: false,
+		email: false,
+		message: false
+	});
+
+	const validators = {
+		name: validateName,
+		email: validateEmail,
+		message: validateMessage
+	} as const;
+
+	type Field = keyof typeof validators;
+
+	function runValidation(field: Field) {
+		errors[field] = validators[field](values[field]);
+	}
+
+	function onBlur(field: Field) {
+		touched[field] = true;
+		runValidation(field);
+	}
+
+	function onInput(field: Field) {
+		if (touched[field]) runValidation(field);
+	}
+
+	function onSubmit(e: SubmitEvent) {
+		e.preventDefault();
+		(Object.keys(validators) as Field[]).forEach((f) => {
+			touched[f] = true;
+			runValidation(f);
+		});
+		const valid = !errors.name && !errors.email && !errors.message;
+		if (valid) {
+			values = { name: '', email: '', message: '' };
+			errors = {};
+			touched = { name: false, email: false, message: false };
+			close();
+		}
+	}
 
 	$effect(() => {
 		if (!dialog) return;
@@ -26,6 +71,8 @@
 	}
 
 	function onDialogClose() {
+		errors = {};
+		touched = { name: false, email: false, message: false };
 		if (page.url.hash !== '#contact-modal') return;
 		goto(page.url.pathname + page.url.search, {
 			replaceState: true,
@@ -70,7 +117,7 @@
 			</button>
 		</div>
 
-		<form onsubmit={(e) => e.preventDefault()} class="flex flex-col gap-4">
+		<form onsubmit={onSubmit} class="flex flex-col gap-4">
 			<div class="flex flex-col gap-1.5">
 				<label for="contact-name" class="font-mono text-sm text-white">Name</label>
 				<input
@@ -79,8 +126,18 @@
 					type="text"
 					placeholder="Your name"
 					autocomplete="name"
-					class="w-full rounded-lg border border-black/10 bg-paper px-3 py-2.5 text-sm leading-normal text-ink transition-colors placeholder:text-charcoal focus:border-ink focus:outline-none"
+					bind:value={values.name}
+					oninput={() => onInput('name')}
+					onblur={() => onBlur('name')}
+					aria-invalid={errors.name ? 'true' : undefined}
+					aria-describedby={errors.name ? 'contact-name-error' : undefined}
+					class={errors.name
+						? 'w-full rounded-lg border border-red-500 bg-paper px-3 py-2.5 text-sm leading-normal text-ink transition-colors placeholder:text-charcoal focus:border-red-500 focus:outline-none'
+						: 'w-full rounded-lg border border-black/10 bg-paper px-3 py-2.5 text-sm leading-normal text-ink transition-colors placeholder:text-charcoal focus:border-ink focus:outline-none'}
 				/>
+				{#if errors.name}
+					<p id="contact-name-error" class="font-mono text-xs text-red-400">{errors.name}</p>
+				{/if}
 			</div>
 			<div class="flex flex-col gap-1.5">
 				<label for="contact-email" class="font-mono text-sm text-white">Email</label>
@@ -90,8 +147,18 @@
 					type="email"
 					placeholder="you@example.com"
 					autocomplete="email"
-					class="w-full rounded-lg border border-black/10 bg-paper px-3 py-2.5 text-sm leading-normal text-ink transition-colors placeholder:text-charcoal focus:border-ink focus:outline-none"
+					bind:value={values.email}
+					oninput={() => onInput('email')}
+					onblur={() => onBlur('email')}
+					aria-invalid={errors.email ? 'true' : undefined}
+					aria-describedby={errors.email ? 'contact-email-error' : undefined}
+					class={errors.email
+						? 'w-full rounded-lg border border-red-500 bg-paper px-3 py-2.5 text-sm leading-normal text-ink transition-colors placeholder:text-charcoal focus:border-red-500 focus:outline-none'
+						: 'w-full rounded-lg border border-black/10 bg-paper px-3 py-2.5 text-sm leading-normal text-ink transition-colors placeholder:text-charcoal focus:border-ink focus:outline-none'}
 				/>
+				{#if errors.email}
+					<p id="contact-email-error" class="font-mono text-xs text-red-400">{errors.email}</p>
+				{/if}
 			</div>
 			<div class="flex flex-col gap-1.5">
 				<label for="contact-message" class="font-mono text-sm text-white">Message</label>
@@ -100,8 +167,18 @@
 					name="message"
 					rows="5"
 					placeholder="What's on your mind?"
-					class="w-full resize-y rounded-lg border border-black/10 bg-paper px-3 py-2.5 text-sm leading-normal text-ink transition-colors placeholder:text-charcoal focus:border-ink focus:outline-none"
+					bind:value={values.message}
+					oninput={() => onInput('message')}
+					onblur={() => onBlur('message')}
+					aria-invalid={errors.message ? 'true' : undefined}
+					aria-describedby={errors.message ? 'contact-message-error' : undefined}
+					class={errors.message
+						? 'w-full resize-y rounded-lg border border-red-500 bg-paper px-3 py-2.5 text-sm leading-normal text-ink transition-colors placeholder:text-charcoal focus:border-red-500 focus:outline-none'
+						: 'w-full resize-y rounded-lg border border-black/10 bg-paper px-3 py-2.5 text-sm leading-normal text-ink transition-colors placeholder:text-charcoal focus:border-ink focus:outline-none'}
 				></textarea>
+				{#if errors.message}
+					<p id="contact-message-error" class="font-mono text-xs text-red-400">{errors.message}</p>
+				{/if}
 			</div>
 			<Button type="submit" class="btn-yellow mt-1 w-full">Send message</Button>
 		</form>
