@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { SvelteSet, SvelteMap } from 'svelte/reactivity';
+	import type { ISourceOptions } from '@tsparticles/engine';
 	import Button from '$lib/components/Button.svelte';
 	import { resolveMultilink } from '$lib/utils/links';
+	import { LEAF_IMAGES } from '$lib/particles/leafImages';
 	import type { StoryblokHomePage } from '$lib/types/storyblok';
 
 	interface Props {
@@ -31,233 +32,103 @@
 	const ctaText = $derived(content?.hero_cta_text ?? 'start a project');
 	const cta = $derived(resolveMultilink(content?.hero_cta_url));
 
-	interface FallingLeaf {
-		id: number;
-		x: number;
-		size: number;
-		fill: string;
-		initialRot: number;
-		fallDur: number;
-		swayDur: number;
-		swayAmp: number;
-		tumbleDur: number;
-		tumbleDir: 'normal' | 'reverse';
-	}
-
-	const LEAF_COLORS = ['#7ba87b', '#6f9c6e', '#8fb88c', '#9bc198', '#5e8a5a', '#c9b674', '#a89a4e'];
-
-	function makeFallingLeaf(id: number): FallingLeaf {
-		return {
-			id,
-			x: 2 + Math.random() * 96,
-			size: 26 + Math.random() * 40,
-			fill: LEAF_COLORS[Math.floor(Math.random() * LEAF_COLORS.length)],
-			initialRot: Math.random() * 360,
-			fallDur: 7 + Math.random() * 6,
-			swayDur: 2.4 + Math.random() * 2.2,
-			swayAmp: (18 + Math.random() * 38) / 16,
-			tumbleDur: 5 + Math.random() * 8,
-			tumbleDir: Math.random() > 0.5 ? 'normal' : 'reverse'
-		};
-	}
-
-	let leaves = $state<FallingLeaf[]>([]);
-	let heroEl: HTMLElement;
-	let fallDistance = $state(700);
-
-	const leafBlowEls = new SvelteMap<number, HTMLElement>();
-	const leafOffsets = new SvelteMap<number, { x: number; y: number; vx: number; vy: number }>();
-	let mouseX = 0;
-	let mouseY = 0;
-	let prevMouseX = 0;
-	let prevMouseY = 0;
-	let mouseInside = false;
+	const leafParticleOptions = {
+		fullScreen: { enable: true },
+		background: { color: 'transparent' },
+		fpsLimit: 60,
+		detectRetina: true,
+		particles: {
+			number: { value: 0 },
+			shape: {
+				type: 'image',
+				options: { image: LEAF_IMAGES }
+			},
+			opacity: { value: 0.9 },
+			size: { value: { min: 16, max: 38 } },
+			rotate: {
+				value: { min: 0, max: 360 },
+				direction: 'random',
+				animation: { enable: true, speed: { min: 5, max: 25 }, sync: false }
+			},
+			move: {
+				enable: true,
+				direction: 'bottom',
+				speed: { min: 0.4, max: 0.9 },
+				straight: false,
+				gravity: { enable: true, acceleration: 0.3, maxSpeed: 2 },
+				wobble: { enable: true, distance: 30, speed: { min: -8, max: 8 } },
+				outModes: { default: 'destroy', top: 'none' }
+			}
+		},
+		emitters: {
+			direction: 'bottom',
+			position: { x: 50, y: -5 },
+			size: { width: 100, height: 0, mode: 'percent' },
+			rate: { delay: 1.4, quantity: 1 }
+		},
+		interactivity: {
+			detectsOn: 'window',
+			events: { onHover: { enable: true, mode: 'repulse' } },
+			modes: {
+				repulse: { distance: 90, duration: 0.4, factor: 100, speed: 1, easing: 'ease-out-quad' }
+			}
+		}
+	} as ISourceOptions;
 
 	let wi = $state(0);
+	let particlesEl: HTMLDivElement;
 
 	onMount(() => {
+		let wordIntervalId: ReturnType<typeof setInterval> | undefined;
 		if (words.length > 0) {
-			const id = setInterval(() => {
+			wordIntervalId = setInterval(() => {
 				wi = (wi + 1) % words.length;
 			}, 2400);
+		}
 
-			// leaf system
-			const ro = new ResizeObserver(() => {
-				fallDistance = heroEl.offsetHeight + 80;
-			});
-			ro.observe(heroEl);
-			fallDistance = heroEl.offsetHeight + 80;
+		const prefersReducedMotion =
+			typeof window !== 'undefined' &&
+			window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-			let leafId = 0;
-			const timeouts = new SvelteSet<ReturnType<typeof setTimeout>>();
-			const spawnInterval = setInterval(() => {
-				const leaf = makeFallingLeaf(++leafId);
-				leaves = [...leaves, leaf];
-				const t = setTimeout(() => {
-					timeouts.delete(t);
-					leaves = leaves.filter((l) => l.id !== leaf.id);
-				}, leaf.fallDur * 1000);
-				timeouts.add(t);
-			}, 1400);
-
-			// mouse blow interaction
-			const onPointerMove = (e: PointerEvent) => {
-				if (!mouseInside) {
-					prevMouseX = e.clientX;
-					prevMouseY = e.clientY;
-				}
-				mouseX = e.clientX;
-				mouseY = e.clientY;
-				mouseInside = true;
-			};
-			const onPointerLeave = () => {
-				mouseInside = false;
-			};
-			heroEl.addEventListener('pointermove', onPointerMove);
-			heroEl.addEventListener('pointerleave', onPointerLeave);
-
-			let rafId = 0;
-			const tick = () => {
-				const dx = mouseX - prevMouseX;
-				const dy = mouseY - prevMouseY;
-				prevMouseX = mouseX;
-				prevMouseY = mouseY;
-
-				for (const [leafKey, el] of leafBlowEls) {
-					const off = leafOffsets.get(leafKey);
-					if (!off) continue;
-
-					if (mouseInside) {
-						const rect = el.getBoundingClientRect();
-						const cx = rect.left + rect.width / 2;
-						const cy = rect.top + rect.height / 2;
-						const dist = Math.hypot(mouseX - cx, mouseY - cy);
-						const auraRadius = rect.width / 2 + 48;
-						if (dist < auraRadius) {
-							const falloff = 1 - dist / auraRadius;
-							const accel = 0.35 * falloff;
-							off.vx += dx * accel;
-							off.vy += dy * accel;
-						}
-					}
-
-					// gentle restoring force toward natural fall path
-					off.vx -= off.x * 0.012;
-					off.vy -= off.y * 0.012;
-
-					// air drag on velocity
-					off.vx *= 0.92;
-					off.vy *= 0.92;
-
-					// integrate velocity → position
-					off.x += off.vx;
-					off.y += off.vy;
-
-					if (Math.abs(off.x) < 0.1 && Math.abs(off.vx) < 0.05) {
-						off.x = 0;
-						off.vx = 0;
-					}
-					if (Math.abs(off.y) < 0.1 && Math.abs(off.vy) < 0.05) {
-						off.y = 0;
-						off.vy = 0;
-					}
-
-					el.style.setProperty('--blow-x', `${off.x}px`);
-					el.style.setProperty('--blow-y', `${off.y}px`);
-				}
-				rafId = requestAnimationFrame(tick);
-			};
-			rafId = requestAnimationFrame(tick);
-
+		if (prefersReducedMotion) {
 			return () => {
-				clearInterval(id);
-				clearInterval(spawnInterval);
-				timeouts.forEach((t) => clearTimeout(t));
-				ro.disconnect();
-				heroEl.removeEventListener('pointermove', onPointerMove);
-				heroEl.removeEventListener('pointerleave', onPointerLeave);
-				cancelAnimationFrame(rafId);
+				if (wordIntervalId) clearInterval(wordIntervalId);
 			};
 		}
+
+		let destroyed = false;
+		let container: { destroy: () => void } | undefined;
+
+		(async () => {
+			const { tsParticles } = await import('@tsparticles/engine');
+			const { loadSlim } = await import('@tsparticles/slim');
+			const { loadEmittersPlugin } = await import('@tsparticles/plugin-emitters');
+			const { loadEmittersShapeSquare } = await import('@tsparticles/plugin-emitters-shape-square');
+			await loadSlim(tsParticles);
+			await loadEmittersPlugin(tsParticles);
+			await loadEmittersShapeSquare(tsParticles);
+			const loaded = await tsParticles.load({
+				element: particlesEl,
+				options: leafParticleOptions
+			});
+			if (destroyed) {
+				loaded?.destroy();
+			} else {
+				container = loaded;
+			}
+		})();
+
+		return () => {
+			destroyed = true;
+			if (wordIntervalId) clearInterval(wordIntervalId);
+			container?.destroy();
+		};
 	});
 </script>
 
-<section class="paper-bg relative overflow-hidden pt-16 pb-30" bind:this={heroEl}>
+<section class="paper-bg relative overflow-hidden pt-16 pb-30">
 	<!-- Falling leaves layer -->
-	<div class="hero-leaves-layer" style="--hero-fall-distance: {fallDistance}px" aria-hidden="true">
-		{#each leaves as l (l.id)}
-			<div class="falling-leaf" style="left: {l.x}%; --fall-dur: {l.fallDur}s">
-				<div
-					class="leaf-blow"
-					{@attach (el) => {
-						leafBlowEls.set(l.id, el as HTMLElement);
-						leafOffsets.set(l.id, { x: 0, y: 0, vx: 0, vy: 0 });
-						return () => {
-							leafBlowEls.delete(l.id);
-							leafOffsets.delete(l.id);
-						};
-					}}
-				>
-					<div class="leaf-sway" style="--sway-dur: {l.swayDur}s; --sway-amp: {l.swayAmp}rem">
-						<div
-							class="leaf-tumble"
-							style="--tumble-dur: {l.tumbleDur}s; animation-direction: {l.tumbleDir}"
-						>
-							<svg
-								viewBox="0 0 100 140"
-								width={l.size}
-								style="transform: rotate({l.initialRot}deg)"
-								aria-hidden="true"
-							>
-								<path
-									d="M50 6 C 78 22, 90 70, 60 128 C 52 132, 44 132, 38 128 C 12 90, 18 36, 50 6 Z"
-									fill={l.fill}
-									stroke="#1a1a1a"
-									stroke-width="1.4"
-									stroke-linejoin="round"
-								/>
-								<path
-									d="M50 14 C 50 60, 50 100, 50 128"
-									stroke="#1a1a1a"
-									stroke-width="0.9"
-									fill="none"
-									opacity="0.55"
-								/>
-								<path
-									d="M50 38 Q66 50, 72 70"
-									stroke="#1a1a1a"
-									stroke-width="0.6"
-									fill="none"
-									opacity="0.4"
-								/>
-								<path
-									d="M50 38 Q34 50, 28 70"
-									stroke="#1a1a1a"
-									stroke-width="0.6"
-									fill="none"
-									opacity="0.4"
-								/>
-								<path
-									d="M50 70 Q68 82, 70 100"
-									stroke="#1a1a1a"
-									stroke-width="0.6"
-									fill="none"
-									opacity="0.4"
-								/>
-								<path
-									d="M50 70 Q32 82, 30 100"
-									stroke="#1a1a1a"
-									stroke-width="0.6"
-									fill="none"
-									opacity="0.4"
-								/>
-							</svg>
-						</div>
-					</div>
-				</div>
-			</div>
-		{/each}
-	</div>
+	<div class="hero-leaves-layer" bind:this={particlesEl} aria-hidden="true"></div>
 
 	<!-- Sun sticker -->
 	<div
@@ -394,55 +265,5 @@
 		overflow: hidden;
 		opacity: 0.55;
 		z-index: 0;
-	}
-
-	.falling-leaf {
-		position: absolute;
-		top: -4rem;
-		will-change: transform;
-		animation: leafFall var(--fall-dur, 9s) linear forwards;
-	}
-
-	.leaf-blow {
-		transform: translate(var(--blow-x, 0px), var(--blow-y, 0px));
-		will-change: transform;
-	}
-
-	@keyframes leafFall {
-		0% {
-			transform: translateY(0);
-		}
-		100% {
-			transform: translateY(var(--hero-fall-distance, 110vh));
-		}
-	}
-
-	.leaf-sway {
-		will-change: transform;
-		animation: leafSway var(--sway-dur, 3s) ease-in-out infinite;
-	}
-
-	@keyframes leafSway {
-		0%,
-		100% {
-			transform: translateX(calc(var(--sway-amp, 1.875rem) * -1));
-		}
-		50% {
-			transform: translateX(var(--sway-amp, 1.875rem));
-		}
-	}
-
-	.leaf-tumble {
-		will-change: transform;
-		animation: leafTumble var(--tumble-dur, 7s) linear infinite;
-	}
-
-	@keyframes leafTumble {
-		from {
-			transform: rotate(0deg);
-		}
-		to {
-			transform: rotate(360deg);
-		}
 	}
 </style>
