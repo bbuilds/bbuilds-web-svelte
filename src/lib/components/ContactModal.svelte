@@ -180,7 +180,7 @@
 					<p id="contact-message-error" class="font-mono text-xs text-red-400">{errors.message}</p>
 				{/if}
 			</div>
-			<Button type="submit" class="btn-yellow mt-1 w-full">Send message</Button>
+			<Button type="submit" rounded="lg" class="btn-yellow mt-1 w-full">Send message</Button>
 		</form>
 	</div>
 </dialog>

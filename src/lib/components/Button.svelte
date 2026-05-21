@@ -11,6 +11,7 @@
 		type?: 'button' | 'submit' | 'reset';
 		variant?: Variant;
 		size?: Size;
+		rounded?: string;
 		disabled?: boolean;
 		class?: string;
 		onclick?: (e: MouseEvent) => void;
@@ -24,6 +25,7 @@
 		type = 'button',
 		variant = 'primary',
 		size = 'md',
+		rounded = 'full',
 		disabled = false,
 		class: className = '',
 		onclick,
@@ -40,7 +42,7 @@
 		[
 			'btn',
 			`btn-${variant}`,
-			'inline-flex items-center font-mono rounded-full border no-underline cursor-pointer',
+			`inline-flex items-center font-mono rounded-${rounded} border no-underline cursor-pointer`,
 			'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink',
 			disabled ? 'opacity-50 pointer-events-none' : '',
 			sizeClasses[size],
