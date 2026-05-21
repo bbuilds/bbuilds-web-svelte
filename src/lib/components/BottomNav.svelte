@@ -82,7 +82,12 @@
 		</svg>
 	</a>
 
-	<a href="/#contact" aria-label="Contact" class={linkClass('/#contact')}>
+	<a
+		href="#contact-modal"
+		data-sveltekit-noscroll
+		aria-label="Contact"
+		class={linkClass('#contact-modal')}
+	>
 		<svg
 			viewBox="0 0 24 24"
 			fill="none"
