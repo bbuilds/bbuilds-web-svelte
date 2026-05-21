@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { SvelteSet } from 'svelte/reactivity';
 	import Button from '$lib/components/Button.svelte';
 	import { resolveMultilink } from '$lib/utils/links';
 	import type { StoryblokHomePage } from '$lib/types/storyblok';
@@ -30,70 +31,140 @@
 	const ctaText = $derived(content?.hero_cta_text ?? 'start a project');
 	const cta = $derived(resolveMultilink(content?.hero_cta_url));
 
-	const SNAKE_ROWS = [
-		[
-			{ x: 60, h: 180, tilt: -8 },
-			{ x: 80, h: 210, tilt: 0 },
-			{ x: 100, h: 175, tilt: 8 },
-			{ x: 72, h: 150, tilt: -16 },
-			{ x: 92, h: 155, tilt: 14 }
-		],
-		[
-			{ x: 62, h: 178, tilt: -8 },
-			{ x: 80, h: 207, tilt: 2 },
-			{ x: 98, h: 172, tilt: 10 },
-			{ x: 70, h: 148, tilt: -16 },
-			{ x: 90, h: 158, tilt: 14 }
-		],
-		[
-			{ x: 60, h: 168, tilt: -8 },
-			{ x: 82, h: 202, tilt: 4 },
-			{ x: 100, h: 174, tilt: 10 },
-			{ x: 72, h: 153, tilt: -14 },
-			{ x: 88, h: 163, tilt: 14 }
-		],
-		[
-			{ x: 62, h: 176, tilt: -8 },
-			{ x: 80, h: 212, tilt: 2 },
-			{ x: 100, h: 166, tilt: 12 },
-			{ x: 70, h: 150, tilt: -16 },
-			{ x: 90, h: 160, tilt: 10 }
-		]
-	] as const;
+	interface FallingLeaf {
+		id: number;
+		x: number;
+		size: number;
+		fill: string;
+		initialRot: number;
+		fallDur: number;
+		swayDur: number;
+		swayAmp: number;
+		tumbleDur: number;
+		tumbleDir: 'normal' | 'reverse';
+	}
+
+	const LEAF_COLORS = ['#7ba87b', '#6f9c6e', '#8fb88c', '#9bc198', '#5e8a5a', '#c9b674', '#a89a4e'];
+
+	function makeFallingLeaf(id: number): FallingLeaf {
+		return {
+			id,
+			x: 2 + Math.random() * 96,
+			size: 26 + Math.random() * 40,
+			fill: LEAF_COLORS[Math.floor(Math.random() * LEAF_COLORS.length)],
+			initialRot: Math.random() * 360,
+			fallDur: 7 + Math.random() * 6,
+			swayDur: 2.4 + Math.random() * 2.2,
+			swayAmp: (18 + Math.random() * 38) / 16,
+			tumbleDur: 5 + Math.random() * 8,
+			tumbleDir: Math.random() > 0.5 ? 'normal' : 'reverse'
+		};
+	}
+
+	let leaves = $state<FallingLeaf[]>([]);
+	let heroEl: HTMLElement;
+	let fallDistance = $state(700);
 
 	let wi = $state(0);
 
 	onMount(() => {
-		if (words.length === 0) return;
-		const id = setInterval(() => {
-			wi = (wi + 1) % words.length;
-		}, 2400);
-		return () => clearInterval(id);
+		if (words.length > 0) {
+			const id = setInterval(() => {
+				wi = (wi + 1) % words.length;
+			}, 2400);
+
+			// leaf system
+			const ro = new ResizeObserver(() => {
+				fallDistance = heroEl.offsetHeight + 80;
+			});
+			ro.observe(heroEl);
+			fallDistance = heroEl.offsetHeight + 80;
+
+			let leafId = 0;
+			const timeouts = new SvelteSet<ReturnType<typeof setTimeout>>();
+			const spawnInterval = setInterval(() => {
+				const leaf = makeFallingLeaf(++leafId);
+				leaves = [...leaves, leaf];
+				const t = setTimeout(() => {
+					timeouts.delete(t);
+					leaves = leaves.filter((l) => l.id !== leaf.id);
+				}, leaf.fallDur * 1000);
+				timeouts.add(t);
+			}, 1400);
+
+			return () => {
+				clearInterval(id);
+				clearInterval(spawnInterval);
+				timeouts.forEach((t) => clearTimeout(t));
+				ro.disconnect();
+			};
+		}
 	});
 </script>
 
-<section class="paper-bg relative overflow-hidden pt-16 pb-30">
-	<!-- Snake — right (always visible) -->
-	<div
-		class="plant-snake plant-snake-0 pointer-events-none absolute opacity-25 md:opacity-100"
-		style="right: -1.875rem; bottom: -1.25rem; transform-origin: bottom right;"
-	>
-		<div class="plant-sway plant-sway-0" style="transform-origin: bottom right;">
-			<svg viewBox="0 0 160 220" style="width:11.25rem" aria-hidden="true">
-				{#each SNAKE_ROWS[0] as b, i (i)}
-					<g transform="translate({b.x} {220 - b.h}) rotate({b.tilt} 0 {b.h})">
-						<path
-							d="M0 0 C -12 {b.h * 0.4}, -12 {b.h * 0.7}, 0 {b.h} C 12 {b.h * 0.7}, 12 {b.h *
-								0.4}, 0 0 Z"
-							fill="#557a55"
-							stroke="#1a1a1a"
-							stroke-width="1.4"
-						/>
-					</g>
-				{/each}
-				<path d="M40 218 L120 218" stroke="#1a1a1a" stroke-width="2" />
-			</svg>
-		</div>
+<section class="paper-bg relative overflow-hidden pt-16 pb-30" bind:this={heroEl}>
+	<!-- Falling leaves layer -->
+	<div class="hero-leaves-layer" style="--hero-fall-distance: {fallDistance}px" aria-hidden="true">
+		{#each leaves as l (l.id)}
+			<div class="falling-leaf" style="left: {l.x}%; --fall-dur: {l.fallDur}s">
+				<div class="leaf-sway" style="--sway-dur: {l.swayDur}s; --sway-amp: {l.swayAmp}rem">
+					<div
+						class="leaf-tumble"
+						style="--tumble-dur: {l.tumbleDur}s; animation-direction: {l.tumbleDir}"
+					>
+						<svg
+							viewBox="0 0 100 140"
+							width={l.size}
+							style="transform: rotate({l.initialRot}deg)"
+							aria-hidden="true"
+						>
+							<path
+								d="M50 6 C 78 22, 90 70, 60 128 C 52 132, 44 132, 38 128 C 12 90, 18 36, 50 6 Z"
+								fill={l.fill}
+								stroke="#1a1a1a"
+								stroke-width="1.4"
+								stroke-linejoin="round"
+							/>
+							<path
+								d="M50 14 C 50 60, 50 100, 50 128"
+								stroke="#1a1a1a"
+								stroke-width="0.9"
+								fill="none"
+								opacity="0.55"
+							/>
+							<path
+								d="M50 38 Q66 50, 72 70"
+								stroke="#1a1a1a"
+								stroke-width="0.6"
+								fill="none"
+								opacity="0.4"
+							/>
+							<path
+								d="M50 38 Q34 50, 28 70"
+								stroke="#1a1a1a"
+								stroke-width="0.6"
+								fill="none"
+								opacity="0.4"
+							/>
+							<path
+								d="M50 70 Q68 82, 70 100"
+								stroke="#1a1a1a"
+								stroke-width="0.6"
+								fill="none"
+								opacity="0.4"
+							/>
+							<path
+								d="M50 70 Q32 82, 30 100"
+								stroke="#1a1a1a"
+								stroke-width="0.6"
+								fill="none"
+								opacity="0.4"
+							/>
+						</svg>
+					</div>
+				</div>
+			</div>
+		{/each}
 	</div>
 
 	<!-- Sun sticker -->
@@ -104,32 +175,7 @@
 		<div class="sticker" aria-hidden="true"></div>
 	</div>
 
-	<!-- Repeating snake plants (tablet/desktop only) -->
-	{#each [{ right: '37%', row: 1 }, { right: '27%', row: 2 }, { right: '17%', row: 3 }, { right: '7%', row: 0 }] as p, i (i)}
-		<div
-			class="plant-snake plant-snake-{i + 1} pointer-events-none absolute hidden md:block"
-			style="right: {p.right}; bottom: -1.25rem; transform-origin: bottom right;"
-		>
-			<div class="plant-sway plant-sway-{i + 1}" style="transform-origin: bottom right;">
-				<svg viewBox="0 0 160 220" style="width:11.25rem" aria-hidden="true">
-					{#each SNAKE_ROWS[p.row] as b, j (j)}
-						<g transform="translate({b.x} {220 - b.h}) rotate({b.tilt} 0 {b.h})">
-							<path
-								d="M0 0 C -12 {b.h * 0.4}, -12 {b.h * 0.7}, 0 {b.h} C 12 {b.h * 0.7}, 12 {b.h *
-									0.4}, 0 0 Z"
-								fill="#557a55"
-								stroke="#1a1a1a"
-								stroke-width="1.4"
-							/>
-						</g>
-					{/each}
-					<path d="M40 218 L120 218" stroke="#1a1a1a" stroke-width="2" />
-				</svg>
-			</div>
-		</div>
-	{/each}
-
-	<div class="container">
+	<div class="relative z-2 container">
 		<div
 			class="mb-4.5 font-mono text-sm tracking-[0.06em] text-muted uppercase before:mr-2 before:text-yellow before:content-['●'] md:text-base"
 		>
@@ -188,8 +234,8 @@
 	}
 
 	.sticker {
-		width: 9.25rem;
-		height: 9.25rem;
+		width: 5.5rem;
+		height: 5.5rem;
 		border-radius: 50%;
 		background: radial-gradient(circle at var(--sun-x) var(--sun-y), #fff3bb 0%, #ffcd67 70%);
 		box-shadow:
@@ -198,6 +244,13 @@
 		animation:
 			gradientDrift 10s ease-in-out infinite,
 			glowPulse 4s ease-in-out infinite;
+	}
+
+	@media (min-width: 48rem) {
+		.sticker {
+			width: 6.5rem;
+			height: 6.5rem;
+		}
 	}
 
 	@keyframes gradientDrift {
@@ -231,66 +284,6 @@
 		}
 	}
 
-	.plant-snake-0 {
-		animation: growIn 1.4s cubic-bezier(0.2, 0.7, 0.2, 1) both;
-	}
-	.plant-snake-1 {
-		animation: growIn 1.5s 0.1s cubic-bezier(0.2, 0.7, 0.2, 1) both;
-	}
-	.plant-snake-2 {
-		animation: growIn 1.6s 0.18s cubic-bezier(0.2, 0.7, 0.2, 1) both;
-	}
-	.plant-snake-3 {
-		animation: growIn 1.7s 0.26s cubic-bezier(0.2, 0.7, 0.2, 1) both;
-	}
-	.plant-snake-4 {
-		animation: growIn 1.8s 0.34s cubic-bezier(0.2, 0.7, 0.2, 1) both;
-	}
-
-	.plant-sway-0 {
-		animation:
-			sway 9s ease-in-out infinite reverse,
-			fadeIn 1.4s cubic-bezier(0.2, 0.7, 0.2, 1) both;
-	}
-	.plant-sway-1 {
-		animation:
-			sway 7s ease-in-out -1s infinite,
-			fadeIn 1.5s 0.1s cubic-bezier(0.2, 0.7, 0.2, 1) both;
-	}
-	.plant-sway-2 {
-		animation:
-			sway 8.5s ease-in-out -3s infinite reverse,
-			fadeIn 1.6s 0.18s cubic-bezier(0.2, 0.7, 0.2, 1) both;
-	}
-	.plant-sway-3 {
-		animation:
-			sway 6.5s ease-in-out -0.5s infinite,
-			fadeIn 1.7s 0.26s cubic-bezier(0.2, 0.7, 0.2, 1) both;
-	}
-	.plant-sway-4 {
-		animation:
-			sway 10s ease-in-out -2s infinite reverse,
-			fadeIn 1.8s 0.34s cubic-bezier(0.2, 0.7, 0.2, 1) both;
-	}
-
-	@keyframes growIn {
-		from {
-			transform: translateY(40%) scaleY(0.4);
-		}
-		to {
-			transform: translateY(0) scaleY(1);
-		}
-	}
-
-	@keyframes fadeIn {
-		from {
-			opacity: 0;
-		}
-		to {
-			opacity: 1;
-		}
-	}
-
 	@keyframes wordFade {
 		0% {
 			opacity: 0;
@@ -302,13 +295,57 @@
 		}
 	}
 
-	@keyframes sway {
+	.hero-leaves-layer {
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+		overflow: hidden;
+		opacity: 0.55;
+		z-index: 0;
+	}
+
+	.falling-leaf {
+		position: absolute;
+		top: -4rem;
+		will-change: transform;
+		animation: leafFall var(--fall-dur, 9s) linear forwards;
+	}
+
+	@keyframes leafFall {
+		0% {
+			transform: translateY(0);
+		}
+		100% {
+			transform: translateY(var(--hero-fall-distance, 110vh));
+		}
+	}
+
+	.leaf-sway {
+		will-change: transform;
+		animation: leafSway var(--sway-dur, 3s) ease-in-out infinite;
+	}
+
+	@keyframes leafSway {
 		0%,
 		100% {
-			transform: rotate(-1.5deg);
+			transform: translateX(calc(var(--sway-amp, 1.875rem) * -1));
 		}
 		50% {
-			transform: rotate(1.5deg);
+			transform: translateX(var(--sway-amp, 1.875rem));
+		}
+	}
+
+	.leaf-tumble {
+		will-change: transform;
+		animation: leafTumble var(--tumble-dur, 7s) linear infinite;
+	}
+
+	@keyframes leafTumble {
+		from {
+			transform: rotate(0deg);
+		}
+		to {
+			transform: rotate(360deg);
 		}
 	}
 </style>
