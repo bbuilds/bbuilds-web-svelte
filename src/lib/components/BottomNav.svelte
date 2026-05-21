@@ -22,13 +22,13 @@
 	});
 
 	const linkClass = (href: string) =>
-		`flex flex-1 items-center justify-center py-3 no-underline transition-colors duration-150 ${activeHref === href ? 'text-teal' : 'text-ink/35 hover:text-ink'}`;
+		`flex flex-1 items-center justify-center py-3 no-underline transition-colors duration-150 ${activeHref === href ? 'bg-paper-line text-ink' : 'text-ink/45 hover:text-ink'}`;
 </script>
 
 <svelte:window bind:scrollY />
 
 <nav
-	class="fixed right-0 bottom-0 left-0 z-50 flex items-center border-t border-paper-line bg-paper/85 backdrop-blur-md backdrop-saturate-150 md:hidden"
+	class="fixed right-0 bottom-0 left-0 z-50 flex items-center border-t border-paper-line bg-paper/85 backdrop-blur-[0.625rem] backdrop-saturate-150 md:hidden"
 	aria-label="Mobile navigation"
 >
 	<a href="/#services" aria-label="Services" class={linkClass('/#services')}>
@@ -45,25 +45,6 @@
 			<path
 				d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"
 			/>
-		</svg>
-	</a>
-
-	<a href="/#stack" aria-label="Stack" class={linkClass('/#stack')}>
-		<svg
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			stroke-width="2"
-			stroke-linecap="round"
-			stroke-linejoin="round"
-			aria-hidden="true"
-			class="h-5 w-5"
-		>
-			<path
-				d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"
-			/>
-			<path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65" />
-			<path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65" />
 		</svg>
 	</a>
 
@@ -85,7 +66,7 @@
 		</svg>
 	</a>
 
-	<a href="/blog" aria-label="Blog" class={linkClass('/blog')}>
+	<a href="/#blog" aria-label="Blog" class={linkClass('/#blog')}>
 		<svg
 			viewBox="0 0 24 24"
 			fill="none"
@@ -101,7 +82,12 @@
 		</svg>
 	</a>
 
-	<a href="/#contact" aria-label="Contact" class={linkClass('/#contact')}>
+	<a
+		href="#contact-modal"
+		data-sveltekit-noscroll
+		aria-label="Contact"
+		class={linkClass('#contact-modal')}
+	>
 		<svg
 			viewBox="0 0 24 24"
 			fill="none"

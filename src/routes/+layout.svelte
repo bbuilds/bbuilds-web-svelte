@@ -5,6 +5,7 @@
 	import Footer from '$lib/components/Footer.svelte';
 	import BottomNav from '$lib/components/BottomNav.svelte';
 	import Contact from '$lib/components/Contact.svelte';
+	import ContactModal from '$lib/components/ContactModal.svelte';
 	let { children, data } = $props();
 </script>
 
@@ -21,5 +22,6 @@
 <Header />
 {@render children()}
 <Contact content={data.globals?.content} />
+<ContactModal />
 <Footer />
 <BottomNav />

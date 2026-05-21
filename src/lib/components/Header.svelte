@@ -1,14 +1,13 @@
 <script lang="ts">
 	const navItems = [
 		{ title: 'services', href: '/#services' },
-		{ title: 'stack', href: '/#stack' },
 		{ title: 'process', href: '/#process' },
-		{ title: 'blog', href: '/blog' }
+		{ title: 'blog', href: '/#blog' }
 	];
 </script>
 
 <nav
-	class="top-0 z-50 border-b border-black/10 bg-paper/80 backdrop-blur-md backdrop-saturate-150 md:sticky"
+	class="top-0 z-50 border-b border-black/[0.07] bg-paper/78 backdrop-blur-[0.625rem] backdrop-saturate-150 md:sticky"
 >
 	<div class="container flex items-center justify-between gap-6 py-3.5">
 		<a
@@ -54,7 +53,8 @@
 				</span>
 			</span>
 			<a
-				href="/#contact"
+				href="#contact-modal"
+				data-sveltekit-noscroll
 				class="relative px-0.5 py-1.5 text-ink no-underline after:absolute after:right-full after:-bottom-0.5 after:left-0 after:h-0.5 after:bg-ink after:transition-[right] after:duration-200 after:content-[''] hover:after:right-0"
 				>contact</a
 			>

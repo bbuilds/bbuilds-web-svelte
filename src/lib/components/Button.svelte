@@ -11,6 +11,7 @@
 		type?: 'button' | 'submit' | 'reset';
 		variant?: Variant;
 		size?: Size;
+		rounded?: string;
 		disabled?: boolean;
 		class?: string;
 		onclick?: (e: MouseEvent) => void;
@@ -24,6 +25,7 @@
 		type = 'button',
 		variant = 'primary',
 		size = 'md',
+		rounded = 'full',
 		disabled = false,
 		class: className = '',
 		onclick,
@@ -36,11 +38,22 @@
 		lg: 'px-7 py-4 text-sm gap-3'
 	};
 
+	const roundedClasses: Record<string, string> = {
+		full: 'rounded-full',
+		lg: 'rounded-lg',
+		md: 'rounded-md',
+		sm: 'rounded-sm',
+		xl: 'rounded-xl',
+		'2xl': 'rounded-2xl',
+		none: 'rounded-none'
+	};
+
 	const classes = $derived(
 		[
 			'btn',
 			`btn-${variant}`,
-			'inline-flex items-center font-mono rounded-full border no-underline cursor-pointer',
+			`inline-flex items-center font-mono border no-underline cursor-pointer`,
+			roundedClasses[rounded] ?? 'rounded-full',
 			'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink',
 			disabled ? 'opacity-50 pointer-events-none' : '',
 			sizeClasses[size],
@@ -141,9 +154,9 @@
 
 	/* Yellow: ink overlay slides in on hover */
 	.btn-yellow {
-		background: var(--yellow);
+		background: var(--pale-fire);
 		color: #fff;
-		border-color: var(--yellow);
+		border-color: var(--pale-fire);
 	}
 	.btn-yellow::before {
 		background: var(--ink);
