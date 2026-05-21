@@ -36,6 +36,8 @@
 			.filter((it: Item) => it.runs.length > 0);
 	}
 
+	import SectionHeader from '$lib/components/SectionHeader.svelte';
+
 	const eyebrow = $derived(content?.services_section_eyebrow ?? '02.services');
 	const title = $derived(content?.services_section_title ?? 'Diving deep into digital.');
 	const titleSegments = $derived(parseTitleSegments(title));
@@ -65,35 +67,7 @@
 <section id="services" class="paper-bg relative pt-30 pb-25">
 	<div class="container">
 		<div class="mb-12">
-			<div
-				class="font-mono text-sm tracking-wider text-muted uppercase before:mr-2 before:text-yellow before:content-['●']"
-			>
-				// {eyebrow}
-			</div>
-			<h2 class="mt-2">
-				{#each titleSegments as seg, i (i)}
-					{#if seg.underline}
-						<span class="scribble">
-							{seg.text}
-							<svg viewBox="0 0 200 14" preserveAspectRatio="none" aria-hidden="true">
-								<path
-									d="M2 9 C 40 2, 80 12, 120 6 S 180 10, 198 5"
-									stroke="var(--yellow)"
-									stroke-width="4"
-									fill="none"
-									stroke-linecap="round"
-									opacity="0.9"
-								/>
-							</svg>
-						</span>
-					{:else}
-						{seg.text}
-					{/if}
-				{/each}
-			</h2>
-			<p class="mt-3.5 max-w-140 font-mono text-[0.8125rem] leading-[1.7] text-charcoal">
-				{copy}
-			</p>
+			<SectionHeader {eyebrow} {titleSegments} {copy} />
 		</div>
 
 		<div class="border-t border-ink">
