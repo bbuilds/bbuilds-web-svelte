@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
+	import Button from '$lib/components/Button.svelte';
 
 	let dialog = $state<HTMLDialogElement | undefined>(undefined);
 	const isOpen = $derived(page.url.hash === '#contact-modal');
@@ -42,16 +43,16 @@
 	bind:this={dialog}
 	onclose={onDialogClose}
 	onclick={onBackdropClick}
-	class="fixed inset-0 m-auto h-fit max-h-[calc(100dvh-2rem)] w-full max-w-125 rounded-xl border-none bg-transparent p-0"
+	class="fixed inset-0 m-auto h-fit max-h-[calc(100dvh-2rem)] w-full max-w-xl rounded-xl"
 >
-	<div class="rounded-xl border border-black/[0.07] bg-paper p-6">
+	<div class="rounded-xl border border-pale-fire/50 bg-ink p-10">
 		<div class="mb-5 flex items-center justify-between">
-			<h2 class="font-mono text-base font-bold tracking-tight text-ink">Contact</h2>
+			<h2 class="font-mono text-base font-bold tracking-tight text-white">Contact</h2>
 			<button
 				type="button"
 				aria-label="Close"
 				onclick={close}
-				class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-md border border-black/[0.07] bg-transparent p-1.5 text-ink transition-colors hover:bg-black/5"
+				class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-md border border-paper bg-transparent p-1.5 text-white transition-colors hover:bg-charcoal"
 			>
 				<svg
 					viewBox="0 0 24 24"
@@ -71,43 +72,38 @@
 
 		<form onsubmit={(e) => e.preventDefault()} class="flex flex-col gap-4">
 			<div class="flex flex-col gap-1.5">
-				<label for="contact-name" class="font-mono text-sm text-muted">Name</label>
+				<label for="contact-name" class="font-mono text-sm text-white">Name</label>
 				<input
 					id="contact-name"
 					name="name"
 					type="text"
 					placeholder="Your name"
 					autocomplete="name"
-					class="w-full rounded-lg border border-black/10 bg-paper px-3 py-2.5 text-sm leading-normal text-ink transition-colors placeholder:text-muted focus:border-ink focus:outline-none"
+					class="w-full rounded-lg border border-black/10 bg-paper px-3 py-2.5 text-sm leading-normal text-ink transition-colors placeholder:text-charcoal focus:border-ink focus:outline-none"
 				/>
 			</div>
 			<div class="flex flex-col gap-1.5">
-				<label for="contact-email" class="font-mono text-sm text-muted">Email</label>
+				<label for="contact-email" class="font-mono text-sm text-white">Email</label>
 				<input
 					id="contact-email"
 					name="email"
 					type="email"
 					placeholder="you@example.com"
 					autocomplete="email"
-					class="w-full rounded-lg border border-black/10 bg-paper px-3 py-2.5 text-sm leading-normal text-ink transition-colors placeholder:text-muted focus:border-ink focus:outline-none"
+					class="w-full rounded-lg border border-black/10 bg-paper px-3 py-2.5 text-sm leading-normal text-ink transition-colors placeholder:text-charcoal focus:border-ink focus:outline-none"
 				/>
 			</div>
 			<div class="flex flex-col gap-1.5">
-				<label for="contact-message" class="font-mono text-sm text-muted">Message</label>
+				<label for="contact-message" class="font-mono text-sm text-white">Message</label>
 				<textarea
 					id="contact-message"
 					name="message"
 					rows="5"
 					placeholder="What's on your mind?"
-					class="w-full resize-y rounded-lg border border-black/10 bg-paper px-3 py-2.5 text-sm leading-normal text-ink transition-colors placeholder:text-muted focus:border-ink focus:outline-none"
+					class="w-full resize-y rounded-lg border border-black/10 bg-paper px-3 py-2.5 text-sm leading-normal text-ink transition-colors placeholder:text-charcoal focus:border-ink focus:outline-none"
 				></textarea>
 			</div>
-			<button
-				type="submit"
-				class="mt-1 w-full cursor-pointer rounded-lg border border-ink bg-ink px-5.5 py-3 font-mono text-[0.8125rem] font-medium text-paper transition-opacity hover:opacity-85"
-			>
-				Send message
-			</button>
+			<Button type="submit" class="btn-yellow mt-1 w-full">Send message</Button>
 		</form>
 	</div>
 </dialog>

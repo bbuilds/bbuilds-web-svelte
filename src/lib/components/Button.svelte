@@ -141,9 +141,9 @@
 
 	/* Yellow: ink overlay slides in on hover */
 	.btn-yellow {
-		background: var(--yellow);
+		background: var(--pale-fire);
 		color: #fff;
-		border-color: var(--yellow);
+		border-color: var(--pale-fire);
 	}
 	.btn-yellow::before {
 		background: var(--ink);
