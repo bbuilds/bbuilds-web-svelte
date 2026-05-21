@@ -1,4 +1,7 @@
 <script module lang="ts">
+	import type { ISourceOptions } from '@tsparticles/engine';
+	import { LEAF_IMAGES } from '$lib/particles/leafImages';
+
 	let particlesReady: Promise<typeof import('@tsparticles/engine').tsParticles> | undefined;
 	const initParticles = () => {
 		particlesReady ??= (async () => {
@@ -13,41 +16,6 @@
 		})();
 		return particlesReady;
 	};
-</script>
-
-<script lang="ts">
-	import { onMount } from 'svelte';
-	import type { ISourceOptions } from '@tsparticles/engine';
-	import Button from '$lib/components/Button.svelte';
-	import { resolveMultilink } from '$lib/utils/links';
-	import { LEAF_IMAGES } from '$lib/particles/leafImages';
-	import type { StoryblokHomePage } from '$lib/types/storyblok';
-
-	interface Props {
-		content?: StoryblokHomePage;
-	}
-	let { content }: Props = $props();
-
-	const HERO_WORDS = [
-		'hardened systems',
-		'immersive experiences',
-		'captivating stories',
-		'sexy interfaces',
-		'intelligent workflows'
-	] as const;
-
-	const slugToWord = (slug: string) => slug.replace(/-/g, ' ');
-
-	const eyebrow = $derived(content?.hero_eyebrow ?? "greetings, I'm Branden Builds");
-	const words = $derived(
-		content?.hero_taglines?.filter(Boolean).map(slugToWord) ?? [...HERO_WORDS]
-	);
-	const copy = $derived(
-		content?.hero_copy ??
-			'I turn ambitious ideas into high-performance digital reality. I bridge creative discovery and hardened engineering with intelligent workflows and "nerdy" UX. Precise engineering meets high-fidelity design. Always clean, always sexy.'
-	);
-	const ctaText = $derived(content?.hero_cta_text ?? 'start a project');
-	const cta = $derived(resolveMultilink(content?.hero_cta_url));
 
 	const leafParticleOptions = {
 		fullScreen: { enable: true },
@@ -91,21 +59,52 @@
 			}
 		}
 	} as ISourceOptions;
+</script>
+
+<script lang="ts">
+	import { onMount } from 'svelte';
+	import Button from '$lib/components/Button.svelte';
+	import { resolveMultilink } from '$lib/utils/links';
+	import type { StoryblokHomePage } from '$lib/types/storyblok';
+
+	interface Props {
+		content?: StoryblokHomePage;
+	}
+	let { content }: Props = $props();
+
+	const HERO_WORDS = [
+		'hardened systems',
+		'immersive experiences',
+		'captivating stories',
+		'sexy interfaces',
+		'intelligent workflows'
+	] as const;
+
+	const slugToWord = (slug: string) => slug.replace(/-/g, ' ');
+
+	const eyebrow = $derived(content?.hero_eyebrow ?? "greetings, I'm Branden Builds");
+	const words = $derived(
+		content?.hero_taglines?.filter(Boolean).map(slugToWord) ?? [...HERO_WORDS]
+	);
+	const copy = $derived(
+		content?.hero_copy ??
+			'I turn ambitious ideas into high-performance digital reality. I bridge creative discovery and hardened engineering with intelligent workflows and "nerdy" UX. Precise engineering meets high-fidelity design. Always clean, always sexy.'
+	);
+	const ctaText = $derived(content?.hero_cta_text ?? 'start a project');
+	const cta = $derived(resolveMultilink(content?.hero_cta_url));
 
 	let wi = $state(0);
 	let particlesEl: HTMLDivElement;
 
 	onMount(() => {
+		const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 		let wordIntervalId: ReturnType<typeof setInterval> | undefined;
-		if (words.length > 0) {
+		if (!prefersReducedMotion && words.length > 0) {
 			wordIntervalId = setInterval(() => {
 				wi = (wi + 1) % words.length;
 			}, 2400);
 		}
-
-		const prefersReducedMotion =
-			typeof window !== 'undefined' &&
-			window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 		if (prefersReducedMotion) {
 			return () => {
@@ -279,5 +278,14 @@
 		overflow: hidden;
 		opacity: 0.55;
 		z-index: 0;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.rot {
+			animation: none;
+		}
+		.sticker {
+			animation: none;
+		}
 	}
 </style>
