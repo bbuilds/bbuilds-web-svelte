@@ -71,6 +71,23 @@ const mockContent: StoryblokHomePage = {
 	]
 };
 
+const fiveChapterContent: StoryblokHomePage = {
+	_uid: 'home',
+	component: 'Home Page',
+	featured_services: [
+		makeServiceStory(
+			'discovery-transformation',
+			'Discovery & Transformation',
+			'AI Strategy.',
+			'desc'
+		),
+		makeServiceStory('product-engineering', 'Product Engineering', 'Frontend.', 'desc'),
+		makeServiceStory('applied-intelligence', 'Applied Intelligence', 'RAG.', 'desc'),
+		makeServiceStory('identity-experience', 'Identity & Experience', 'Brand.', 'desc'),
+		makeServiceStory('continuity-growth', 'Continuity & Growth', 'SEO.', 'desc')
+	]
+};
+
 describe('Services', () => {
 	it('renders the eyebrow text', async () => {
 		render(Services);
@@ -92,7 +109,7 @@ describe('Services', () => {
 	});
 
 	it('renders all five practice titles as h3s', async () => {
-		render(Services);
+		render(Services, { content: fiveChapterContent });
 		await expect
 			.element(page.getByRole('heading', { level: 3, name: /discovery & transformation/i }))
 			.toBeInTheDocument();
@@ -111,15 +128,15 @@ describe('Services', () => {
 	});
 
 	it('first practice is open by default', async () => {
-		render(Services);
-		const btn = page.getByRole('button', { name: /discovery & transformation/i });
+		render(Services, { content: mockContent });
+		const btn = page.getByRole('button', { name: /mock practice one/i });
 		await expect.element(btn).toHaveAttribute('aria-expanded', 'true');
 	});
 
 	it('clicking a different practice opens it and closes the first', async () => {
-		render(Services);
-		const first = page.getByRole('button', { name: /discovery & transformation/i });
-		const second = page.getByRole('button', { name: /product engineering/i });
+		render(Services, { content: mockContent });
+		const first = page.getByRole('button', { name: /mock practice one/i });
+		const second = page.getByRole('button', { name: /mock practice two/i });
 
 		await expect.element(first).toHaveAttribute('aria-expanded', 'true');
 		await second.click();
@@ -128,8 +145,8 @@ describe('Services', () => {
 	});
 
 	it('clicking an open practice closes it', async () => {
-		render(Services);
-		const first = page.getByRole('button', { name: /discovery & transformation/i });
+		render(Services, { content: mockContent });
+		const first = page.getByRole('button', { name: /mock practice one/i });
 		await expect.element(first).toHaveAttribute('aria-expanded', 'true');
 		await first.click();
 		await expect.element(first).toHaveAttribute('aria-expanded', 'false');

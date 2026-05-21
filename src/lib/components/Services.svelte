@@ -13,18 +13,6 @@
 
 	type Run = { text: string; bold: boolean; href?: string };
 	type Item = { runs: Run[] };
-	type Chapter = {
-		n: string;
-		title: string;
-		items: ReadonlyArray<Item>;
-	};
-	type StaticItem = { b: string; t: string };
-	type StaticChapter = {
-		n: string;
-		title: string;
-		items: ReadonlyArray<StaticItem>;
-	};
-
 	function parseListItems(doc: StoryblokRichtext | undefined): Item[] {
 		const list = doc?.content?.find((n: StoryblokRichtext) => n.type === 'bullet_list');
 		if (!list?.content) return [];
@@ -47,131 +35,6 @@
 			.filter((it: Item) => it.runs.length > 0);
 	}
 
-	const SERVICES = [
-		{
-			n: '01',
-			title: 'Discovery & Transformation',
-			items: [
-				{
-					b: 'AI Strategy & Roadmap Discovery',
-					t: 'Precision auditing to identify high-leverage AI integration points. We skip the hype and map out the technical path from manual friction to intelligent automation.'
-				},
-				{
-					b: 'Systems Architecture & Audits',
-					t: "Whether untangling legacy spaghetti or architecting greenfield infrastructure, we build for the scale you're headed toward. Structural integrity is non-negotiable."
-				},
-				{
-					b: 'Mixed-methods research',
-					t: 'Merging quantitative data with qualitative insights to reveal high-fidelity opportunities. We find the "why" behind the metrics to inform every engineering decision.'
-				},
-				{
-					b: 'Product innovation',
-					t: 'Breathing production-grade life into experimental ideas. We blend technical foresight with business logic to carve out your niche in the digital era.'
-				}
-			]
-		},
-		{
-			n: '02',
-			title: 'Product Engineering',
-			items: [
-				{
-					b: 'Frontend Development',
-					t: 'High-performance TypeScript applications built with "nerdy" UX precision. We deliver lag-free, visually stunning interfaces across React, Next.js, and beyond.'
-				},
-				{
-					b: 'Backend & API Development',
-					t: 'Hardened Node.js and PHP services with clean separation of concerns. Robust, well-documented APIs that your frontend—and your AI agents—can actually depend on.'
-				},
-				{
-					b: 'Headless CMS Implementation',
-					t: 'Modular content infrastructure via Sanity, Contentful, or Strapi. We build flexible modeling systems that empower creators without compromising the engineering.'
-				},
-				{
-					b: 'E-commerce & Point of Sale',
-					t: 'Custom Stripe-powered engines and unified POS systems. We close the loop between digital and physical commerce, engineered to handle every edge case.'
-				},
-				{
-					b: 'Mobile Deployment',
-					t: 'Cross-platform iOS and Android with native-level polish. We build mobile products that feel like high-performance hardware, not a web app in a costume.'
-				}
-			]
-		},
-		{
-			n: '03',
-			title: 'Applied Intelligence',
-			items: [
-				{
-					b: 'AI Strategy & Integration',
-					t: 'We audit your stack to find genuine leverage, not pitch-deck fluff. You get a concrete execution plan for deploying intelligence where it moves the needle.'
-				},
-				{
-					b: 'Retrieval-Augmented Generation (RAG) & Knowledge Systems',
-					t: 'Transforming institutional data into a grounded intelligence layer. Your models stop hallucinating and start answering with cited, queryable precision.'
-				},
-				{
-					b: 'Agentic Workflows',
-					t: 'Moving beyond chatbots to autonomous systems. We build agents that execute multi-step tasks, interact with your APIs, and fail gracefully when necessary.'
-				},
-				{
-					b: 'Model Context Protocol',
-					t: 'Custom MCP servers that give your AI systems live, proprietary context. We extend what language models can do without the overhead of retraining.'
-				},
-				{
-					b: 'Fix AI Slop',
-					t: 'Hardening "vibe-coded" prototypes into enterprise-grade reality. We audit the architecture, close security gaps, and add the observability needed to survive real users.'
-				}
-			]
-		},
-		{
-			n: '04',
-			title: 'Identity & Experience',
-			items: [
-				{
-					b: 'Brand Strategy & Positioning',
-					t: 'Clarity before creativity. We engineer a memorable position in the market that is honest enough to hold up and specific enough to scale.'
-				},
-				{
-					b: 'Visual Identity',
-					t: 'A coherent system of typography, motion, and design resolved for the digital-first context. We build brand assets that live in code, not just in PDFs.'
-				},
-				{
-					b: 'Content strategy and information architecture (IA)',
-					t: 'Organizing the digital landscape for clear wayfinding. We treat information architecture as the foundational infrastructure of the user experience.'
-				},
-				{
-					b: 'User Experience (UX)',
-					t: "High-fidelity design meets technical precision. To us, UX is a cross-disciplinary commitment to making the interface feel 'clean and sexy' at every touchpoint."
-				},
-				{
-					b: 'Design Systems & Component Libraries',
-					t: 'Atomized design as infrastructure. We deliver tokens, components, and documentation that allow your engineering team to build with total confidence.'
-				}
-			]
-		},
-		{
-			n: '05',
-			title: 'Continuity & Growth',
-			items: [
-				{
-					b: 'Generative Engine Optimization (GEO)',
-					t: 'Structuring your brand signals so that AI systems—ChatGPT, Perplexity, Gemini—surface you as the definitive authority in the next era of search.'
-				},
-				{
-					b: 'Technical SEO',
-					t: 'Deep indexability work and schema markup that most agencies skip. We make your content legible to both the LLMs and the humans they direct to you.'
-				},
-				{
-					b: 'Core Web Vitals & Performance',
-					t: 'Targeted engineering for speed and efficiency. We treat Lighthouse scores as a performance metric and a core part of the user experience.'
-				},
-				{
-					b: 'Maintenance & Evolution',
-					t: 'Strategic partnership over help-desk support. We keep your product performant, secure, and evolving alongside your business goals.'
-				}
-			]
-		}
-	] as const satisfies ReadonlyArray<StaticChapter>;
-
 	const eyebrow = $derived(content?.services_section_eyebrow ?? '02.services');
 	const title = $derived(content?.services_section_title ?? 'Diving deep into digital.');
 	const copy = $derived(
@@ -179,28 +42,16 @@
 			"Together, we bridge the gap between creative discovery and high-performance engineering to scale your vision. Whether we're hardening a single pillar or architecting your entire stack, we ensure every detail is hardened, polished, and resilient."
 	);
 
-	const chapters = $derived.by<ReadonlyArray<Chapter>>(() => {
-		const resolved = (content?.featured_services ?? []).filter(
-			(s): s is ISbStoryData<StoryblokServicesTemplate> => typeof s !== 'string'
-		);
-		if (resolved.length === 0) {
-			return SERVICES.map((s) => ({
-				n: s.n,
-				title: s.title,
-				items: s.items.map((it) => ({
-					runs: [
-						{ text: `${it.b}.`, bold: true },
-						{ text: ` ${it.t}`, bold: false }
-					]
-				}))
-			}));
-		}
-		return resolved.map((story, i) => ({
-			n: String(i + 1).padStart(2, '0'),
-			title: story.content.card_title ?? '',
-			items: parseListItems(story.content.card_list_items)
-		}));
-	});
+	const chapters = $derived(
+		(content?.featured_services ?? [])
+			.filter((s): s is ISbStoryData<StoryblokServicesTemplate> => typeof s !== 'string')
+			.map((story, i) => ({
+				n: String(i + 1).padStart(2, '0'),
+				title: story.content.card_title ?? '',
+				href: `/${story.full_slug}`,
+				items: parseListItems(story.content.card_list_items)
+			}))
+	);
 
 	let openIdx = $state(0);
 
@@ -290,6 +141,27 @@
 										>
 									</div>
 								{/each}
+								{#if s.href}
+									<div class="col-span-full mt-2 flex justify-end">
+										<a
+											href={s.href}
+											class="group inline-flex items-center font-mono text-[0.75rem] font-bold text-ink"
+										>
+											<span
+												class="transition duration-300 group-hover:-translate-x-2 group-hover:opacity-0"
+												>[</span
+											>
+											<span class="px-1">full service overview</span>
+											<span class="transition duration-200 ease-[ease] group-hover:translate-x-1"
+												>→</span
+											>
+											<span
+												class="transition duration-300 group-hover:translate-x-2 group-hover:opacity-0"
+												>]</span
+											>
+										</a>
+									</div>
+								{/if}
 							</div>
 						</div>
 					</div>
