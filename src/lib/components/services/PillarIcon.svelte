@@ -9,7 +9,7 @@
 </script>
 
 {#if kind === 'ai'}
-	<svg viewBox="0 0 240 200" class="pi-svg" aria-hidden="true">
+	<svg viewBox="0 0 240 200" class="mx-auto block h-auto w-full max-w-md" aria-hidden="true">
 		<defs>
 			<pattern id="pi-grid-ai" width="16" height="16" patternUnits="userSpaceOnUse">
 				<path
@@ -125,7 +125,7 @@
 		>
 	</svg>
 {:else if kind === 'systems'}
-	<svg viewBox="0 0 240 200" class="pi-svg" aria-hidden="true">
+	<svg viewBox="0 0 240 200" class="mx-auto block h-auto w-full max-w-md" aria-hidden="true">
 		<defs>
 			<pattern id="pi-grid-sys" width="16" height="16" patternUnits="userSpaceOnUse">
 				<path
@@ -285,7 +285,7 @@
 		>
 	</svg>
 {:else if kind === 'research'}
-	<svg viewBox="0 0 240 200" class="pi-svg" aria-hidden="true">
+	<svg viewBox="0 0 240 200" class="mx-auto block h-auto w-full max-w-md" aria-hidden="true">
 		<defs>
 			<pattern id="pi-grid-res" width="16" height="16" patternUnits="userSpaceOnUse">
 				<path
@@ -391,7 +391,7 @@
 		</g>
 	</svg>
 {:else if kind === 'innovation'}
-	<svg viewBox="0 0 240 200" class="pi-svg" aria-hidden="true">
+	<svg viewBox="0 0 240 200" class="mx-auto block h-auto w-full max-w-md" aria-hidden="true">
 		<defs>
 			<pattern id="pi-grid-inn" width="16" height="16" patternUnits="userSpaceOnUse">
 				<path
@@ -615,13 +615,3 @@
 		</g>
 	</svg>
 {/if}
-
-<style>
-	.pi-svg {
-		display: block;
-		width: 100%;
-		height: auto;
-		max-width: 28rem;
-		margin: 0 auto;
-	}
-</style>

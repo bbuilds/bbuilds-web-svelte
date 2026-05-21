@@ -23,51 +23,65 @@
 	const hasAmp = $derived(service.title.includes(' & '));
 </script>
 
-<section class="svc-hero paper-bg">
+<section class="paper-bg relative overflow-hidden pt-6 pb-18 md:pt-10 md:pb-24">
 	<div class="svc-hero-gridbg" aria-hidden="true"></div>
 
-	<div class="svc-hero-container container">
-		<nav class="svc-crumbs" aria-label="Breadcrumb">
-			<a href="/">/ home</a>
-			<span class="svc-crumbs-sep" aria-hidden="true">›</span>
-			<a href="/#services">/ services</a>
-			<span class="svc-crumbs-sep" aria-hidden="true">›</span>
-			<span class="svc-crumbs-here">/ {service.title.toLowerCase()}</span>
+	<div class="relative z-1 container">
+		<nav
+			class="mb-10 flex flex-wrap items-center gap-2 font-mono text-xs text-muted"
+			aria-label="Breadcrumb"
+		>
+			<a href="/" class="text-muted no-underline transition-colors duration-200 hover:text-ink"
+				>/ home</a
+			>
+			<span class="opacity-50" aria-hidden="true">›</span>
+			<a
+				href="/#services"
+				class="text-muted no-underline transition-colors duration-200 hover:text-ink">/ services</a
+			>
+			<span class="opacity-50" aria-hidden="true">›</span>
+			<span class="font-semibold text-ink">/ {service.title.toLowerCase()}</span>
 		</nav>
 
-		<div class="svc-hero-grid">
-			<div class="svc-hero-content">
-				<h1 class="svc-hero-h1">
-					<span class="svc-hero-line">
-						<span class="svc-hero-word">{line1}</span>
+		<div
+			class="grid grid-cols-1 items-center gap-12 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:gap-16"
+		>
+			<div>
+				<h1
+					class="text-[clamp(2.5rem,6.5vw,5.5rem)] leading-[0.95] font-semibold tracking-tight text-ink"
+				>
+					<span class="block">
+						<span class="inline-block">{line1}</span>
 						{#if hasAmp}
 							<span class="svc-hero-amp">&amp;</span>
 						{/if}
 					</span>
-					<span class="svc-hero-line">
-						<span class="scribble svc-hero-word-2">
+					<span class="block">
+						<span class="scribble relative inline-block">
 							{line2}
 							<ScribbleUnderline variant="thick" />
 						</span>
 					</span>
 				</h1>
 
-				<div class="svc-hero-kicker">
-					<span class="font-hand">{service.kicker}</span>
+				<div
+					class="svc-hero-kicker mt-5 inline-block translate-x-1 rotate-[-1.5deg] font-hand text-[clamp(1.375rem,2.2vw,1.875rem)] text-charcoal"
+				>
+					{service.kicker}
 				</div>
 
-				<p class="svc-hero-lead">
+				<p class="svc-hero-lead mt-7 max-w-136 font-mono text-[0.875rem] leading-7 text-body">
 					{#each service.lead as seg (seg.text)}
 						{#if seg.bold}<strong>{seg.text}</strong>{:else}{seg.text}{/if}
 					{/each}
 				</p>
 
-				<div class="svc-hero-actions">
+				<div class="mt-8 flex flex-wrap gap-3.5">
 					<Button href="#contact">{service.ctaLabel}</Button>
 				</div>
 			</div>
 
-			<div class="svc-hero-visual">
+			<div class="svc-hero-visual w-full">
 				<BlueprintDiagram diagram={service.diagram} />
 			</div>
 		</div>
@@ -75,18 +89,6 @@
 </section>
 
 <style>
-	.svc-hero {
-		padding: 2rem 0 4.5rem;
-		position: relative;
-		overflow: hidden;
-	}
-
-	@media (min-width: 48rem) {
-		.svc-hero {
-			padding: 2.5rem 0 6rem;
-		}
-	}
-
 	.svc-hero-gridbg {
 		position: absolute;
 		inset: 0;
@@ -100,71 +102,6 @@
 		opacity: 0.75;
 	}
 
-	.svc-hero-container {
-		position: relative;
-		z-index: 1;
-	}
-
-	.svc-crumbs {
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-		flex-wrap: wrap;
-		font-family: var(--mono);
-		font-size: 0.75rem;
-		color: var(--muted);
-		margin-bottom: 2.5rem;
-	}
-
-	.svc-crumbs a {
-		text-decoration: none;
-		color: var(--muted);
-		transition: color 0.2s ease;
-	}
-
-	.svc-crumbs a:hover {
-		color: var(--ink);
-	}
-
-	.svc-crumbs-sep {
-		opacity: 0.5;
-	}
-
-	.svc-crumbs-here {
-		color: var(--ink);
-		font-weight: 600;
-	}
-
-	.svc-hero-grid {
-		display: grid;
-		grid-template-columns: 1fr;
-		gap: 3rem;
-		align-items: center;
-	}
-
-	@media (min-width: 64rem) {
-		.svc-hero-grid {
-			grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
-			gap: 4rem;
-		}
-	}
-
-	.svc-hero-h1 {
-		font-size: clamp(2.5rem, 6.5vw, 5.5rem);
-		line-height: 0.95;
-		letter-spacing: -0.025em;
-		font-weight: 600;
-		color: var(--ink);
-	}
-
-	.svc-hero-line {
-		display: block;
-	}
-
-	.svc-hero-word {
-		display: inline-block;
-	}
-
 	.svc-hero-amp {
 		display: inline-block;
 		margin-left: 0.5rem;
@@ -173,11 +110,6 @@
 		color: var(--yellow);
 		font-size: 0.78em;
 		transform: translateY(-0.08em) rotate(-6deg);
-	}
-
-	.scribble {
-		position: relative;
-		display: inline-block;
 	}
 
 	.scribble :global(svg) {
@@ -190,33 +122,11 @@
 		overflow: visible;
 	}
 
-	.svc-hero-word-2 {
-		display: inline-block;
-	}
-
-	.svc-hero-kicker {
-		margin-top: 1.25rem;
-		font-family: var(--hand);
-		font-size: clamp(1.375rem, 2.2vw, 1.875rem);
-		color: var(--charcoal);
-		transform: rotate(-1.5deg) translateX(0.25rem);
-		display: inline-block;
-	}
-
 	.svc-hero-kicker::before {
 		content: '↳ ';
 		color: var(--yellow);
 		font-family: var(--sans);
 		font-weight: 500;
-	}
-
-	.svc-hero-lead {
-		margin-top: 1.75rem;
-		max-width: 34rem;
-		font-family: var(--mono);
-		font-size: 0.875rem;
-		color: var(--body);
-		line-height: 1.75;
 	}
 
 	.svc-hero-lead :global(strong) {
@@ -225,23 +135,8 @@
 		background: linear-gradient(transparent 65%, rgba(255, 205, 103, 0.45) 65%);
 	}
 
-	.svc-hero-actions {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.875rem;
-		margin-top: 2rem;
-	}
-
 	.svc-hero-visual {
-		width: 100%;
 		animation: bpIn 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) 0.15s both;
-	}
-
-	@media (max-width: 47.9375rem) {
-		.svc-hero {
-			padding-top: 1.5rem;
-			padding-bottom: 4.5rem;
-		}
 	}
 
 	@keyframes bpIn {

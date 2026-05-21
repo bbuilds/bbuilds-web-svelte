@@ -15,13 +15,20 @@
 	const next = $derived(SERVICES_INDEX[(curIdx + 1) % SERVICES_INDEX.length]);
 </script>
 
-<section class="other-svcs paper-bg">
+<section class="paper-bg relative border-t border-paper-line pt-20 pb-24">
 	<div class="container">
-		<div class="meta meta-dot other-svcs-eyebrow">// continue reading</div>
-		<h2 class="other-svcs-title">
-			The other <span class="scribble"
+		<div class="meta-dot mb-4 font-mono text-[0.8125rem] tracking-[0.06em] text-muted uppercase">
+			// continue reading
+		</div>
+		<h2 class="mb-12 text-[clamp(2rem,4vw,3.25rem)]">
+			The other <span class="scribble relative inline-block"
 				>pillars
-				<svg viewBox="0 0 200 22" preserveAspectRatio="none" aria-hidden="true">
+				<svg
+					viewBox="0 0 200 22"
+					preserveAspectRatio="none"
+					class="absolute right-[-6%] -bottom-3.5 left-[-6%] h-3.5 w-[112%] overflow-visible"
+					aria-hidden="true"
+				>
 					<path
 						d="M2 14 C 40 4, 80 20, 120 10 S 180 16, 198 8"
 						stroke="var(--yellow-bright)"
@@ -33,225 +40,86 @@
 			</span>.
 		</h2>
 
-		<ul class="other-svcs-list">
+		<ul class="mb-16 list-none border-t border-paper-line p-0">
 			{#each others as s (s.slug)}
 				{@const live = isLiveService(s.slug)}
-				<li>
+				<li class="border-b border-paper-line">
 					<a
-						class="other-svc {!live ? 'other-svc--stub' : ''}"
+						class="grid grid-cols-[auto_1fr_auto] items-center gap-5 px-2 py-6 text-ink no-underline transition-[padding,background] duration-300 {live
+							? 'group hover:bg-[rgba(184,130,26,0.08)] hover:pl-6'
+							: 'pointer-events-none cursor-default opacity-40'}"
 						href={live ? `/services/${s.slug}` : undefined}
 						aria-disabled={!live || undefined}
 					>
-						<span class="other-svc-n">{s.n}</span>
-						<span class="other-svc-meta">
-							<span class="other-svc-sub">{s.sub}</span>
-							<span class="other-svc-title">{s.title}</span>
+						<span
+							class="min-w-8 font-mono text-[0.875rem] text-muted transition-colors duration-300 {live
+								? 'group-hover:text-yellow'
+								: ''}">{s.n}</span
+						>
+						<span class="flex flex-col gap-0.5">
+							<span class="font-mono text-[0.6875rem] tracking-[0.08em] text-muted uppercase"
+								>{s.sub}</span
+							>
+							<span class="text-[clamp(1.25rem,2.4vw,2rem)] font-medium tracking-[-0.02em]"
+								>{s.title}</span
+							>
 						</span>
-						<span class="other-svc-arr" aria-hidden="true">→</span>
+						<span
+							class="font-mono text-xl text-muted transition-[transform,color] duration-300 {live
+								? 'group-hover:translate-x-1.5 group-hover:text-ink'
+								: ''}"
+							aria-hidden="true">→</span
+						>
 					</a>
 				</li>
 			{/each}
 		</ul>
 
-		<div class="other-svcs-pn">
+		<div
+			class="grid grid-cols-1 gap-4 border-t border-dashed border-paper-line pt-8 md:grid-cols-2 md:gap-8"
+		>
 			<a
-				class="other-svcs-pn-link {!isLiveService(prev.slug) ? 'other-svcs-pn-link--stub' : ''}"
+				class="flex flex-col gap-1.5 py-4 text-inherit no-underline {isLiveService(prev.slug)
+					? 'group'
+					: 'pointer-events-none cursor-default opacity-40'}"
 				href={isLiveService(prev.slug) ? `/services/${prev.slug}` : undefined}
 				aria-disabled={!isLiveService(prev.slug) || undefined}
 			>
-				<span class="other-svcs-pn-label">← previous pillar</span>
-				<span class="other-svcs-pn-title">{prev.n} · {prev.title}</span>
+				<span class="font-mono text-xs tracking-[0.04em] text-muted">← previous pillar</span>
+				<span
+					class="font-sans text-base font-medium text-ink transition-colors duration-200 {isLiveService(
+						prev.slug
+					)
+						? 'group-hover:text-yellow'
+						: ''}">{prev.n} · {prev.title}</span
+				>
 			</a>
 			<a
-				class="other-svcs-pn-link other-svcs-pn-link--right {!isLiveService(next.slug)
-					? 'other-svcs-pn-link--stub'
-					: ''}"
+				class="flex flex-col items-end gap-1.5 py-4 text-right text-inherit no-underline {isLiveService(
+					next.slug
+				)
+					? 'group'
+					: 'pointer-events-none cursor-default opacity-40'}"
 				href={isLiveService(next.slug) ? `/services/${next.slug}` : undefined}
 				aria-disabled={!isLiveService(next.slug) || undefined}
 			>
-				<span class="other-svcs-pn-label">next pillar →</span>
-				<span class="other-svcs-pn-title">{next.n} · {next.title}</span>
+				<span class="font-mono text-xs tracking-[0.04em] text-muted">next pillar →</span>
+				<span
+					class="font-sans text-base font-medium text-ink transition-colors duration-200 {isLiveService(
+						next.slug
+					)
+						? 'group-hover:text-yellow'
+						: ''}">{next.n} · {next.title}</span
+				>
 			</a>
 		</div>
 	</div>
 </section>
 
 <style>
-	.other-svcs {
-		padding: 5rem 0 6rem;
-		position: relative;
-		border-top: 1px solid var(--paper-line);
-	}
-
-	.meta {
-		font-family: var(--mono);
-		font-size: 0.8125rem;
-		letter-spacing: 0.06em;
-		text-transform: uppercase;
-		color: var(--muted);
-	}
-
 	.meta-dot::before {
 		content: '●';
 		color: var(--yellow);
 		margin-right: 0.5rem;
-	}
-
-	.other-svcs-eyebrow {
-		margin-bottom: 1rem;
-	}
-
-	.other-svcs-title {
-		margin-bottom: 3rem;
-		font-size: clamp(2rem, 4vw, 3.25rem);
-	}
-
-	.scribble {
-		position: relative;
-		display: inline-block;
-	}
-
-	.scribble svg {
-		position: absolute;
-		left: -6%;
-		right: -6%;
-		bottom: -0.875rem;
-		width: 112%;
-		height: 0.875rem;
-		overflow: visible;
-	}
-
-	.other-svcs-list {
-		list-style: none;
-		padding: 0;
-		margin: 0 0 4rem;
-		border-top: 1px solid var(--paper-line);
-	}
-
-	.other-svcs-list li {
-		border-bottom: 1px solid var(--paper-line);
-	}
-
-	.other-svc {
-		display: grid;
-		grid-template-columns: auto 1fr auto;
-		align-items: center;
-		gap: 1.25rem;
-		padding: 1.5rem 0.5rem;
-		text-decoration: none;
-		color: var(--ink);
-		transition:
-			padding 0.3s ease,
-			background 0.3s ease;
-	}
-
-	.other-svc:not(.other-svc--stub):hover {
-		padding-left: 1.5rem;
-		background: rgba(184, 130, 26, 0.08);
-	}
-
-	.other-svc--stub {
-		opacity: 0.4;
-		cursor: default;
-		pointer-events: none;
-	}
-
-	.other-svc-n {
-		font-family: var(--mono);
-		font-size: 0.875rem;
-		color: var(--muted);
-		min-width: 2rem;
-	}
-
-	.other-svc:not(.other-svc--stub):hover .other-svc-n {
-		color: var(--yellow);
-	}
-
-	.other-svc-meta {
-		display: flex;
-		flex-direction: column;
-		gap: 0.125rem;
-	}
-
-	.other-svc-sub {
-		font-family: var(--mono);
-		font-size: 0.6875rem;
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-		color: var(--muted);
-	}
-
-	.other-svc-title {
-		font-size: clamp(1.25rem, 2.4vw, 2rem);
-		font-weight: 500;
-		letter-spacing: -0.02em;
-	}
-
-	.other-svc-arr {
-		font-family: var(--mono);
-		font-size: 1.25rem;
-		color: var(--muted);
-		transition:
-			transform 0.3s ease,
-			color 0.3s ease;
-	}
-
-	.other-svc:not(.other-svc--stub):hover .other-svc-arr {
-		color: var(--ink);
-		transform: translateX(0.375rem);
-	}
-
-	.other-svcs-pn {
-		display: grid;
-		grid-template-columns: 1fr;
-		gap: 1rem;
-		padding-top: 2rem;
-		border-top: 1px dashed var(--paper-line);
-	}
-
-	@media (min-width: 48rem) {
-		.other-svcs-pn {
-			grid-template-columns: 1fr 1fr;
-			gap: 2rem;
-		}
-	}
-
-	.other-svcs-pn-link {
-		text-decoration: none;
-		color: inherit;
-		display: flex;
-		flex-direction: column;
-		gap: 0.375rem;
-		padding: 1rem 0;
-	}
-
-	.other-svcs-pn-link--right {
-		text-align: right;
-		align-items: flex-end;
-	}
-
-	.other-svcs-pn-link--stub {
-		opacity: 0.4;
-		pointer-events: none;
-		cursor: default;
-	}
-
-	.other-svcs-pn-label {
-		font-family: var(--mono);
-		font-size: 0.75rem;
-		color: var(--muted);
-		letter-spacing: 0.04em;
-	}
-
-	.other-svcs-pn-title {
-		font-family: var(--sans);
-		font-size: 1rem;
-		font-weight: 500;
-		color: var(--ink);
-		transition: color 0.2s ease;
-	}
-
-	.other-svcs-pn-link:not(.other-svcs-pn-link--stub):hover .other-svcs-pn-title {
-		color: var(--yellow);
 	}
 </style>

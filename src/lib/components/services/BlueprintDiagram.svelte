@@ -12,20 +12,29 @@
 	}
 </script>
 
-<div class="bp" aria-hidden="true">
-	<div class="bp-chrome">
-		<div class="bp-chrome-dots">
-			<span></span><span></span><span></span>
+<div
+	class="bp relative overflow-hidden rounded-xl border border-ink bg-paper font-mono shadow-[0_1.5rem_3rem_-1.5rem_rgba(26,26,26,0.25),inset_0_0_0_1px_rgba(26,26,26,0.04)]"
+	aria-hidden="true"
+>
+	<div
+		class="flex items-center gap-3 border-b border-ink bg-[rgba(26,26,26,0.04)] px-3.5 py-2 text-[0.6875rem] tracking-wider"
+	>
+		<div class="flex gap-1.25">
+			<span class="h-2 w-2 rounded-full border border-ink bg-[#f7c5a6]"></span>
+			<span class="h-2 w-2 rounded-full border border-ink bg-[#ffdf95]"></span>
+			<span class="h-2 w-2 rounded-full border border-ink bg-[#b6dbb6]"></span>
 		</div>
-		<div class="bp-chrome-title">~ / {diagram.title}</div>
-		<div class="bp-chrome-status">
-			<span class="bp-chrome-status-dot"></span>
+		<div class="flex-1 font-medium text-charcoal">~ / {diagram.title}</div>
+		<div class="flex items-center gap-1.5 text-muted uppercase">
+			<span
+				class="h-1.75 w-1.75 rounded-full bg-green shadow-[0_0_0_0.1875rem_rgba(123,168,123,0.18)]"
+			></span>
 			live
 		</div>
 	</div>
 
 	<div class="bp-canvas">
-		<svg viewBox="0 0 520 360" class="bp-svg">
+		<svg viewBox="0 0 520 360" class="block h-auto w-full">
 			<defs>
 				<pattern id="bpgrid" width="20" height="20" patternUnits="userSpaceOnUse">
 					<path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(26,26,26,0.05)" stroke-width="0.5" />
@@ -149,26 +158,16 @@
 		</svg>
 	</div>
 
-	<div class="bp-footer">
-		<span class="bp-prompt">$</span>
-		<span class="bp-cmd">{diagram.cmd ?? ''}</span>
-		<span class="bp-cursor" aria-hidden="true">▍</span>
+	<div
+		class="flex items-center gap-2 border-t border-ink bg-ink px-3.5 py-2.5 text-[0.6875rem] tracking-[0.04em] text-[#cfc4ad]"
+	>
+		<span class="font-bold text-teal">$</span>
+		<span class="text-paper-line">{diagram.cmd ?? ''}</span>
+		<span class="bp-cursor ml-auto text-pale-fire" aria-hidden="true">▍</span>
 	</div>
 </div>
 
 <style>
-	.bp {
-		background: var(--paper);
-		border: 1px solid var(--ink);
-		border-radius: 0.75rem;
-		overflow: hidden;
-		box-shadow:
-			0 1.5rem 3rem -1.5rem rgba(26, 26, 26, 0.25),
-			inset 0 0 0 1px rgba(26, 26, 26, 0.04);
-		font-family: var(--mono);
-		position: relative;
-	}
-
 	.bp::after {
 		content: '';
 		position: absolute;
@@ -194,71 +193,9 @@
 		opacity: 0.45;
 	}
 
-	.bp-chrome {
-		display: flex;
-		align-items: center;
-		gap: 0.75rem;
-		padding: 0.5rem 0.875rem;
-		border-bottom: 1px solid var(--ink);
-		background: rgba(26, 26, 26, 0.04);
-		font-size: 0.6875rem;
-		letter-spacing: 0.05em;
-	}
-
-	.bp-chrome-dots {
-		display: flex;
-		gap: 0.3125rem;
-	}
-
-	.bp-chrome-dots span {
-		width: 0.5rem;
-		height: 0.5rem;
-		border-radius: 50%;
-		border: 1px solid var(--ink);
-		background: var(--paper);
-	}
-
-	.bp-chrome-dots span:nth-child(1) {
-		background: #f7c5a6;
-	}
-	.bp-chrome-dots span:nth-child(2) {
-		background: #ffdf95;
-	}
-	.bp-chrome-dots span:nth-child(3) {
-		background: #b6dbb6;
-	}
-
-	.bp-chrome-title {
-		flex: 1;
-		color: var(--charcoal);
-		font-weight: 500;
-	}
-
-	.bp-chrome-status {
-		display: flex;
-		align-items: center;
-		gap: 0.375rem;
-		color: var(--muted);
-		text-transform: uppercase;
-	}
-
-	.bp-chrome-status-dot {
-		width: 0.4375rem;
-		height: 0.4375rem;
-		border-radius: 50%;
-		background: var(--green);
-		box-shadow: 0 0 0 0.1875rem rgba(123, 168, 123, 0.18);
-	}
-
 	.bp-canvas {
 		background:
 			radial-gradient(circle at 20% 0%, rgba(255, 205, 103, 0.08), transparent 60%), var(--paper);
-	}
-
-	.bp-svg {
-		display: block;
-		width: 100%;
-		height: auto;
 	}
 
 	.bp-node {
@@ -281,31 +218,8 @@
 		animation: bpFlow 2s linear infinite;
 	}
 
-	.bp-footer {
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-		padding: 0.625rem 0.875rem;
-		border-top: 1px solid var(--ink);
-		background: var(--ink);
-		color: #cfc4ad;
-		font-size: 0.6875rem;
-		letter-spacing: 0.04em;
-	}
-
-	.bp-prompt {
-		color: var(--teal);
-		font-weight: 700;
-	}
-
-	.bp-cmd {
-		color: #d8cdb6;
-	}
-
 	.bp-cursor {
-		color: var(--yellow-bright);
 		animation: bpBlink 1.1s steps(2) infinite;
-		margin-left: auto;
 	}
 
 	@keyframes bpNodeIn {
