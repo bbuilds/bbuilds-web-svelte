@@ -1,3 +1,20 @@
+<script module lang="ts">
+	let particlesReady: Promise<typeof import('@tsparticles/engine').tsParticles> | undefined;
+	const initParticles = () => {
+		particlesReady ??= (async () => {
+			const { tsParticles } = await import('@tsparticles/engine');
+			const { loadSlim } = await import('@tsparticles/slim');
+			const { loadEmittersPlugin } = await import('@tsparticles/plugin-emitters');
+			const { loadEmittersShapeSquare } = await import('@tsparticles/plugin-emitters-shape-square');
+			await loadSlim(tsParticles);
+			await loadEmittersPlugin(tsParticles);
+			await loadEmittersShapeSquare(tsParticles);
+			return tsParticles;
+		})();
+		return particlesReady;
+	};
+</script>
+
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { ISourceOptions } from '@tsparticles/engine';
@@ -100,13 +117,7 @@
 		let container: { destroy: () => void } | undefined;
 
 		(async () => {
-			const { tsParticles } = await import('@tsparticles/engine');
-			const { loadSlim } = await import('@tsparticles/slim');
-			const { loadEmittersPlugin } = await import('@tsparticles/plugin-emitters');
-			const { loadEmittersShapeSquare } = await import('@tsparticles/plugin-emitters-shape-square');
-			await loadSlim(tsParticles);
-			await loadEmittersPlugin(tsParticles);
-			await loadEmittersShapeSquare(tsParticles);
+			const tsParticles = await initParticles();
 			const loaded = await tsParticles.load({
 				element: particlesEl,
 				options: leafParticleOptions
