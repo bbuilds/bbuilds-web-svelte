@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Button from '$lib/components/Button.svelte';
+	import SectionHeader from '$lib/components/SectionHeader.svelte';
 	import { parseTitleSegments } from '$lib/utils/format';
 	import { resolveMultilink } from '$lib/utils/links';
 	import type { StoryblokGlobals } from '$lib/types/storyblok';
@@ -85,47 +85,18 @@
 		{/each}
 
 		<div class="container">
-			{#if content.contact_eyebrow}
-				<div
-					class="font-mono text-sm tracking-wider text-muted uppercase before:mr-2 before:text-yellow before:content-['●']"
-				>
-					{content.contact_eyebrow}
-				</div>
-			{/if}
-
-			<h2 class="mx-auto mt-4 max-w-250">
-				{#each titleSegments as seg, i (i)}
-					{#if seg.underline}
-						<span class="scribble"
-							>{seg.text}<svg viewBox="0 0 200 22" preserveAspectRatio="none" aria-hidden="true">
-								<path
-									d="M2 14 C 40 4, 80 20, 120 10 S 180 16, 198 8"
-									stroke="var(--yellow)"
-									stroke-width="8"
-									fill="none"
-									stroke-linecap="round"
-								/>
-							</svg></span
-						>
-					{:else if seg.hand}
-						<span class="font-hand font-bold text-charcoal">{seg.text}</span>
-					{:else}
-						{seg.text}
-					{/if}
-				{/each}
-			</h2>
-
-			{#if content.contact_copy}
-				<p class="mx-auto mt-6 max-w-155 font-mono text-sm leading-[1.7] text-body">
-					{content.contact_copy}
-				</p>
-			{/if}
-
-			{#if cta && ctaLink}
-				<div class="mt-9 flex flex-wrap justify-center gap-3.5">
-					<Button href={ctaLink.href}>{cta.label}</Button>
-				</div>
-			{/if}
+			<SectionHeader
+				eyebrow={content.contact_eyebrow}
+				eyebrowPrefix={false}
+				{titleSegments}
+				copy={content.contact_copy}
+				copyMaxWidth="max-w-155"
+				copyClass="text-sm text-body"
+				align="center"
+				{cta}
+				{ctaLink}
+				scribbleVariant="thick"
+			/>
 		</div>
 	</section>
 {/if}

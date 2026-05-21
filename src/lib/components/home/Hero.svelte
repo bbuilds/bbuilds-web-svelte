@@ -1,0 +1,291 @@
+<script module lang="ts">
+	import type { ISourceOptions } from '@tsparticles/engine';
+	import { LEAF_IMAGES } from '$lib/particles/leafImages';
+
+	let particlesReady: Promise<typeof import('@tsparticles/engine').tsParticles> | undefined;
+	const initParticles = () => {
+		particlesReady ??= (async () => {
+			const { tsParticles } = await import('@tsparticles/engine');
+			const { loadSlim } = await import('@tsparticles/slim');
+			const { loadEmittersPlugin } = await import('@tsparticles/plugin-emitters');
+			const { loadEmittersShapeSquare } = await import('@tsparticles/plugin-emitters-shape-square');
+			await loadSlim(tsParticles);
+			await loadEmittersPlugin(tsParticles);
+			await loadEmittersShapeSquare(tsParticles);
+			return tsParticles;
+		})();
+		return particlesReady;
+	};
+
+	const leafParticleOptions = {
+		fullScreen: { enable: true },
+		background: { color: 'transparent' },
+		fpsLimit: 60,
+		detectRetina: true,
+		particles: {
+			number: { value: 0 },
+			shape: {
+				type: 'image',
+				options: { image: LEAF_IMAGES }
+			},
+			opacity: { value: 0.9 },
+			size: { value: { min: 16, max: 38 } },
+			rotate: {
+				value: { min: 0, max: 360 },
+				direction: 'random',
+				animation: { enable: true, speed: { min: 5, max: 25 }, sync: false }
+			},
+			move: {
+				enable: true,
+				direction: 'bottom',
+				speed: { min: 0.4, max: 0.9 },
+				straight: false,
+				gravity: { enable: true, acceleration: 0.3, maxSpeed: 2 },
+				wobble: { enable: true, distance: 30, speed: { min: -8, max: 8 } },
+				outModes: { default: 'destroy', top: 'none' }
+			}
+		},
+		emitters: {
+			direction: 'bottom',
+			position: { x: 50, y: -5 },
+			size: { width: 100, height: 0, mode: 'percent' },
+			rate: { delay: 1.4, quantity: 1 }
+		},
+		interactivity: {
+			detectsOn: 'window',
+			events: { onHover: { enable: true, mode: 'repulse' } },
+			modes: {
+				repulse: { distance: 90, duration: 0.4, factor: 100, speed: 1, easing: 'ease-out-quad' }
+			}
+		}
+	} as ISourceOptions;
+</script>
+
+<script lang="ts">
+	import { onMount } from 'svelte';
+	import Button from '$lib/components/Button.svelte';
+	import { resolveMultilink } from '$lib/utils/links';
+	import type { StoryblokHomePage } from '$lib/types/storyblok';
+
+	interface Props {
+		content?: StoryblokHomePage;
+	}
+	let { content }: Props = $props();
+
+	const HERO_WORDS = [
+		'hardened systems',
+		'immersive experiences',
+		'captivating stories',
+		'sexy interfaces',
+		'intelligent workflows'
+	] as const;
+
+	const slugToWord = (slug: string) => slug.replace(/-/g, ' ');
+
+	const eyebrow = $derived(content?.hero_eyebrow ?? "greetings, I'm Branden Builds");
+	const words = $derived(
+		content?.hero_taglines?.filter(Boolean).map(slugToWord) ?? [...HERO_WORDS]
+	);
+	const copy = $derived(
+		content?.hero_copy ??
+			'I turn ambitious ideas into high-performance digital reality. I bridge creative discovery and hardened engineering with intelligent workflows and "nerdy" UX. Precise engineering meets high-fidelity design. Always clean, always sexy.'
+	);
+	const ctaText = $derived(content?.hero_cta_text ?? 'start a project');
+	const cta = $derived(resolveMultilink(content?.hero_cta_url));
+
+	let wi = $state(0);
+	let particlesEl: HTMLDivElement;
+
+	onMount(() => {
+		const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+		let wordIntervalId: ReturnType<typeof setInterval> | undefined;
+		if (!prefersReducedMotion && words.length > 0) {
+			wordIntervalId = setInterval(() => {
+				wi = (wi + 1) % words.length;
+			}, 2400);
+		}
+
+		if (prefersReducedMotion) {
+			return () => {
+				if (wordIntervalId) clearInterval(wordIntervalId);
+			};
+		}
+
+		let destroyed = false;
+		let container: { destroy: () => void } | undefined;
+
+		(async () => {
+			const tsParticles = await initParticles();
+			const loaded = await tsParticles.load({
+				element: particlesEl,
+				options: leafParticleOptions
+			});
+			if (destroyed) {
+				loaded?.destroy();
+			} else {
+				container = loaded;
+			}
+		})();
+
+		return () => {
+			destroyed = true;
+			if (wordIntervalId) clearInterval(wordIntervalId);
+			container?.destroy();
+		};
+	});
+</script>
+
+<section class="paper-bg relative overflow-hidden pt-16 pb-30">
+	<!-- Falling leaves layer -->
+	<div class="hero-leaves-layer" bind:this={particlesEl} aria-hidden="true"></div>
+
+	<!-- Sun sticker -->
+	<div
+		class="pointer-events-none absolute opacity-25 md:opacity-100"
+		style="right: 8%; top: 3.75rem;"
+	>
+		<div class="sticker" aria-hidden="true"></div>
+	</div>
+
+	<div class="relative z-2 container">
+		<span
+			class="mb-4 flex items-center font-mono text-sm tracking-[0.06em] text-muted uppercase before:mr-2 before:text-yellow before:content-['●'] md:text-base"
+		>
+			{eyebrow}
+		</span>
+		<h1>
+			I enjoy building <span
+				class="hidden font-hand text-8xl font-medium text-charcoal md:inline-block md:translate-y-4"
+				>↳</span
+			><br />
+			<span class="scribble whitespace-nowrap">
+				{#key wi}
+					<em class="rot inline-block text-ink not-italic">{words[wi]}</em>
+				{/key}
+				<svg viewBox="0 0 400 22" preserveAspectRatio="none" aria-hidden="true">
+					<path
+						d="M2 14 C 80 4, 160 20, 240 10 S 360 16, 398 8"
+						stroke="#ffcd67"
+						stroke-width="10"
+						fill="none"
+						stroke-linecap="round"
+						opacity="0.85"
+					/>
+				</svg>
+			</span>
+		</h1>
+
+		<p class="mt-9 max-w-140 font-mono text-[0.875rem] leading-[1.7] text-body">
+			{copy}
+		</p>
+
+		<div class="mt-8 flex flex-wrap gap-3.5">
+			<Button href={cta?.href ?? '#contact'} target={cta?.target} rel={cta?.rel}>{ctaText}</Button>
+		</div>
+	</div>
+</section>
+
+<style>
+	@media (max-width: 639px) {
+		h1 {
+			font-size: 1.875rem;
+		}
+	}
+
+	.rot {
+		animation: wordFade 0.6s ease both;
+	}
+
+	@property --sun-x {
+		syntax: '<percentage>';
+		inherits: false;
+		initial-value: 35%;
+	}
+
+	@property --sun-y {
+		syntax: '<percentage>';
+		inherits: false;
+		initial-value: 35%;
+	}
+
+	.sticker {
+		width: 5.5rem;
+		height: 5.5rem;
+		border-radius: 50%;
+		background: radial-gradient(circle at var(--sun-x) var(--sun-y), #fff3bb 0%, #ffcd67 70%);
+		box-shadow:
+			0 0.75rem 2.5rem -0.625rem rgba(0, 0, 0, 0.25),
+			inset 0 0 0 0.125rem var(--ink);
+		animation:
+			gradientDrift 10s ease-in-out infinite,
+			glowPulse 4s ease-in-out infinite;
+	}
+
+	@media (min-width: 48rem) {
+		.sticker {
+			width: 6.5rem;
+			height: 6.5rem;
+		}
+	}
+
+	@keyframes gradientDrift {
+		0%,
+		100% {
+			--sun-x: 35%;
+			--sun-y: 35%;
+		}
+		33% {
+			--sun-x: 62%;
+			--sun-y: 42%;
+		}
+		66% {
+			--sun-x: 42%;
+			--sun-y: 65%;
+		}
+	}
+
+	@keyframes glowPulse {
+		0%,
+		100% {
+			box-shadow:
+				0 0.75rem 2.5rem -0.625rem rgba(0, 0, 0, 0.25),
+				inset 0 0 0 0.125rem var(--ink);
+		}
+		50% {
+			box-shadow:
+				0 0.75rem 3.5rem -0.25rem rgba(0, 0, 0, 0.18),
+				0 0 2rem 0.375rem rgba(255, 205, 103, 0.45),
+				inset 0 0 0 0.125rem var(--ink);
+		}
+	}
+
+	@keyframes wordFade {
+		0% {
+			opacity: 0;
+			transform: translateY(0.875rem) rotate(-2deg);
+		}
+		60% {
+			opacity: 1;
+			transform: translateY(0) rotate(0);
+		}
+	}
+
+	.hero-leaves-layer {
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+		overflow: hidden;
+		opacity: 0.55;
+		z-index: 0;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.rot {
+			animation: none;
+		}
+		.sticker {
+			animation: none;
+		}
+	}
+</style>

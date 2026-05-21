@@ -65,6 +65,10 @@
 		"wrangler": "^4.93.0"
 	},
 	"dependencies": {
-		"@storyblok/svelte": "^6.1.7"
+		"@storyblok/svelte": "^6.1.7",
+		"@tsparticles/engine": "^4.0.5",
+		"@tsparticles/plugin-emitters": "^4.0.5",
+		"@tsparticles/plugin-emitters-shape-square": "^4.0.5",
+		"@tsparticles/slim": "^4.0.5"
 	}
 }

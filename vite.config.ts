@@ -5,6 +5,14 @@ import { sveltekit } from '@sveltejs/kit/vite';
 
 export default defineConfig({
 	plugins: [tailwindcss(), sveltekit()],
+	optimizeDeps: {
+		include: [
+			'@tsparticles/engine',
+			'@tsparticles/slim',
+			'@tsparticles/plugin-emitters',
+			'@tsparticles/plugin-emitters-shape-square'
+		]
+	},
 	test: {
 		expect: { requireAssertions: true },
 		projects: [

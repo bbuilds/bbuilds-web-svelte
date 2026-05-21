@@ -1,4 +1,6 @@
 <script lang="ts">
+	import ScribbleUnderline from '$lib/components/ScribbleUnderline.svelte';
+
 	const QUOTE = {
 		body: "I've had the chance to work with Branden for 4+ years. Everything he touches is thoughtful, scalable, and intentionally set up to last. He's always thinking a few steps ahead, which means his work doesn't just solve the immediate need — it actually future-proofs whatever we're building so we're not backtracking later. Reliable, collaborative, and consistently raises the bar.",
 		name: 'Kat Williams',
@@ -44,17 +46,7 @@
 					rel="noopener noreferrer"
 				>
 					<span class="scribble">
-						{QUOTE.name}
-						<svg viewBox="0 0 200 14" preserveAspectRatio="none" aria-hidden="true">
-							<path
-								d="M2 9 C 40 2, 80 12, 120 6 S 180 10, 198 5"
-								stroke="var(--color-yellow)"
-								stroke-width="4"
-								fill="none"
-								stroke-linecap="round"
-								opacity="0.9"
-							/>
-						</svg>
+						{QUOTE.name}<ScribbleUnderline />
 					</span>
 				</a>
 				<span class="opacity-50" aria-hidden="true">·</span>

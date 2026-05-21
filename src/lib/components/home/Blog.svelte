@@ -5,6 +5,7 @@
 	import { resolveMultilink } from '$lib/utils/links';
 	import Button from '$lib/components/Button.svelte';
 	import PostCard from '$lib/components/PostCard.svelte';
+	import SectionHeader from '$lib/components/SectionHeader.svelte';
 
 	interface Props {
 		content?: StoryblokHomePage;
@@ -44,41 +45,7 @@
 	<div class="container">
 		<header class="mb-12 flex flex-wrap items-end justify-between gap-8">
 			<div>
-				{#if eyebrow}
-					<div
-						class="font-mono text-sm tracking-wider text-muted uppercase before:mr-2 before:text-yellow before:content-['●']"
-					>
-						// {eyebrow}
-					</div>
-				{/if}
-				{#if titleSegments.length}
-					<h2 class="mt-2">
-						{#each titleSegments as seg, i (i)}
-							{#if seg.underline}
-								<span class="scribble">
-									{seg.text}
-									<svg viewBox="0 0 200 14" preserveAspectRatio="none" aria-hidden="true">
-										<path
-											d="M2 9 C 40 2, 80 12, 120 6 S 180 10, 198 5"
-											stroke="var(--yellow)"
-											stroke-width="4"
-											fill="none"
-											stroke-linecap="round"
-											opacity="0.9"
-										/>
-									</svg>
-								</span>
-							{:else}
-								{seg.text}
-							{/if}
-						{/each}
-					</h2>
-				{/if}
-				{#if copy}
-					<p class="mt-3.5 max-w-lg font-mono text-[0.8125rem] leading-[1.7] text-charcoal">
-						{copy}
-					</p>
-				{/if}
+				<SectionHeader {eyebrow} {titleSegments} {copy} copyMaxWidth="max-w-lg" />
 			</div>
 			{#if ctaLink}
 				<Button href={ctaLink.href} target={ctaLink.target} rel={ctaLink.rel} variant="primary">

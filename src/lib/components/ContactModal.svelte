@@ -2,6 +2,7 @@
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
 	import Button from '$lib/components/Button.svelte';
+	import FormField from '$lib/components/FormField.svelte';
 	import { validateName, validateEmail, validateMessage } from '$lib/utils/validation';
 
 	let dialog = $state<HTMLDialogElement | undefined>(undefined);
@@ -84,10 +85,6 @@
 	function onBackdropClick(e: MouseEvent) {
 		if (e.target === dialog) close();
 	}
-
-	function inputClass(hasError: string | undefined) {
-		return `w-full rounded-lg border bg-paper px-3 py-2.5 text-sm leading-normal text-ink transition-colors placeholder:text-charcoal focus:outline-none ${hasError ? 'border-red-500 focus:border-red-500' : 'border-black/10 focus:border-ink'}`;
-	}
 </script>
 
 <dialog
@@ -122,62 +119,40 @@
 		</div>
 
 		<form onsubmit={onSubmit} class="flex flex-col gap-4">
-			<div class="flex flex-col gap-1.5">
-				<label for="contact-name" class="font-mono text-sm text-white">Name</label>
-				<input
-					id="contact-name"
-					name="name"
-					type="text"
-					placeholder="Your name"
-					autocomplete="name"
-					bind:value={values.name}
-					oninput={() => onInput('name')}
-					onblur={() => onBlur('name')}
-					aria-invalid={errors.name ? 'true' : undefined}
-					aria-describedby={errors.name ? 'contact-name-error' : undefined}
-					class={inputClass(errors.name)}
-				/>
-				{#if errors.name}
-					<p id="contact-name-error" class="font-mono text-xs text-red-400">{errors.name}</p>
-				{/if}
-			</div>
-			<div class="flex flex-col gap-1.5">
-				<label for="contact-email" class="font-mono text-sm text-white">Email</label>
-				<input
-					id="contact-email"
-					name="email"
-					type="email"
-					placeholder="you@example.com"
-					autocomplete="email"
-					bind:value={values.email}
-					oninput={() => onInput('email')}
-					onblur={() => onBlur('email')}
-					aria-invalid={errors.email ? 'true' : undefined}
-					aria-describedby={errors.email ? 'contact-email-error' : undefined}
-					class={inputClass(errors.email)}
-				/>
-				{#if errors.email}
-					<p id="contact-email-error" class="font-mono text-xs text-red-400">{errors.email}</p>
-				{/if}
-			</div>
-			<div class="flex flex-col gap-1.5">
-				<label for="contact-message" class="font-mono text-sm text-white">Message</label>
-				<textarea
-					id="contact-message"
-					name="message"
-					rows="5"
-					placeholder="What's on your mind?"
-					bind:value={values.message}
-					oninput={() => onInput('message')}
-					onblur={() => onBlur('message')}
-					aria-invalid={errors.message ? 'true' : undefined}
-					aria-describedby={errors.message ? 'contact-message-error' : undefined}
-					class="resize-y {inputClass(errors.message)}"
-				></textarea>
-				{#if errors.message}
-					<p id="contact-message-error" class="font-mono text-xs text-red-400">{errors.message}</p>
-				{/if}
-			</div>
+			<FormField
+				id="contact-name"
+				name="name"
+				label="Name"
+				placeholder="Your name"
+				autocomplete="name"
+				bind:value={values.name}
+				error={errors.name}
+				onInput={() => onInput('name')}
+				onBlur={() => onBlur('name')}
+			/>
+			<FormField
+				id="contact-email"
+				name="email"
+				label="Email"
+				type="email"
+				placeholder="you@example.com"
+				autocomplete="email"
+				bind:value={values.email}
+				error={errors.email}
+				onInput={() => onInput('email')}
+				onBlur={() => onBlur('email')}
+			/>
+			<FormField
+				id="contact-message"
+				name="message"
+				label="Message"
+				type="textarea"
+				placeholder="What's on your mind?"
+				bind:value={values.message}
+				error={errors.message}
+				onInput={() => onInput('message')}
+				onBlur={() => onBlur('message')}
+			/>
 			<Button type="submit" rounded="lg" class="btn-yellow mt-1 w-full">Send message</Button>
 		</form>
 	</div>
