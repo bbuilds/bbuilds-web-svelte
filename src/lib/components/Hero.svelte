@@ -150,13 +150,16 @@
 	</div>
 
 	<div class="relative z-2 container">
-		<div
-			class="mb-4.5 font-mono text-sm tracking-[0.06em] text-muted uppercase before:mr-2 before:text-yellow before:content-['●'] md:text-base"
+		<span
+			class="mb-4 flex items-center font-mono text-sm tracking-[0.06em] text-muted uppercase before:mr-2 before:text-yellow before:content-['●'] md:text-base"
 		>
 			{eyebrow}
-		</div>
+		</span>
 		<h1>
-			I enjoy building <span class="font-hand font-medium text-charcoal">↳</span><br />
+			I enjoy building <span
+				class="hidden font-hand text-8xl font-medium text-charcoal md:inline-block md:translate-y-4"
+				>↳</span
+			><br />
 			<span class="scribble whitespace-nowrap">
 				{#key wi}
 					<em class="rot inline-block text-ink not-italic">{words[wi]}</em>
