@@ -1,13 +1,18 @@
 <script lang="ts">
-	import type { Pillar } from '$lib/services/types';
+	import type { StoryblokServicesTemplate } from '$lib/types/storyblok';
 	import PillarIcon from './PillarIcon.svelte';
 
 	interface Props {
-		head: { meta: string; title: string; lead: string };
-		items: Pillar[];
+		slug: string;
+		content: StoryblokServicesTemplate;
 	}
 
-	let { head, items }: Props = $props();
+	let { slug, content }: Props = $props();
+
+	const eyebrow = $derived(content.pillars_eyebrow ?? '');
+	const title = $derived(content.pillars_title ?? '');
+	const lead = $derived(content.pillars_copy ?? '');
+	const pillars = $derived(content.pillars ?? []);
 </script>
 
 <section
@@ -17,16 +22,16 @@
 	<div class="container">
 		<div class="mb-16">
 			<div class="meta-dot font-mono text-[0.8125rem] tracking-[0.06em] text-muted uppercase">
-				{head.meta}
+				{eyebrow}
 			</div>
-			<h2 class="mt-3 text-[clamp(2rem,4.2vw,3.5rem)] leading-[1.05] text-balance">{head.title}</h2>
+			<h2 class="mt-3 text-[clamp(2rem,4.2vw,3.5rem)] leading-[1.05] text-balance">{title}</h2>
 			<p class="mt-4 max-w-136 font-mono text-[0.8125rem] leading-[1.7] text-charcoal">
-				{head.lead}
+				{lead}
 			</p>
 		</div>
 
 		<div class="flex flex-col border-t border-paper-line">
-			{#each items as item, i (item.tag)}
+			{#each pillars as pillar, i (pillar._uid)}
 				<article
 					class="grid grid-cols-1 items-center gap-8 border-b border-paper-line py-8 md:py-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:gap-20 lg:py-16"
 				>
@@ -37,20 +42,20 @@
 							<span
 								class="h-1.75 w-1.75 rounded-full bg-yellow shadow-[0_0_0_0.1875rem_rgba(255,205,103,0.25)]"
 							></span>
-							<span class="font-semibold">{item.tag}</span>
+							<span class="font-semibold">pillar.{pillar.pillar_id}</span>
 						</div>
-						<PillarIcon kind={item.icon} />
+						<PillarIcon {slug} pillarId={pillar.pillar_id} />
 					</div>
 					<div class="max-w-136">
 						<h3
 							class="mb-4.5 text-[clamp(1.625rem,3vw,2.5rem)] font-semibold tracking-[-0.02em] text-balance text-ink"
 						>
-							{item.heading}
+							{pillar.title}
 						</h3>
 						<p
 							class="pillar-copy m-0 font-mono text-[0.875rem] leading-[1.8] text-pretty text-body"
 						>
-							{item.copy}
+							{pillar.copy}
 						</p>
 					</div>
 				</article>

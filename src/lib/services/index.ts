@@ -1,7 +1,6 @@
-import type { Service, ServiceStub } from './types';
-import { architecture } from './architecture';
+import type { ServiceStub } from './types';
 
-export type { Service, ServiceStub };
+export type { ServiceStub };
 
 export const SERVICES_INDEX: ServiceStub[] = [
 	{ slug: 'architecture', n: '01', title: 'Discovery & Architecture', sub: 'The Foundation' },
@@ -11,8 +10,6 @@ export const SERVICES_INDEX: ServiceStub[] = [
 	{ slug: 'continuity', n: '05', title: 'Continuity & Growth', sub: 'The Lifecycle' }
 ];
 
-const SERVICES: Record<string, Service> = { architecture };
+const LIVE_SLUGS = new Set<string>(['architecture']);
 
-export const getService = (slug: string): Service | undefined => SERVICES[slug];
-
-export const isLiveService = (slug: string): boolean => slug in SERVICES;
+export const isLiveService = (slug: string): boolean => LIVE_SLUGS.has(slug);
