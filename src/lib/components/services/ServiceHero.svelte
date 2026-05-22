@@ -2,6 +2,7 @@
 	import type { StoryblokHero } from '$lib/types/storyblok';
 	import { getDiagram } from '$lib/services/diagrams';
 	import { resolveMultilink } from '$lib/utils/links';
+	import { parseHighlights } from '$lib/utils/parseHighlights';
 	import Button from '$lib/components/Button.svelte';
 	import ScribbleUnderline from '$lib/components/ScribbleUnderline.svelte';
 	import BlueprintDiagram from './BlueprintDiagram.svelte';
@@ -26,7 +27,7 @@
 	const hasAmp = $derived(title.includes(' & '));
 
 	const kicker = $derived(hero?.tagline ?? '');
-	const copy = $derived(hero?.copy ?? '');
+	const copy = $derived(parseHighlights(hero?.copy ?? ''));
 	const cta = $derived(resolveMultilink(hero?.CTA?.[0]?.link));
 	const ctaLabel = $derived(hero?.CTA?.[0]?.label ?? 'get in touch');
 
@@ -63,7 +64,10 @@
 					<span class="block">
 						<span class="inline-block">{line1}</span>
 						{#if hasAmp}
-							<span class="svc-hero-amp">&amp;</span>
+							<span
+								class="ml-2 inline-block translate-y-[-0.08em] rotate-[-6deg] font-hand text-[0.78em] font-medium text-yellow"
+								>&amp;</span
+							>
 						{/if}
 					</span>
 					<span class="block">
@@ -82,9 +86,11 @@
 					</div>
 				{/if}
 
-				{#if copy}
+				{#if copy.length}
 					<p class="svc-hero-lead mt-7 max-w-136 font-mono text-[0.875rem] leading-7 text-body">
-						{copy}
+						{#each copy as seg (seg.text + seg.highlight)}
+							{#if seg.highlight}<strong>{seg.text}</strong>{:else}{seg.text}{/if}
+						{/each}
 					</p>
 				{/if}
 
@@ -95,7 +101,7 @@
 				</div>
 			</div>
 
-			<div class="svc-hero-visual w-full">
+			<div class="w-full animate-[bpIn_0.7s_cubic-bezier(0.2,0.7,0.2,1)_0.15s_both]">
 				<BlueprintDiagram {diagram} />
 			</div>
 		</div>
@@ -116,26 +122,6 @@
 		opacity: 0.75;
 	}
 
-	.svc-hero-amp {
-		display: inline-block;
-		margin-left: 0.5rem;
-		font-family: var(--hand);
-		font-weight: 500;
-		color: var(--yellow);
-		font-size: 0.78em;
-		transform: translateY(-0.08em) rotate(-6deg);
-	}
-
-	.scribble :global(svg) {
-		position: absolute;
-		left: -6%;
-		right: -6%;
-		bottom: -0.875rem;
-		width: 112%;
-		height: 1.125rem;
-		overflow: visible;
-	}
-
 	.svc-hero-kicker::before {
 		content: '↳ ';
 		color: var(--yellow);
@@ -147,10 +133,6 @@
 		color: var(--ink);
 		font-weight: 700;
 		background: linear-gradient(transparent 65%, rgba(255, 205, 103, 0.45) 65%);
-	}
-
-	.svc-hero-visual {
-		animation: bpIn 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) 0.15s both;
 	}
 
 	@keyframes bpIn {
