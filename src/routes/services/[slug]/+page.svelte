@@ -18,5 +18,5 @@
 
 <ServiceHero slug={data.slug} {hero} />
 <Pillars slug={data.slug} {content} />
-<OtherServices currentSlug={data.slug} />
+<OtherServices currentSlug={data.slug} liveSlugs={data.liveSlugs} />
 <Contact />

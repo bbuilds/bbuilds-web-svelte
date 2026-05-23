@@ -9,7 +9,3 @@ export const SERVICES_INDEX: ServiceStub[] = [
 	{ slug: 'identity', n: '04', title: 'Identity & Experience', sub: 'The Interface' },
 	{ slug: 'continuity', n: '05', title: 'Continuity & Growth', sub: 'The Lifecycle' }
 ];
-
-const LIVE_SLUGS = new Set<string>(['architecture']);
-
-export const isLiveService = (slug: string): boolean => LIVE_SLUGS.has(slug);
