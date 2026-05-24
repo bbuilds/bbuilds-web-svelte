@@ -38,6 +38,31 @@ export const DIAGRAMS: Record<string, Diagram> = {
 			{ from: 'analytics', to: 'bp', hot: true },
 			{ from: 'tech', to: 'bp', hot: true }
 		]
+	},
+	engineering: {
+		title: 'engineering.stack',
+		cmd: 'npm run deploy --stack=full --env=production',
+		nodes: [
+			{ id: 'frontend', x: 60, y: 110, label: 'FRONTEND', tag: 'react · next.js', w: 80 },
+			{ id: 'mobile', x: 60, y: 230, label: 'MOBILE', tag: 'rn · swift · kotlin', w: 80 },
+			{ id: 'api', x: 165, y: 170, label: 'API LAYER', tag: 'gateway', w: 80 },
+			{ id: 'backend', x: 270, y: 80, label: 'BACKEND', tag: 'node.js · php', w: 80 },
+			{ id: 'cms', x: 270, y: 170, label: 'CMS', tag: 'headless', w: 80 },
+			{ id: 'commerce', x: 270, y: 260, label: 'COMMERCE', tag: 'stripe · pos', w: 80 },
+			{ id: 'harden', x: 365, y: 170, label: 'CI / CD', tag: 'harden · test', w: 80 },
+			{ id: 'deploy', x: 460, y: 170, label: 'PRODUCTION', tag: 'v1.0', w: 80, hot: true }
+		],
+		edges: [
+			{ from: 'frontend', to: 'api' },
+			{ from: 'mobile', to: 'api' },
+			{ from: 'api', to: 'backend' },
+			{ from: 'api', to: 'cms' },
+			{ from: 'api', to: 'commerce' },
+			{ from: 'backend', to: 'harden' },
+			{ from: 'cms', to: 'harden' },
+			{ from: 'commerce', to: 'harden' },
+			{ from: 'harden', to: 'deploy', hot: true }
+		]
 	}
 };
 

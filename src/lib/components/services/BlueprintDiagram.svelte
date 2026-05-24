@@ -79,14 +79,23 @@
 				font-size="9"
 				letter-spacing="1">VISION</text
 			>
+			<g stroke="var(--muted)" stroke-width="0.7" opacity="0.5" fill="none">
+				<line x1="10" y1="20" x2="10" y2="34" />
+				<path d="M 6 30 L 10 36 L 14 30" stroke-linecap="round" stroke-linejoin="round" />
+			</g>
 			<text
-				x="10"
+				x="510"
 				y="354"
+				text-anchor="end"
 				fill="var(--muted)"
 				font-family="var(--mono)"
 				font-size="9"
 				letter-spacing="1">REALITY</text
 			>
+			<g stroke="var(--muted)" stroke-width="0.7" opacity="0.5" fill="none">
+				<line x1="510" y1="346" x2="510" y2="332" />
+				<path d="M 506 336 L 510 330 L 514 336" stroke-linecap="round" stroke-linejoin="round" />
+			</g>
 			<text
 				x="510"
 				y="14"
@@ -140,6 +149,16 @@
 						font-weight={node.hot ? 700 : 500}
 						letter-spacing="0.5">{node.label}</text
 					>
+					{#if node.tag}
+						<text
+							x={node.x - w / 2}
+							y={node.y - h / 2 - 5}
+							fill="var(--muted)"
+							font-family="var(--mono)"
+							font-size="8"
+							letter-spacing="0.7">{node.tag}</text
+						>
+					{/if}
 				</g>
 			{/each}
 
