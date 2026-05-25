@@ -63,6 +63,29 @@ export const DIAGRAMS: Record<string, Diagram> = {
 			{ from: 'commerce', to: 'harden' },
 			{ from: 'harden', to: 'deploy', hot: true }
 		]
+	},
+	intelligence: {
+		title: 'intelligence.graph',
+		cmd: 'agent run --grounded --observable --autonomous',
+		nodes: [
+			{ id: 'prompt', x: 70, y: 75, label: 'PROMPT', tag: 'user input' },
+			{ id: 'data', x: 70, y: 185, label: 'DATA', tag: 'sources · corpus' },
+			{ id: 'rag', x: 250, y: 75, label: 'RAG', tag: 'retrieval', w: 110 },
+			{ id: 'ml', x: 250, y: 185, label: 'ML MODELS', tag: 'classify · predict', w: 110 },
+			{ id: 'llm', x: 250, y: 290, label: 'LLM CORE', tag: 'grounded', w: 120, hot: true },
+			{ id: 'agent', x: 430, y: 130, label: 'AGENT', tag: 'reason · act' },
+			{ id: 'tools', x: 430, y: 230, label: 'TOOLS', tag: 'apis · db' }
+		],
+		edges: [
+			{ from: 'prompt', to: 'rag', hot: true },
+			{ from: 'data', to: 'ml' },
+			{ from: 'data', to: 'rag' },
+			{ from: 'rag', to: 'llm', hot: true },
+			{ from: 'ml', to: 'llm' },
+			{ from: 'llm', to: 'agent', hot: true },
+			{ from: 'agent', to: 'tools' },
+			{ from: 'tools', to: 'agent' }
+		]
 	}
 };
 
