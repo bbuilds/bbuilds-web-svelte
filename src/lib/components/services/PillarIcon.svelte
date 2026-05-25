@@ -19,7 +19,7 @@
 	<Engineering {pillarId} />
 {:else if slug === 'intelligence'}
 	<Intelligence {pillarId} />
-{:else if slug === 'identity'}
+{:else if slug === 'storytelling'}
 	<Identity {pillarId} />
 {:else if slug === 'continuity'}
 	<Continuity {pillarId} />

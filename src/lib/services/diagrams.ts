@@ -64,6 +64,30 @@ export const DIAGRAMS: Record<string, Diagram> = {
 			{ from: 'harden', to: 'deploy', hot: true }
 		]
 	},
+	storytelling: {
+		title: 'branding.graph',
+		cmd: 'brand-build --strategy --identity --system --ship',
+		nodes: [
+			{ id: 'values', x: 70, y: 75, label: 'VALUES', tag: 'mission · vision' },
+			{ id: 'market', x: 70, y: 185, label: 'MARKET', tag: 'audit · audience' },
+			{ id: 'strategy', x: 250, y: 75, label: 'STRATEGY', tag: 'positioning', w: 120, hot: true },
+			{ id: 'identity', x: 250, y: 185, label: 'IDENTITY', tag: 'type · motion · marks', w: 130 },
+			{ id: 'system', x: 250, y: 290, label: 'SYSTEM', tag: 'tokens · components', w: 130 },
+			{ id: 'story', x: 430, y: 130, label: 'STORY', tag: 'voice · narrative' },
+			{ id: 'product', x: 430, y: 240, label: 'PRODUCT', tag: 'ux · ia · ship' }
+		],
+		edges: [
+			{ from: 'values', to: 'strategy', hot: true },
+			{ from: 'market', to: 'strategy' },
+			{ from: 'market', to: 'identity' },
+			{ from: 'strategy', to: 'identity', hot: true },
+			{ from: 'strategy', to: 'system' },
+			{ from: 'identity', to: 'story', hot: true },
+			{ from: 'identity', to: 'system' },
+			{ from: 'system', to: 'product' },
+			{ from: 'story', to: 'product' }
+		]
+	},
 	intelligence: {
 		title: 'intelligence.graph',
 		cmd: 'agent run --grounded --observable --autonomous',
