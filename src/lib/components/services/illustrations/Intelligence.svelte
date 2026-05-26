@@ -1041,10 +1041,6 @@
 			font-size="6.5"
 			fill="var(--ink)">0.04</text
 		>
-
-		<text x="14" y="192" font-family="var(--mono)" font-size="6.5" fill="var(--ink)" opacity="0.7"
-			>$ rag-pipeline --grounded=true --sources=2</text
-		>
 	</svg>
 {:else if pillarId === 'hardening'}
 	<svg viewBox="0 0 240 200" class="mx-auto block h-auto w-full max-w-md" aria-hidden="true">
@@ -1273,16 +1269,6 @@
 				>
 			</g>
 		{/each}
-
-		<text
-			x="14"
-			y="186"
-			font-family="var(--mono)"
-			font-size="5.5"
-			fill="var(--ink)"
-			opacity="0.75"
-			letter-spacing="0.2">$ harden-agent --env=production --temp=0.0 --fail_gracefully=true</text
-		>
 	</svg>
 {:else if pillarId === 'innovation'}
 	<svg viewBox="0 0 240 200" class="mx-auto block h-auto w-full max-w-md" aria-hidden="true">

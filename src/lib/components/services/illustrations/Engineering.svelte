@@ -909,13 +909,14 @@
 					opacity="0.5"
 				/>
 			</pattern>
-			<marker id="cms-arr-y" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+			<marker id="cms-arr" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
 				<path
-					d="M0,1 L6,4 L0,7"
+					d="M0,1 L5,3.5 L0,6"
 					fill="none"
-					stroke="var(--yellow)"
-					stroke-width="1.3"
+					stroke="var(--ink)"
+					stroke-width="1"
 					stroke-linecap="round"
+					opacity="0.65"
 				/>
 			</marker>
 		</defs>
@@ -963,7 +964,7 @@
 			letter-spacing="0.5">ARTICLE</text
 		>
 
-		{#each [{ label: 'title', type: 'string', composite: false }, { label: 'body', type: 'richtext', composite: true }, { label: 'image', type: 'media', composite: false }, { label: 'tags', type: 'array', composite: false }, { label: 'slug', type: 'string', composite: false }, { label: 'status', type: 'enum', composite: false }] as field, i (field.label)}
+		{#each [{ label: 'title', type: 'string' }, { label: 'body', type: 'richtext' }, { label: 'image', type: 'media' }, { label: 'tags', type: 'array' }, { label: 'slug', type: 'string' }, { label: 'status', type: 'enum' }] as field, i (field.label)}
 			<g transform="translate(17 {49 + i * 19})">
 				<rect
 					x="0"
@@ -985,43 +986,6 @@
 					font-weight="500"
 					fill="var(--ink)">{field.label}</text
 				>
-				{#if field.composite}
-					<g transform="translate(36 4)">
-						<rect
-							x="0"
-							y="0"
-							width="5"
-							height="9"
-							rx="0.7"
-							fill="none"
-							stroke="var(--ink)"
-							stroke-width="0.45"
-							opacity="0.6"
-						/>
-						<rect
-							x="7"
-							y="0"
-							width="5"
-							height="9"
-							rx="0.7"
-							fill="none"
-							stroke="var(--ink)"
-							stroke-width="0.45"
-							opacity="0.6"
-						/>
-						<rect
-							x="14"
-							y="0"
-							width="5"
-							height="9"
-							rx="0.7"
-							fill="none"
-							stroke="var(--ink)"
-							stroke-width="0.45"
-							opacity="0.6"
-						/>
-					</g>
-				{/if}
 				<text
 					x="94"
 					y="11.5"
@@ -1034,62 +998,38 @@
 			</g>
 		{/each}
 
-		<text
-			x="67"
-			y="180"
-			text-anchor="middle"
-			font-family="var(--mono)"
-			font-size="6.5"
-			fill="var(--ink)"
-			opacity="0.6"
-			letter-spacing="0.3">Sanity · Contentful</text
-		>
-		<text
-			x="67"
-			y="190"
-			text-anchor="middle"
-			font-family="var(--mono)"
-			font-size="6.5"
-			fill="var(--ink)"
-			opacity="0.6"
-			letter-spacing="0.3">Strapi</text
-		>
-
-		<path
-			d="M 121 55 L 132 102 L 121 164"
-			fill="none"
-			stroke="var(--yellow)"
-			stroke-width="2.2"
-			stroke-linejoin="round"
-			stroke-linecap="round"
-		/>
-
 		<line
-			x1="132"
-			y1="102"
+			x1="121"
+			y1="52"
 			x2="148"
 			y2="52"
-			stroke="var(--yellow)"
-			stroke-width="1.5"
-			marker-end="url(#cms-arr-y)"
+			stroke="var(--ink)"
+			stroke-width="0.9"
+			stroke-dasharray="3 2"
+			opacity="0.65"
+			marker-end="url(#cms-arr)"
 		/>
 		<line
-			x1="132"
+			x1="121"
 			y1="102"
 			x2="148"
 			y2="102"
-			stroke="var(--yellow)"
-			stroke-width="1.5"
-			marker-end="url(#cms-arr-y)"
+			stroke="var(--ink)"
+			stroke-width="0.9"
+			stroke-dasharray="3 2"
+			opacity="0.65"
+			marker-end="url(#cms-arr)"
 		/>
 		<line
-			x1="132"
-			y1="102"
+			x1="121"
+			y1="152"
 			x2="148"
 			y2="152"
-			stroke="var(--yellow)"
-			stroke-width="1.5"
-			marker-end="url(#cms-arr-y)"
+			stroke="var(--ink)"
+			stroke-width="0.9"
+			stroke-dasharray="3 2"
+			opacity="0.65"
+			marker-end="url(#cms-arr)"
 		/>
 
 		{#each [{ y: 40, label: 'WEB' }, { y: 90, label: 'MOBILE' }, { y: 140, label: 'API' }] as channel (channel.label)}
@@ -1239,26 +1179,6 @@
 			fill="var(--ink)"
 			letter-spacing="0.3">POS TERMINAL</text
 		>
-		<line x1="41" y1="60" x2="41" y2="42" stroke="var(--ink)" stroke-width="0.8" opacity="0.45" />
-		<rect
-			x="10"
-			y="28"
-			width="78"
-			height="14"
-			rx="2"
-			fill="var(--paper)"
-			stroke="var(--ink)"
-			stroke-width="0.8"
-		/>
-		<text
-			x="49"
-			y="39"
-			text-anchor="middle"
-			font-family="var(--mono)"
-			font-size="7"
-			fill="var(--ink)"
-			letter-spacing="0.3">edge cases handled</text
-		>
 		{#each ['stripe-powered', 'inventory sync', 'global scale'] as label, i (label)}
 			<g transform="translate({14 + i * 74} 152)">
 				<rect
@@ -1267,26 +1187,19 @@
 					width="9"
 					height="9"
 					rx="1"
-					fill={i === 0 ? 'var(--yellow)' : 'var(--paper)'}
+					fill="var(--yellow)"
 					stroke="var(--ink)"
 					stroke-width="0.7"
 				/>
-				{#if i === 0}
-					<path
-						d="M 1.5 4.5 L 3.5 6.5 L 7.5 2.5"
-						stroke="var(--ink)"
-						stroke-width="1.1"
-						fill="none"
-						stroke-linecap="round"
-					/>
-				{/if}
-				<text
-					x="12"
-					y="8"
-					font-family="var(--mono)"
-					font-size="6.5"
-					fill="var(--ink)"
-					opacity={i === 0 ? 1 : 0.7}>{label}</text
+				<path
+					d="M 1.5 4.5 L 3.5 6.5 L 7.5 2.5"
+					stroke="var(--ink)"
+					stroke-width="1.1"
+					fill="none"
+					stroke-linecap="round"
+				/>
+				<text x="12" y="8" font-family="var(--mono)" font-size="6.5" fill="var(--ink)" opacity="1"
+					>{label}</text
 				>
 			</g>
 		{/each}

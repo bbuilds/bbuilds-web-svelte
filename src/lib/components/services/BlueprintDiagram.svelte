@@ -125,10 +125,53 @@
 				{/if}
 			{/each}
 
+			{#if diagram.loop}
+				{#each diagram.loop.paths as d, i (i)}
+					<path
+						{d}
+						fill="none"
+						stroke="var(--yellow)"
+						stroke-width="1.4"
+						stroke-opacity="0.85"
+						stroke-linecap="round"
+						marker-end="url(#bp-arrow-yellow)"
+						class="bp-loop"
+					/>
+				{/each}
+				{#if diagram.loop.label}
+					{@const lx = diagram.loop.labelX ?? 260}
+					{@const ly = diagram.loop.labelY ?? 348}
+					{@const lw = diagram.loop.label.length * 5 + 14}
+					<rect
+						x={lx - lw / 2}
+						y={ly - 8}
+						width={lw}
+						height="14"
+						rx="2"
+						fill="var(--paper)"
+						stroke="var(--yellow)"
+						stroke-width="0.6"
+						opacity="0.95"
+					/>
+					<text
+						x={lx}
+						y={ly + 2.5}
+						text-anchor="middle"
+						fill="var(--ink)"
+						font-family="var(--mono)"
+						font-size="8"
+						letter-spacing="0.6">{diagram.loop.label}</text
+					>
+				{/if}
+			{/if}
+
 			{#each diagram.nodes as node, i (node.id)}
 				{@const w = node.w ?? 110}
 				{@const h = 32}
-				<g class="bp-node {node.hot ? 'bp-node-hot' : ''}" style="--i:{i}">
+				<g
+					class="bp-node {node.hot ? 'bp-node-hot' : ''} {node.warm ? 'bp-node-warm' : ''}"
+					style="--i:{i}"
+				>
 					<rect
 						x={node.x - w / 2}
 						y={node.y - h / 2}
@@ -136,8 +179,8 @@
 						height={h}
 						rx="3"
 						fill={node.hot ? 'var(--pale-fire)' : 'var(--paper)'}
-						stroke="var(--ink)"
-						stroke-width={node.hot ? 1.4 : 1}
+						stroke={node.warm ? 'var(--yellow)' : 'var(--ink)'}
+						stroke-width={node.hot ? 1.4 : node.warm ? 1.4 : 1}
 					/>
 					<text
 						x={node.x}
@@ -146,7 +189,7 @@
 						fill="var(--ink)"
 						font-family="var(--mono)"
 						font-size="10"
-						font-weight={node.hot ? 700 : 500}
+						font-weight={node.hot || node.warm ? 700 : 500}
 						letter-spacing="0.5">{node.label}</text
 					>
 					{#if node.tag}
@@ -172,6 +215,23 @@
 					stroke-width="1.2"
 					opacity="0.4"
 					class="bp-pulse"
+				/>
+			{/each}
+
+			{#each diagram.nodes.filter((n) => n.warm && !n.hot) as node (node.id)}
+				{@const w = node.w ?? 110}
+				<rect
+					x={node.x - w / 2 - 3}
+					y={node.y - 19}
+					width={w + 6}
+					height={38}
+					rx="4"
+					fill="none"
+					stroke="var(--yellow)"
+					stroke-width="0.6"
+					stroke-dasharray="2 3"
+					opacity="0.55"
+					class="bp-warm-frame"
 				/>
 			{/each}
 		</svg>
@@ -224,6 +284,26 @@
 
 	:global(.bp-node-hot rect) {
 		filter: drop-shadow(0 0.25rem 0.625rem rgba(255, 205, 103, 0.45));
+	}
+
+	:global(.bp-node-warm rect) {
+		filter: drop-shadow(0 0.1875rem 0.5rem rgba(255, 205, 103, 0.22));
+	}
+
+	.bp-warm-frame {
+		transform-origin: center;
+		transform-box: fill-box;
+		animation: bpWarmBreathe 3.6s ease-in-out infinite;
+	}
+
+	@keyframes bpWarmBreathe {
+		0%,
+		100% {
+			opacity: 0.4;
+		}
+		50% {
+			opacity: 0.7;
+		}
 	}
 
 	.bp-pulse {

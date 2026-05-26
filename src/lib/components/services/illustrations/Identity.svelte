@@ -7,7 +7,7 @@
 </script>
 
 {#if pillarId === 'brand-strategy'}
-	<svg viewBox="0 0 240 200" class="mx-auto block h-auto w-full max-w-md" aria-hidden="true">
+	<svg viewBox="0 0 240 158" class="mx-auto block h-auto w-full max-w-md" aria-hidden="true">
 		<defs>
 			<pattern id="pi-grid-bstr" width="16" height="16" patternUnits="userSpaceOnUse">
 				<path
@@ -39,7 +39,7 @@
 				/>
 			</marker>
 		</defs>
-		<rect width="240" height="200" fill="url(#pi-grid-bstr)" />
+		<rect width="240" height="158" fill="url(#pi-grid-bstr)" />
 
 		<text
 			x="14"
@@ -233,34 +233,6 @@
 			fill="var(--yellow)"
 			letter-spacing="0.5">YOU</text
 		>
-
-		<g transform="translate(14 150)">
-			<rect x="0" y="0" width="212" height="40" rx="2" fill="var(--ink)" />
-			<text
-				x="8"
-				y="13"
-				font-family="var(--mono)"
-				font-size="6.5"
-				fill="var(--teal)"
-				font-weight="700">$</text
-			>
-			<text x="18" y="13" font-family="var(--mono)" font-size="5.8" fill="var(--paper)"
-				>positioning_matrix --audit=competitor_gap</text
-			>
-			<text x="18" y="24" font-family="var(--mono)" font-size="5.8" fill="var(--paper)">
-				--uvp_calc=intersection</text
-			>
-			<text
-				x="18"
-				y="34"
-				font-family="var(--mono)"
-				font-size="5.8"
-				fill="var(--yellow)"
-				font-weight="700"
-			>
-				→ output: market_authority.exe</text
-			>
-		</g>
 	</svg>
 {:else if pillarId === 'brand-identity'}
 	<svg viewBox="0 0 240 200" class="mx-auto block h-auto w-full max-w-md" aria-hidden="true">
@@ -800,7 +772,7 @@
 		</g>
 	</svg>
 {:else if pillarId === 'brand-ia'}
-	<svg viewBox="0 0 240 200" class="mx-auto block h-auto w-full max-w-md" aria-hidden="true">
+	<svg viewBox="0 0 240 184" class="mx-auto block h-auto w-full max-w-md" aria-hidden="true">
 		<defs>
 			<pattern id="pi-grid-bia" width="16" height="16" patternUnits="userSpaceOnUse">
 				<path
@@ -845,18 +817,18 @@
 			letter-spacing="0.4">/home</text
 		>
 
-		<line x1="120" y1="44" x2="120" y2="58" stroke="var(--ink)" stroke-width="0.9" opacity="0.55" />
-		<line x1="36" y1="58" x2="204" y2="58" stroke="var(--ink)" stroke-width="0.9" opacity="0.3" />
-		<line x1="36" y1="58" x2="36" y2="72" stroke="var(--ink)" stroke-width="0.9" opacity="0.3" />
-		<line x1="92" y1="58" x2="92" y2="72" stroke="var(--ink)" stroke-width="0.9" opacity="0.55" />
-		<line x1="148" y1="58" x2="148" y2="72" stroke="var(--ink)" stroke-width="0.9" opacity="0.3" />
-		<line x1="204" y1="58" x2="204" y2="72" stroke="var(--ink)" stroke-width="0.9" opacity="0.3" />
+		<line x1="120" y1="44" x2="120" y2="64" stroke="var(--ink)" stroke-width="0.9" opacity="0.55" />
+		<line x1="36" y1="64" x2="204" y2="64" stroke="var(--ink)" stroke-width="0.9" opacity="0.3" />
+		<line x1="36" y1="64" x2="36" y2="82" stroke="var(--ink)" stroke-width="0.9" opacity="0.3" />
+		<line x1="92" y1="64" x2="92" y2="82" stroke="var(--ink)" stroke-width="0.9" opacity="0.55" />
+		<line x1="148" y1="64" x2="148" y2="82" stroke="var(--ink)" stroke-width="0.9" opacity="0.3" />
+		<line x1="204" y1="64" x2="204" y2="82" stroke="var(--ink)" stroke-width="0.9" opacity="0.3" />
 
 		{#each [{ x: 12, label: 'work', hot: false }, { x: 68, label: 'services', hot: true }, { x: 124, label: 'story', hot: false }, { x: 180, label: 'contact', hot: false }] as node (node.label)}
 			<g>
 				<rect
 					x={node.x}
-					y="72"
+					y="82"
 					width="48"
 					height="20"
 					rx="2"
@@ -866,7 +838,7 @@
 				/>
 				<text
 					x={node.x + 24}
-					y="85"
+					y="95"
 					text-anchor="middle"
 					font-family="var(--mono)"
 					font-size="7"
@@ -876,17 +848,17 @@
 			</g>
 		{/each}
 
-		<line x1="92" y1="92" x2="92" y2="106" stroke="var(--yellow)" stroke-width="2" />
-		<line x1="48" y1="106" x2="148" y2="106" stroke="var(--yellow)" stroke-width="2" />
+		<line x1="92" y1="102" x2="92" y2="116" stroke="var(--yellow)" stroke-width="2" />
+		<line x1="48" y1="116" x2="148" y2="116" stroke="var(--yellow)" stroke-width="2" />
 		{#each [48, 92, 148] as x (x)}
-			<line x1={x} y1="106" x2={x} y2="120" stroke="var(--yellow)" stroke-width="2" />
+			<line x1={x} y1="116" x2={x} y2="130" stroke="var(--yellow)" stroke-width="2" />
 		{/each}
 
 		{#each [{ x: 26, label: 'brand-strat', hot: true }, { x: 70, label: 'stack', hot: false }, { x: 126, label: 'agents', hot: false }] as node (node.label)}
 			<g>
 				<rect
 					x={node.x}
-					y="120"
+					y="130"
 					width="44"
 					height="18"
 					rx="2"
@@ -896,7 +868,7 @@
 				/>
 				<text
 					x={node.x + 22}
-					y="132"
+					y="142"
 					text-anchor="middle"
 					font-family="var(--mono)"
 					font-size="6"
@@ -906,7 +878,7 @@
 			</g>
 		{/each}
 
-		<g transform="translate(14 156)">
+		<g transform="translate(14 158)">
 			<rect
 				x="0"
 				y="0"
@@ -963,21 +935,6 @@
 				font-weight="700"
 				fill="var(--ink)"
 				letter-spacing="0.3">2 clicks</text
-			>
-		</g>
-
-		<g transform="translate(14 176)">
-			<rect x="0" y="0" width="212" height="20" rx="2" fill="var(--ink)" />
-			<text
-				x="8"
-				y="13"
-				font-family="var(--mono)"
-				font-size="6"
-				fill="var(--teal)"
-				font-weight="700">$</text
-			>
-			<text x="18" y="13" font-family="var(--mono)" font-size="6" fill="var(--paper)"
-				>router --strict-map=true --target=brand-strat</text
 			>
 		</g>
 	</svg>
@@ -1364,29 +1321,6 @@
 			stroke-width="0.8"
 		/>
 		<rect x="14" y="165" width="196" height="7" rx="1" fill="var(--yellow)" />
-
-		<g transform="translate(14 180)">
-			<rect x="0" y="0" width="212" height="18" rx="2" fill="var(--ink)" />
-			<text
-				x="8"
-				y="12"
-				font-family="var(--mono)"
-				font-size="6.5"
-				fill="var(--teal)"
-				font-weight="700">$</text
-			>
-			<text x="18" y="12" font-family="var(--mono)" font-size="6" fill="var(--paper)"
-				>web-vitals --audit=user-flow
-			</text>
-			<text
-				x="124"
-				y="12"
-				font-family="var(--mono)"
-				font-size="6"
-				fill="var(--yellow)"
-				font-weight="700">--cls=0.0 --fid=12ms</text
-			>
-		</g>
 	</svg>
 {:else}
 	<div class="aspect-6/5 w-full bg-ink"></div>
