@@ -21,7 +21,7 @@
 	<Intelligence {pillarId} />
 {:else if slug === 'storytelling'}
 	<Identity {pillarId} />
-{:else if slug === 'continuity'}
+{:else if slug === 'promotion'}
 	<Continuity {pillarId} />
 {:else}
 	<div class="aspect-6/5 w-full bg-ink"></div>

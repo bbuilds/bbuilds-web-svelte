@@ -24,7 +24,9 @@
 			<div class="meta-dot font-mono text-[0.8125rem] tracking-[0.06em] text-muted uppercase">
 				{eyebrow}
 			</div>
-			<h2 class="mt-3 text-[clamp(2rem,4.2vw,3.5rem)] leading-[1.05] text-balance">{title}</h2>
+			<h2 class="mt-3 max-w-2/3 text-[clamp(2rem,4.2vw,3.5rem)] leading-[1.05] text-balance">
+				{title}
+			</h2>
 			<p class="mt-4 max-w-136 font-mono text-[0.8125rem] leading-[1.7] text-charcoal">
 				{lead}
 			</p>
@@ -48,7 +50,7 @@
 					</div>
 					<div class="max-w-136">
 						<h3
-							class="mb-4.5 text-[clamp(1.625rem,3vw,2.5rem)] font-semibold tracking-[-0.02em] text-balance text-ink"
+							class="mb-4.5 text-[clamp(1.625rem,3vw,2.5rem)] leading-tight font-semibold tracking-[-0.02em] text-balance text-ink"
 						>
 							{pillar.title}
 						</h3>

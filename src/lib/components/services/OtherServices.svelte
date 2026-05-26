@@ -33,7 +33,7 @@
 				>
 					<path
 						d="M2 14 C 40 4, 80 20, 120 10 S 180 16, 198 8"
-						stroke="var(--yellow-bright)"
+						stroke="#ffcd67"
 						stroke-width="8"
 						fill="none"
 						stroke-linecap="round"

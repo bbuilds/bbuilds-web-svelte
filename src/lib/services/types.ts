@@ -6,6 +6,7 @@ export interface DiagramNode {
 	tag?: string;
 	w?: number;
 	hot?: boolean;
+	warm?: boolean;
 }
 
 export interface DiagramEdge {
@@ -14,11 +15,19 @@ export interface DiagramEdge {
 	hot?: boolean;
 }
 
+export interface DiagramLoop {
+	paths: string[];
+	label?: string;
+	labelX?: number;
+	labelY?: number;
+}
+
 export interface Diagram {
 	title: string;
 	cmd?: string;
 	nodes: DiagramNode[];
 	edges: DiagramEdge[];
+	loop?: DiagramLoop;
 }
 
 export interface ServiceStub {

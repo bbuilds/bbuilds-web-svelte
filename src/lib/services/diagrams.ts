@@ -88,6 +88,46 @@ export const DIAGRAMS: Record<string, Diagram> = {
 			{ from: 'story', to: 'product' }
 		]
 	},
+	promotion: {
+		title: 'continuity.graph',
+		cmd: './bbuilds-promotion.sh --watch --geo --seo --vitals --a11y --env=production',
+		nodes: [
+			{ id: 'live', x: 70, y: 180, label: 'LIVE PRODUCT', tag: 'post-launch · in-market', w: 130 },
+			{ id: 'geo', x: 260, y: 110, label: 'GEO', tag: 'authority / geo', w: 120 },
+			{ id: 'seo', x: 260, y: 180, label: 'SEMANTIC SEO', tag: 'legibility / json-ld', w: 140 },
+			{
+				id: 'vitals',
+				x: 260,
+				y: 250,
+				label: 'CORE VITALS & A11Y',
+				tag: 'standards / wcag-lcp',
+				w: 170
+			},
+			{
+				id: 'llm',
+				x: 440,
+				y: 180,
+				label: 'LLM CITED',
+				tag: 'definitive source',
+				w: 130,
+				hot: true
+			}
+		],
+		edges: [
+			{ from: 'live', to: 'geo' },
+			{ from: 'live', to: 'seo' },
+			{ from: 'live', to: 'vitals' },
+			{ from: 'geo', to: 'llm' },
+			{ from: 'seo', to: 'llm' },
+			{ from: 'vitals', to: 'llm' }
+		],
+		loop: {
+			paths: ['M 505 196 C 620 360, -150 360, 5 180'],
+			label: 'calibration_loop()',
+			labelX: 240,
+			labelY: 318
+		}
+	},
 	intelligence: {
 		title: 'intelligence.graph',
 		cmd: 'agent run --grounded --observable --autonomous',
