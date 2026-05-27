@@ -8,7 +8,7 @@
 
 	let { currentSlug, liveSlugs }: Props = $props();
 
-	const isLive = $derived((slug: string) => liveSlugs.includes(slug));
+	const isLive = (slug: string) => liveSlugs.includes(slug);
 	const curIdx = $derived(SERVICES_INDEX.findIndex((s) => s.slug === currentSlug));
 	const others = $derived(SERVICES_INDEX.filter((s) => s.slug !== currentSlug));
 	const prev = $derived(
