@@ -1,4 +1,4 @@
-import type { Diagram } from './types';
+import type { Diagram } from '$lib/types/services';
 
 const PLACEHOLDER_DIAGRAM: Diagram = {
 	title: 'blueprint.map',

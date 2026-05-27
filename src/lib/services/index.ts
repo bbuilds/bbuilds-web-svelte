@@ -1,4 +1,4 @@
-import type { ServiceStub } from './types';
+import type { ServiceStub } from '$lib/types/services';
 
 export type { ServiceStub };
 
