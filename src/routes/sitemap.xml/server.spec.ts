@@ -118,4 +118,45 @@ describe('GET /sitemap.xml', () => {
 
 		expect(response.headers.get('Cache-Control')).toContain('max-age=3600');
 	});
+
+	it('maps posts/* slugs to root-level paths', async () => {
+		mockGetAll.mockResolvedValue([link('posts/my-first-post')]);
+
+		const { GET } = await import('./+server');
+		const response = await GET();
+		const xml = await response.text();
+
+		expect(xml).toContain(`<loc>${SITE_URL}/my-first-post</loc>`);
+		expect(xml).not.toContain(`<loc>${SITE_URL}/posts/my-first-post</loc>`);
+	});
+
+	it('excludes posts/ folder from sitemap', async () => {
+		mockGetAll.mockResolvedValue([link('posts', { is_folder: true })]);
+
+		const { GET } = await import('./+server');
+		const response = await GET();
+		const xml = await response.text();
+
+		expect(xml).not.toContain(`/posts`);
+	});
+
+	it('excludes unpublished posts from sitemap', async () => {
+		mockGetAll.mockResolvedValue([link('posts/draft-post', { published: false })]);
+
+		const { GET } = await import('./+server');
+		const response = await GET();
+		const xml = await response.text();
+
+		expect(xml).not.toContain('draft-post');
+	});
+
+	it('does not map non-posts, non-services, non-homepage slugs', async () => {
+		mockGetAll.mockResolvedValue([link('random-story')]);
+
+		const { GET } = await import('./+server');
+		const response = await GET();
+		const xml = await response.text();
+
+		expect(xml).not.toContain(`<loc>${SITE_URL}/random-story</loc>`);
+	});
 });

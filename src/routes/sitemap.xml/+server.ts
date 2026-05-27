@@ -19,6 +19,7 @@ function escapeXml(value: string): string {
 function pathForSlug(slug: string): string | null {
 	if (slug === 'home-page') return '/';
 	if (slug.startsWith('services/')) return `/${slug}`;
+	if (slug.startsWith('posts/')) return `/${slug.slice('posts/'.length)}`;
 	return null;
 }
 
