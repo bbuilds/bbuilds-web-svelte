@@ -141,6 +141,7 @@ export interface StoryblokBlogPost {
 	summary?: string;
 	Category?: (number | string)[];
 	content?: StoryblokRichtext;
+	seo?: StoryblokSEO[];
 	component: 'Blog Post';
 	_uid: string;
 }
