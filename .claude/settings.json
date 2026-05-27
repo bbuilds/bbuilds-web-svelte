@@ -15,10 +15,5 @@
 	},
 	"enabledPlugins": {
 		"svelte@svelte": true
-	},
-	"permissions": {
-		"allow": [
-			"Bash(npx @sveltejs/mcp svelte-autofixer ./src/lib/components/posts/PostHeader.svelte)"
-		]
 	}
 }
