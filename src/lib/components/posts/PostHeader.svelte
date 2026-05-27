@@ -13,20 +13,12 @@
 	let { name, kicker, dateDisplay, datetime, readTime, topics }: Props = $props();
 </script>
 
-<header class="paper-bg relative border-b border-paper-line pt-8 pb-7 md:pt-14 md:pb-11">
-	<div class="container">
-		<nav
-			class="mb-7 flex flex-wrap items-center gap-2 font-mono text-[0.6875rem] tracking-[0.06em] text-muted uppercase"
-			aria-label="Breadcrumb"
-		>
-			<a href="/" class="no-underline transition-colors hover:text-ink">Home</a>
-			<span class="opacity-35">></span>
-			<a href="/#blog" class="no-underline transition-colors hover:text-ink">Blog</a>
-			<span class="opacity-35">></span>
-			<span class="text-charcoal">{name}</span>
-		</nav>
-
-		<div class="mb-4 flex flex-wrap items-center gap-2.5">
+<header
+	class="paper-bg relative border-b border-paper-line pt-8 pb-7 md:pt-14 md:pb-11"
+	style="background: var(--paper)"
+>
+	<div class="container text-center">
+		<div class="mb-4 flex flex-wrap items-center justify-center gap-2.5">
 			<span
 				class="rounded-full bg-yellow/10 px-2.5 py-1 font-mono text-[0.6875rem] font-semibold tracking-[0.06em] text-yellow uppercase"
 			>
@@ -39,25 +31,37 @@
 		</div>
 
 		<h1
-			class="mt-2.5 max-w-136 text-[clamp(2rem,5vw,3.75rem)] leading-[1.06] font-bold tracking-[-0.03em] text-ink"
+			class="mt-2.5 text-[clamp(2rem,5vw,3.75rem)] leading-[1.06] font-bold tracking-[-0.03em] text-ink"
 		>
 			{name}
 		</h1>
 
+		<nav
+			class="mt-5 flex flex-wrap items-center justify-center gap-2 font-mono text-[0.6875rem] tracking-[0.06em] text-muted uppercase"
+			aria-label="Breadcrumb"
+		>
+			<a href="/" class="no-underline transition-colors hover:text-ink">Home</a>
+			<span class="opacity-35" aria-hidden="true">›</span>
+			<a href="/#blog" class="no-underline transition-colors hover:text-ink">Blog</a>
+			<span class="opacity-35" aria-hidden="true">›</span>
+			<span class="text-charcoal" aria-current="page">{name}</span>
+		</nav>
+
+		<div class="mt-6 flex flex-wrap justify-center gap-2 border-t border-paper-line pt-5 lg:hidden">
+			<ShareButtons title={name} variant="mobile" />
+		</div>
+
 		{#if topics.length > 0}
-			<div class="mt-5 flex flex-wrap gap-1.5">
+			<div class="mt-4 flex flex-wrap justify-center gap-1.5 lg:hidden">
 				{#each topics as topic (topic)}
-					<span
-						class="rounded-full border border-paper-line px-2.5 py-0.5 font-mono text-[0.625rem] tracking-[0.06em] text-charcoal uppercase transition-colors hover:border-charcoal hover:text-ink"
+					<a
+						href="/#blog"
+						class="rounded-full border border-paper-line px-2.25 py-0.75 font-mono text-[0.625rem] tracking-[0.06em] text-ink-soft uppercase no-underline transition-colors hover:border-ink hover:bg-ink/4 hover:text-ink"
 					>
 						{topic}
-					</span>
+					</a>
 				{/each}
 			</div>
 		{/if}
-
-		<div class="mt-6 flex flex-wrap gap-2 border-t border-paper-line pt-5 lg:hidden">
-			<ShareButtons title={name} variant="mobile" />
-		</div>
 	</div>
 </header>

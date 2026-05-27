@@ -33,7 +33,7 @@
 <div
 	class="post-wrap mx-auto grid max-w-352 grid-cols-1 px-4.5 md:px-8 lg:grid-cols-[13.5rem_1fr] lg:items-start lg:gap-x-16 lg:px-10"
 >
-	<PostSidebar title={story.name} />
+	<PostSidebar title={story.name} topics={story.tag_list ?? []} />
 
 	<article class="min-w-0 pt-8 pb-12 md:pt-11 md:pb-16">
 		{#if hero?.filename}

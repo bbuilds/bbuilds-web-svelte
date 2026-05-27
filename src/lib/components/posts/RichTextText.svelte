@@ -41,7 +41,7 @@
 		href={outer.attrs.href}
 		target={outer.attrs.target ?? undefined}
 		rel={outer.attrs.target === '_blank' ? 'noopener noreferrer' : undefined}
-		class="text-yellow underline decoration-1 underline-offset-[0.2em] transition-colors hover:text-ink"
+		class="font-semibold text-ink underline decoration-yellow decoration-2 underline-offset-[0.2em] transition-colors hover:bg-yellow/12 hover:decoration-ink"
 		><RichTextText node={inner} /></a
 	>
 {/if}
