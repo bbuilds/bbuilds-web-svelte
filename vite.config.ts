@@ -13,6 +13,15 @@ export default defineConfig({
 			'@tsparticles/plugin-emitters-shape-square'
 		]
 	},
+	build: {
+		rollupOptions: {
+			output: {
+				manualChunks(id) {
+					if (id.includes('@tsparticles')) return 'tsparticles';
+				}
+			}
+		}
+	},
 	test: {
 		expect: { requireAssertions: true },
 		projects: [

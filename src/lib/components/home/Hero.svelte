@@ -1,69 +1,8 @@
-<script module lang="ts">
-	import type { ISourceOptions } from '@tsparticles/engine';
-	import { LEAF_IMAGES } from '$lib/particles/leafImages';
-
-	let particlesReady: Promise<typeof import('@tsparticles/engine').tsParticles> | undefined;
-	const initParticles = () => {
-		particlesReady ??= (async () => {
-			const { tsParticles } = await import('@tsparticles/engine');
-			const { loadSlim } = await import('@tsparticles/slim');
-			const { loadEmittersPlugin } = await import('@tsparticles/plugin-emitters');
-			const { loadEmittersShapeSquare } = await import('@tsparticles/plugin-emitters-shape-square');
-			await loadSlim(tsParticles);
-			await loadEmittersPlugin(tsParticles);
-			await loadEmittersShapeSquare(tsParticles);
-			return tsParticles;
-		})();
-		return particlesReady;
-	};
-
-	const leafParticleOptions = {
-		fullScreen: { enable: true },
-		background: { color: 'transparent' },
-		fpsLimit: 60,
-		detectRetina: true,
-		particles: {
-			number: { value: 0 },
-			shape: {
-				type: 'image',
-				options: { image: LEAF_IMAGES }
-			},
-			opacity: { value: 0.9 },
-			size: { value: { min: 16, max: 38 } },
-			rotate: {
-				value: { min: 0, max: 360 },
-				direction: 'random',
-				animation: { enable: true, speed: { min: 5, max: 25 }, sync: false }
-			},
-			move: {
-				enable: true,
-				direction: 'bottom',
-				speed: { min: 0.4, max: 0.9 },
-				straight: false,
-				gravity: { enable: true, acceleration: 0.3, maxSpeed: 2 },
-				wobble: { enable: true, distance: 30, speed: { min: -8, max: 8 } },
-				outModes: { default: 'destroy', top: 'none' }
-			}
-		},
-		emitters: {
-			direction: 'bottom',
-			position: { x: 50, y: -5 },
-			size: { width: 100, height: 0, mode: 'percent' },
-			rate: { delay: 1.4, quantity: 1 }
-		},
-		interactivity: {
-			detectsOn: 'window',
-			events: { onHover: { enable: true, mode: 'repulse' } },
-			modes: {
-				repulse: { distance: 90, duration: 0.4, factor: 100, speed: 1, easing: 'ease-out-quad' }
-			}
-		}
-	} as ISourceOptions;
-</script>
-
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import Button from '$lib/components/Button.svelte';
+	import Particles from '$lib/components/Particles.svelte';
+	import { leafParticleOptions } from '$lib/particles/leafOptions';
 	import { resolveMultilink } from '$lib/utils/links';
 	import type { StoryblokHomePage } from '$lib/types/storyblok';
 	import { SITE_NAME } from '$lib/config/site';
@@ -95,51 +34,37 @@
 	const cta = $derived(resolveMultilink(content?.hero_cta_url));
 
 	let wi = $state(0);
-	let particlesEl: HTMLDivElement;
+	let showLeaves = $state(false);
 
 	onMount(() => {
 		const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-		let wordIntervalId: ReturnType<typeof setInterval> | undefined;
-		if (!prefersReducedMotion && words.length > 0) {
-			wordIntervalId = setInterval(() => {
-				wi = (wi + 1) % words.length;
-			}, 2400);
-		}
-
 		if (prefersReducedMotion) {
-			return () => {
-				if (wordIntervalId) clearInterval(wordIntervalId);
-			};
+			return;
 		}
 
-		let destroyed = false;
-		let container: { destroy: () => void } | undefined;
+		showLeaves = true;
 
-		(async () => {
-			const tsParticles = await initParticles();
-			const loaded = await tsParticles.load({
-				element: particlesEl,
-				options: leafParticleOptions
-			});
-			if (destroyed) {
-				loaded?.destroy();
-			} else {
-				container = loaded;
-			}
-		})();
+		if (words.length === 0) {
+			return;
+		}
+
+		const wordIntervalId = setInterval(() => {
+			wi = (wi + 1) % words.length;
+		}, 2400);
 
 		return () => {
-			destroyed = true;
-			if (wordIntervalId) clearInterval(wordIntervalId);
-			container?.destroy();
+			clearInterval(wordIntervalId);
 		};
 	});
 </script>
 
 <section class="paper-bg relative overflow-hidden pt-16 pb-30">
 	<!-- Falling leaves layer -->
-	<div class="hero-leaves-layer" bind:this={particlesEl} aria-hidden="true"></div>
+	{#if showLeaves}
+		<div class="hero-leaves-layer" aria-hidden="true">
+			<Particles options={leafParticleOptions} />
+		</div>
+	{/if}
 
 	<!-- Sun sticker -->
 	<div
