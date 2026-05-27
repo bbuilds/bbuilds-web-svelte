@@ -14,6 +14,39 @@ describe('organizationLd', () => {
 		expect(ld.name).toBe(SITE_NAME);
 		expect(ld.url).toBe(SITE_URL);
 	});
+
+	it('includes description, logo and sameAs', () => {
+		const ld = organizationLd();
+		expect(ld.description).toBeTruthy();
+		expect(ld.logo).toContain(SITE_URL);
+		expect(ld.sameAs.length).toBeGreaterThan(0);
+	});
+
+	it('names the founder as a Person', () => {
+		const ld = organizationLd();
+		expect(ld.founder['@type']).toBe('Person');
+		expect(ld.founder.name).toBe(SITE_NAME);
+	});
+
+	it('builds an OfferCatalog from the given services with absolute URLs', () => {
+		const ld = organizationLd([
+			{ name: 'Product Engineering', slug: 'services/engineering' },
+			{ name: 'Architecture', slug: 'services/architecture' }
+		]);
+		expect(ld.hasOfferCatalog['@type']).toBe('OfferCatalog');
+		const offers = ld.hasOfferCatalog.itemListElement;
+		expect(offers.length).toBe(2);
+		expect(offers[0].itemOffered.url).toBe(`${SITE_URL}/services/engineering`);
+		for (const offer of offers) {
+			expect(offer['@type']).toBe('Offer');
+			expect(offer.itemOffered['@type']).toBe('Service');
+		}
+	});
+
+	it('produces an empty OfferCatalog when no services are passed', () => {
+		const ld = organizationLd();
+		expect(ld.hasOfferCatalog.itemListElement).toEqual([]);
+	});
 });
 
 describe('webSiteLd', () => {

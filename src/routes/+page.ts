@@ -2,11 +2,13 @@ import type { ISbStoryData } from '@storyblok/js';
 import type { StoryblokBlogPost, StoryblokHomePage } from '$lib/types/storyblok';
 import { resolveSEO } from '$lib/utils/seo';
 import { organizationLd, webSiteLd } from '$lib/utils/jsonLd';
+import { fetchServiceLinks } from '$lib/utils/services';
 import { SITE_NAME } from '$lib/config/site';
 import type { PageLoad } from './$types';
 
 export const load: PageLoad = async ({ parent, url }) => {
 	const { storyblokAPI, version, globals } = await parent();
+	const services = await fetchServiceLinks(storyblokAPI, version);
 	try {
 		const response = await storyblokAPI.get('cdn/stories/home-page', {
 			version,
@@ -43,7 +45,7 @@ export const load: PageLoad = async ({ parent, url }) => {
 			pageSEO: story?.content?.seo?.[0],
 			globalSEO: globals?.content?.seo?.[0],
 			fallbacks: { title: SITE_NAME, pathname: url.pathname },
-			extraJsonLd: [organizationLd(), webSiteLd()]
+			extraJsonLd: [organizationLd(services), webSiteLd()]
 		});
 
 		return { story, posts, seo };
@@ -52,7 +54,7 @@ export const load: PageLoad = async ({ parent, url }) => {
 		const seo = resolveSEO({
 			globalSEO: globals?.content?.seo?.[0],
 			fallbacks: { title: SITE_NAME, pathname: url.pathname },
-			extraJsonLd: [organizationLd(), webSiteLd()]
+			extraJsonLd: [organizationLd(services), webSiteLd()]
 		});
 		return { story: null, posts: [], seo };
 	}
