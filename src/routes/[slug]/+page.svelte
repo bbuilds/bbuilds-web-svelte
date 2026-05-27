@@ -16,11 +16,6 @@
 	const hero = $derived(post.content.featured_image);
 </script>
 
-<svelte:head>
-	<title>{post.name} — BrandenBuilds</title>
-	<meta name="description" content={post.content.summary} />
-</svelte:head>
-
 <ReadingProgress />
 
 <PostHeader

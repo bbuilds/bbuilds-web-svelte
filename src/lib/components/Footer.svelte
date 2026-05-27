@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Attachment } from 'svelte/attachments';
+	import { SITE_NAME } from '$lib/config/site';
 
 	const SLOTS = [
 		{ words: ['Svelte,', 'tears,', 'terminal,'] },
@@ -119,7 +120,7 @@
 		<div class="flex flex-col items-center gap-3">
 			<a
 				href="/"
-				aria-label="Branden Builds"
+				aria-label={SITE_NAME}
 				class="flex items-center gap-2 font-mono font-bold tracking-tight text-ink no-underline"
 			>
 				<svg
@@ -136,7 +137,7 @@
 						transform="translate(-4872.264 -326)"
 					></path>
 				</svg>
-				<span>BrandenBuilds<span class="text-teal">.</span></span>
+				<span>{SITE_NAME}<span class="text-teal">.</span></span>
 			</a>
 
 			<p class="built-with">

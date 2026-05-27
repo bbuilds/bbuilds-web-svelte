@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { SITE_NAME } from '$lib/config/site';
+
 	const navItems = [
 		{ title: 'services', href: '/#services' },
 		{ title: 'process', href: '/#process' },
@@ -12,7 +14,7 @@
 	<div class="container flex items-center justify-between gap-6 py-3.5">
 		<a
 			href="/"
-			aria-label="Branden Builds"
+			aria-label={SITE_NAME}
 			class="flex items-center gap-2.5 font-mono font-bold tracking-tight text-ink no-underline"
 		>
 			<svg
@@ -29,7 +31,7 @@
 					transform="translate(-4872.264 -326)"
 				></path>
 			</svg>
-			<span>BrandenBuilds<span class="text-teal">.</span></span>
+			<span>{SITE_NAME}<span class="text-teal">.</span></span>
 		</a>
 
 		<div class="hidden gap-7 font-mono text-[0.8125rem] md:flex">

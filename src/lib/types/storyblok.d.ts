@@ -157,6 +157,7 @@ export interface StoryblokGlobals {
 	contact_title?: string;
 	contact_copy?: string;
 	contact_cta?: StoryblokCTA[];
+	seo?: StoryblokSEO[];
 	component: 'Globals';
 	_uid: string;
 }
@@ -257,6 +258,7 @@ export interface StoryblokServicesTemplate {
 	card_list_items?: StoryblokRichtext;
 	pillars_copy?: string;
 	pillars?: StoryblokServiceOfferCard[];
+	seo?: StoryblokSEO[];
 	component: 'Services Template';
 	_uid: string;
 }
