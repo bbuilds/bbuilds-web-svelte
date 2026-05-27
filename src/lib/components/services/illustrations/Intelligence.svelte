@@ -13,7 +13,7 @@
 				<path
 					d="M 16 0 L 0 0 0 16"
 					fill="none"
-					stroke="rgba(26,26,26,0.35)"
+					stroke="var(--grid-line)"
 					stroke-width="0.4"
 					opacity="0.5"
 				/>
@@ -210,7 +210,7 @@
 				<path
 					d="M 16 0 L 0 0 0 16"
 					fill="none"
-					stroke="rgba(26,26,26,0.35)"
+					stroke="var(--grid-line)"
 					stroke-width="0.4"
 					opacity="0.5"
 				/>
@@ -359,7 +359,7 @@
 				<path
 					d="M 16 0 L 0 0 0 16"
 					fill="none"
-					stroke="rgba(26,26,26,0.35)"
+					stroke="var(--grid-line)"
 					stroke-width="0.4"
 					opacity="0.5"
 				/>
@@ -623,7 +623,7 @@
 				<path
 					d="M 16 0 L 0 0 0 16"
 					fill="none"
-					stroke="rgba(26,26,26,0.35)"
+					stroke="var(--grid-line)"
 					stroke-width="0.4"
 					opacity="0.5"
 				/>
@@ -1049,7 +1049,7 @@
 				<path
 					d="M 16 0 L 0 0 0 16"
 					fill="none"
-					stroke="rgba(26,26,26,0.35)"
+					stroke="var(--grid-line)"
 					stroke-width="0.4"
 					opacity="0.5"
 				/>
@@ -1277,7 +1277,7 @@
 				<path
 					d="M 16 0 L 0 0 0 16"
 					fill="none"
-					stroke="rgba(26,26,26,0.35)"
+					stroke="var(--grid-line)"
 					stroke-width="0.4"
 					opacity="0.5"
 				/>

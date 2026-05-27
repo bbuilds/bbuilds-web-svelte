@@ -84,9 +84,4 @@
 		padding: 1.5rem 1.5rem 1.25rem;
 		overflow: hidden;
 	}
-
-	.pillar-copy :global(strong) {
-		color: var(--ink);
-		font-weight: 700;
-	}
 </style>

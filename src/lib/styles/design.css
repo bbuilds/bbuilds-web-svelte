@@ -48,6 +48,15 @@
 
 	--container-max: 80rem;
 	--container-gutter: 1.5rem;
+
+	/* SVG grid stroke shared by illustrations + BlueprintDiagram */
+	--grid-line: rgba(26, 26, 26, 0.35);
+
+	/* BlueprintDiagram window chrome */
+	--bp-chrome-red: #f7c5a6;
+	--bp-chrome-yellow: #ffdf95;
+	--bp-chrome-green: #b6dbb6;
+	--bp-grid-label: #cfc4ad;
 }
 
 /* =============================================================================
