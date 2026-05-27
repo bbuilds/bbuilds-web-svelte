@@ -157,6 +157,7 @@ export interface StoryblokGlobals {
 	contact_title?: string;
 	contact_copy?: string;
 	contact_cta?: StoryblokCTA[];
+	seo?: StoryblokSEO[];
 	component: 'Globals';
 	_uid: string;
 }
