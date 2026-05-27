@@ -1,38 +1,30 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest';
 import { SITE_URL } from '$lib/config/site';
 
-const mockGet = vi.fn();
+const mockGetAll = vi.fn();
 
 vi.mock('@storyblok/svelte', () => ({
 	storyblokInit: vi.fn(),
 	apiPlugin: {},
-	useStoryblokApi: () => ({ get: mockGet })
+	useStoryblokApi: () => ({ getAll: mockGetAll })
 }));
 
-const homeStory = (overrides: Record<string, unknown> = {}) => ({
-	published_at: '2025-01-15T10:00:00.000Z',
-	content: { seo: [] },
-	...overrides
-});
-
-const serviceStory = (slug: string, overrides: Record<string, unknown> = {}) => ({
-	name: `Service ${slug}`,
-	full_slug: `services/${slug}`,
+const link = (slug: string, overrides: Record<string, unknown> = {}) => ({
+	slug,
+	is_folder: false,
+	is_startpage: false,
+	published: true,
 	published_at: '2025-03-01T00:00:00.000Z',
-	content: { seo: [] },
 	...overrides
 });
 
 beforeEach(() => {
-	mockGet.mockReset();
+	mockGetAll.mockReset();
+	mockGetAll.mockResolvedValue([]);
 });
 
 describe('GET /sitemap.xml', () => {
 	it('returns 200 with application/xml content type', async () => {
-		mockGet.mockResolvedValue({ data: { story: homeStory() } });
-		mockGet.mockResolvedValueOnce({ data: { story: homeStory() } });
-		mockGet.mockResolvedValueOnce({ data: { stories: [] } });
-
 		const { GET } = await import('./+server');
 		const response = await GET();
 
@@ -40,9 +32,26 @@ describe('GET /sitemap.xml', () => {
 		expect(response.headers.get('Content-Type')).toBe('application/xml');
 	});
 
-	it('includes home URL in urlset', async () => {
-		mockGet.mockResolvedValueOnce({ data: { story: homeStory() } });
-		mockGet.mockResolvedValueOnce({ data: { stories: [] } });
+	it('queries the links endpoint with include_dates', async () => {
+		const { GET } = await import('./+server');
+		await GET();
+
+		expect(mockGetAll).toHaveBeenCalledWith(
+			'cdn/links',
+			expect.objectContaining({ version: 'published', include_dates: 1 })
+		);
+	});
+
+	it('always includes the home URL', async () => {
+		const { GET } = await import('./+server');
+		const response = await GET();
+		const xml = await response.text();
+
+		expect(xml).toContain(`<loc>${SITE_URL}/</loc>`);
+	});
+
+	it('maps the home-page story to the root path with its lastmod', async () => {
+		mockGetAll.mockResolvedValue([link('home-page', { published_at: '2025-01-15T10:00:00.000Z' })]);
 
 		const { GET } = await import('./+server');
 		const response = await GET();
@@ -52,11 +61,8 @@ describe('GET /sitemap.xml', () => {
 		expect(xml).toContain('<lastmod>2025-01-15</lastmod>');
 	});
 
-	it('includes service URLs prefixed by SITE_URL', async () => {
-		mockGet.mockResolvedValueOnce({ data: { story: homeStory() } });
-		mockGet.mockResolvedValueOnce({
-			data: { stories: [serviceStory('frontend'), serviceStory('backend')] }
-		});
+	it('includes service URLs from the links endpoint', async () => {
+		mockGetAll.mockResolvedValue([link('services/frontend'), link('services/backend')]);
 
 		const { GET } = await import('./+server');
 		const response = await GET();
@@ -66,30 +72,26 @@ describe('GET /sitemap.xml', () => {
 		expect(xml).toContain(`<loc>${SITE_URL}/services/backend</loc>`);
 	});
 
-	it('excludes stories where seo[0].no_index is true', async () => {
-		mockGet.mockResolvedValueOnce({ data: { story: homeStory() } });
-		mockGet.mockResolvedValueOnce({
-			data: {
-				stories: [
-					serviceStory('visible'),
-					serviceStory('hidden', { content: { seo: [{ no_index: true }] } })
-				]
-			}
-		});
+	it('excludes folders, unpublished links, and non-routable stories', async () => {
+		mockGetAll.mockResolvedValue([
+			link('services', { is_folder: true }),
+			link('services/draft', { published: false }),
+			link('globals'),
+			link('services/live')
+		]);
 
 		const { GET } = await import('./+server');
 		const response = await GET();
 		const xml = await response.text();
 
-		expect(xml).toContain('services/visible');
-		expect(xml).not.toContain('services/hidden');
+		expect(xml).toContain('services/live');
+		expect(xml).not.toContain('services/draft');
+		expect(xml).not.toContain('<loc>' + SITE_URL + '/globals</loc>');
+		expect(xml).not.toContain('<loc>' + SITE_URL + '/services</loc>');
 	});
 
-	it('uses today as lastmod when published_at is missing', async () => {
-		mockGet.mockResolvedValueOnce({
-			data: { story: homeStory({ published_at: undefined }) }
-		});
-		mockGet.mockResolvedValueOnce({ data: { stories: [] } });
+	it('falls back to today as lastmod when published_at is missing', async () => {
+		mockGetAll.mockResolvedValue([link('services/frontend', { published_at: undefined })]);
 
 		const { GET } = await import('./+server');
 		const response = await GET();
@@ -99,10 +101,18 @@ describe('GET /sitemap.xml', () => {
 		expect(xml).toContain(`<lastmod>${today}</lastmod>`);
 	});
 
-	it('sets cache-control header', async () => {
-		mockGet.mockResolvedValueOnce({ data: { story: homeStory() } });
-		mockGet.mockResolvedValueOnce({ data: { stories: [] } });
+	it('still serves the home URL when the links endpoint fails', async () => {
+		mockGetAll.mockRejectedValue(new Error('network'));
 
+		const { GET } = await import('./+server');
+		const response = await GET();
+		const xml = await response.text();
+
+		expect(response.status).toBe(200);
+		expect(xml).toContain(`<loc>${SITE_URL}/</loc>`);
+	});
+
+	it('sets cache-control header', async () => {
 		const { GET } = await import('./+server');
 		const response = await GET();
 

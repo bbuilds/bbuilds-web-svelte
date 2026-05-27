@@ -1,5 +1,26 @@
 import { apiPlugin, storyblokInit, useStoryblokApi } from '@storyblok/svelte';
+import type { StoryblokMultilinkLink } from '$lib/types/storyblok';
 import { SITE_URL } from '$lib/config/site';
+
+type SitemapLink = StoryblokMultilinkLink & { published_at?: string };
+
+function escapeXml(value: string): string {
+	return value
+		.replace(/&/g, '&amp;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
+		.replace(/"/g, '&quot;')
+		.replace(/'/g, '&apos;');
+}
+
+// Maps a Storyblok story slug to the path the SvelteKit app actually serves it
+// at. Only `home-page` and `services/*` are routable Storyblok content; every
+// other story (globals, etc.) has no route and must be left out of the sitemap.
+function pathForSlug(slug: string): string | null {
+	if (slug === 'home-page') return '/';
+	if (slug.startsWith('services/')) return `/${slug}`;
+	return null;
+}
 
 export async function GET() {
 	storyblokInit({
@@ -13,52 +34,32 @@ export async function GET() {
 	const api = useStoryblokApi();
 	const today = new Date().toISOString().split('T')[0];
 
-	const urls: Array<{ loc: string; lastmod: string; changefreq: string; priority: string }> = [];
+	const entries = new Map<string, string>();
+	entries.set(SITE_URL + '/', today);
 
 	try {
-		const res = await api.get('cdn/stories/home-page', { version: 'published' });
-		const story = res.data?.story;
-		if (story && !story.content?.seo?.[0]?.no_index) {
-			urls.push({
-				loc: SITE_URL + '/',
-				lastmod: story.published_at?.split('T')[0] ?? today,
-				changefreq: 'weekly',
-				priority: '1.0'
-			});
+		const params = { version: 'published' as const, include_dates: 1 };
+		const links: SitemapLink[] = await api.getAll('cdn/links', params);
+
+		for (const link of links) {
+			if (link.is_folder || !link.published) continue;
+			const path = pathForSlug(link.slug);
+			if (!path) continue;
+			entries.set(SITE_URL + path, link.published_at?.split('T')[0] ?? today);
 		}
 	} catch {
-		// home page not available — skip
+		// links endpoint unavailable — fall back to the home URL seeded above
 	}
 
-	try {
-		const res = await api.get('cdn/stories', {
-			version: 'published',
-			starts_with: 'services/',
-			is_startpage: false
-		});
-		for (const story of res.data?.stories ?? []) {
-			if (!story.content?.seo?.[0]?.no_index) {
-				urls.push({
-					loc: `${SITE_URL}/${story.full_slug}`,
-					lastmod: story.published_at?.split('T')[0] ?? today,
-					changefreq: 'monthly',
-					priority: '0.8'
-				});
-			}
-		}
-	} catch {
-		// services not available — skip
-	}
+	const urls = [...entries.entries()].sort(([a], [b]) => a.localeCompare(b));
 
 	const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urls
 	.map(
-		(u) => `  <url>
-    <loc>${u.loc}</loc>
-    <lastmod>${u.lastmod}</lastmod>
-    <changefreq>${u.changefreq}</changefreq>
-    <priority>${u.priority}</priority>
+		([loc, lastmod]) => `  <url>
+    <loc>${escapeXml(loc)}</loc>
+    <lastmod>${lastmod}</lastmod>
   </url>`
 	)
 	.join('\n')}
