@@ -43,7 +43,7 @@ export function resolveSEO({
 	const ogImageAsset = pageSEO?.og_image ?? globalSEO?.og_image;
 	if (ogImageAsset?.filename) {
 		ogImage = {
-			url: storyblokImageUrl(ogImageAsset.filename, { width: 1200, height: 630 }),
+			url: storyblokImageUrl(ogImageAsset.filename, { width: 1200, height: 630, format: 'jpeg' }),
 			width: 1200,
 			height: 630,
 			alt: ogImageAsset.alt ?? undefined
