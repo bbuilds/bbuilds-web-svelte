@@ -1,4 +1,4 @@
-import type { Post, RichTextDoc, RichTextNode } from '$lib/types/post';
+import type { RichTextDoc, RichTextNode } from '$lib/types/post';
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
@@ -26,9 +26,10 @@ export const readTime = (doc: RichTextDoc): string => {
 	return `${minutes} min read`;
 };
 
-export const kickerTag = (post: Post): string => {
-	if (post.content.Category.length > 0) return post.content.Category[0];
-	if (post.tag_list.length > 0) return post.tag_list[0];
+export const kickerTag = (category: (number | string)[] | undefined, tagList: string[]): string => {
+	const cats = (category ?? []).filter((c): c is string => typeof c === 'string');
+	if (cats.length > 0) return cats[0];
+	if (tagList.length > 0) return tagList[0];
 	return 'Writing';
 };
 

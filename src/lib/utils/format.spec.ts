@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { Post, RichTextDoc } from '$lib/types/post';
+import type { RichTextDoc } from '$lib/types/post';
 import { formatDate, kickerTag, parseTitleSegments, readTime, wordCount } from './format';
 
 const doc = (...texts: string[]): RichTextDoc => ({
@@ -7,17 +7,9 @@ const doc = (...texts: string[]): RichTextDoc => ({
 	content: texts.map((text) => ({ type: 'paragraph', content: [{ type: 'text', text }] }))
 });
 
-const post = (overrides: { Category?: string[]; tag_list?: string[] } = {}): Post => ({
-	slug: 'test-post',
-	name: 'Test Post',
-	first_published_at: '2024-01-01T00:00:00Z',
-	tag_list: overrides.tag_list ?? [],
-	content: {
-		summary: '',
-		featured_image: { filename: '' },
-		Category: overrides.Category ?? [],
-		content: doc('placeholder')
-	}
+const post = (overrides: { Category?: string[]; tag_list?: string[] } = {}) => ({
+	category: overrides.Category ?? ([] as string[]),
+	tagList: overrides.tag_list ?? ([] as string[])
 });
 
 describe('formatDate', () => {
@@ -98,15 +90,26 @@ describe('readTime', () => {
 
 describe('kickerTag', () => {
 	it('returns the first Category when present', () => {
-		expect(kickerTag(post({ Category: ['Design', 'Dev'], tag_list: ['Other'] }))).toBe('Design');
+		const { category, tagList } = post({ Category: ['Design', 'Dev'], tag_list: ['Other'] });
+		expect(kickerTag(category, tagList)).toBe('Design');
 	});
 
 	it('falls back to the first tag when Category is empty', () => {
-		expect(kickerTag(post({ Category: [], tag_list: ['Engineering'] }))).toBe('Engineering');
+		const { category, tagList } = post({ Category: [], tag_list: ['Engineering'] });
+		expect(kickerTag(category, tagList)).toBe('Engineering');
 	});
 
 	it('returns "Writing" when both Category and tag_list are empty', () => {
-		expect(kickerTag(post())).toBe('Writing');
+		const { category, tagList } = post();
+		expect(kickerTag(category, tagList)).toBe('Writing');
+	});
+
+	it('filters out numeric category entries', () => {
+		expect(kickerTag([42, 'Design'], [])).toBe('Design');
+	});
+
+	it('returns "Writing" when category is undefined', () => {
+		expect(kickerTag(undefined, [])).toBe('Writing');
 	});
 });
 
