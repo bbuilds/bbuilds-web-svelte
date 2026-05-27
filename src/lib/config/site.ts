@@ -1,6 +1,4 @@
-import { PUBLIC_SITE_URL } from '$env/static/public';
-
-export const SITE_URL = PUBLIC_SITE_URL || 'https://brandenbuilds.com';
+export const SITE_URL = import.meta.env.VITE_SITE_URL || 'https://brandenbuilds.com';
 export const SITE_NAME = 'Branden Builds';
 export const SITE_DESCRIPTION =
 	'Branden Builds turns ambitious ideas into high-performance digital reality, bridging creative discovery and hardened engineering with intelligent workflows and precision UX. Always clean, always sexy.';
