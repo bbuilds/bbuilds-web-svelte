@@ -257,6 +257,7 @@ export interface StoryblokServicesTemplate {
 	card_list_items?: StoryblokRichtext;
 	pillars_copy?: string;
 	pillars?: StoryblokServiceOfferCard[];
+	seo?: StoryblokSEO[];
 	component: 'Services Template';
 	_uid: string;
 }
