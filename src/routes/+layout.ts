@@ -2,6 +2,7 @@ import { apiPlugin, storyblokInit, useStoryblokApi } from '@storyblok/svelte';
 import type { ISbStoryData } from '@storyblok/js';
 import type { StoryblokGlobals } from '$lib/types/storyblok';
 import { resolveSEO } from '$lib/utils/seo';
+import { SITE_NAME } from '$lib/config/site';
 import type { LayoutLoad } from './$types';
 
 export const load: LayoutLoad = async ({ url }) => {
@@ -26,7 +27,7 @@ export const load: LayoutLoad = async ({ url }) => {
 
 	const seo = resolveSEO({
 		globalSEO: globals?.content?.seo?.[0],
-		fallbacks: { title: 'Branden Builds', pathname: url.pathname }
+		fallbacks: { title: SITE_NAME, pathname: url.pathname }
 	});
 
 	return {

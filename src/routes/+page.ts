@@ -2,6 +2,7 @@ import type { ISbStoryData } from '@storyblok/js';
 import type { StoryblokBlogPost, StoryblokHomePage } from '$lib/types/storyblok';
 import { resolveSEO } from '$lib/utils/seo';
 import { organizationLd, webSiteLd } from '$lib/utils/jsonLd';
+import { SITE_NAME } from '$lib/config/site';
 import type { PageLoad } from './$types';
 
 export const load: PageLoad = async ({ parent, url }) => {
@@ -41,7 +42,7 @@ export const load: PageLoad = async ({ parent, url }) => {
 		const seo = resolveSEO({
 			pageSEO: story?.content?.seo?.[0],
 			globalSEO: globals?.content?.seo?.[0],
-			fallbacks: { title: 'BrandenBuilds', pathname: url.pathname },
+			fallbacks: { title: SITE_NAME, pathname: url.pathname },
 			extraJsonLd: [organizationLd(), webSiteLd()]
 		});
 
@@ -50,7 +51,7 @@ export const load: PageLoad = async ({ parent, url }) => {
 		console.error(e);
 		const seo = resolveSEO({
 			globalSEO: globals?.content?.seo?.[0],
-			fallbacks: { title: 'Branden Builds', pathname: url.pathname },
+			fallbacks: { title: SITE_NAME, pathname: url.pathname },
 			extraJsonLd: [organizationLd(), webSiteLd()]
 		});
 		return { story: null, posts: [], seo };

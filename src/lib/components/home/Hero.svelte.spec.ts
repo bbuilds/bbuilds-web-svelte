@@ -2,6 +2,7 @@ import { page } from 'vitest/browser';
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import Hero from './Hero.svelte';
+import { SITE_NAME } from '$lib/config/site';
 
 describe('Hero', () => {
 	it('renders the first rotating word on mount', async () => {
@@ -23,6 +24,6 @@ describe('Hero', () => {
 
 	it('renders the intro label', async () => {
 		render(Hero);
-		await expect.element(page.getByText("greetings, I'm Branden Builds")).toBeInTheDocument();
+		await expect.element(page.getByText(`greetings, I'm ${SITE_NAME}`)).toBeInTheDocument();
 	});
 });

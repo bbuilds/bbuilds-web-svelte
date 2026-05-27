@@ -5,6 +5,7 @@
 	import ReadingProgress from '$lib/components/posts/ReadingProgress.svelte';
 	import NextPostCard from '$lib/components/posts/NextPostCard.svelte';
 	import { formatDate, kickerTag, readTime } from '$lib/utils/format';
+	import { SITE_NAME } from '$lib/config/site';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -17,7 +18,7 @@
 </script>
 
 <svelte:head>
-	<title>{post.name} — BrandenBuilds</title>
+	<title>{post.name} — {SITE_NAME}</title>
 	<meta name="description" content={post.content.summary} />
 </svelte:head>
 

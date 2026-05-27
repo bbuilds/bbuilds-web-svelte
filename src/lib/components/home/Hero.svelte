@@ -66,6 +66,7 @@
 	import Button from '$lib/components/Button.svelte';
 	import { resolveMultilink } from '$lib/utils/links';
 	import type { StoryblokHomePage } from '$lib/types/storyblok';
+	import { SITE_NAME } from '$lib/config/site';
 
 	interface Props {
 		content?: StoryblokHomePage;
@@ -82,7 +83,7 @@
 
 	const slugToWord = (slug: string) => slug.replace(/-/g, ' ');
 
-	const eyebrow = $derived(content?.hero_eyebrow ?? "greetings, I'm Branden Builds");
+	const eyebrow = $derived(content?.hero_eyebrow ?? `greetings, I'm ${SITE_NAME}`);
 	const words = $derived(
 		content?.hero_taglines?.filter(Boolean).map(slugToWord) ?? [...HERO_WORDS]
 	);
