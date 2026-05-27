@@ -1,26 +1,37 @@
 <script lang="ts">
-	import type { Service } from '$lib/services/types';
+	import type { StoryblokHero } from '$lib/types/storyblok';
+	import { getDiagram } from '$lib/services/diagrams';
+	import { resolveMultilink } from '$lib/utils/links';
+	import { parseHighlights } from '$lib/utils/parseHighlights';
 	import Button from '$lib/components/Button.svelte';
 	import ScribbleUnderline from '$lib/components/ScribbleUnderline.svelte';
 	import BlueprintDiagram from './BlueprintDiagram.svelte';
 
 	interface Props {
-		service: Service;
+		slug: string;
+		hero: StoryblokHero | undefined;
 	}
 
-	let { service }: Props = $props();
+	let { slug, hero }: Props = $props();
 
+	const title = $derived(hero?.title ?? '');
 	const [line1, line2] = $derived(
-		service.title.includes(' & ')
-			? service.title.split(' & ')
+		title.includes(' & ')
+			? title.split(' & ')
 			: (() => {
-					const words = service.title.split(' ');
+					const words = title.split(' ');
 					const mid = Math.ceil(words.length / 2);
 					return [words.slice(0, mid).join(' '), words.slice(mid).join(' ')];
 				})()
 	);
+	const hasAmp = $derived(title.includes(' & '));
 
-	const hasAmp = $derived(service.title.includes(' & '));
+	const kicker = $derived(hero?.tagline ?? '');
+	const copy = $derived(parseHighlights(hero?.copy ?? ''));
+	const cta = $derived(resolveMultilink(hero?.CTA?.[0]?.link));
+	const ctaLabel = $derived(hero?.CTA?.[0]?.label ?? 'get in touch');
+
+	const diagram = $derived(getDiagram(slug));
 </script>
 
 <section class="paper-bg relative overflow-hidden pt-6 pb-18 md:pt-10 md:pb-24">
@@ -40,7 +51,7 @@
 				class="text-muted no-underline transition-colors duration-200 hover:text-ink">/ services</a
 			>
 			<span class="opacity-50" aria-hidden="true">›</span>
-			<span class="font-semibold text-ink">/ {service.title.toLowerCase()}</span>
+			<span class="font-semibold text-ink">/ {title.toLowerCase()}</span>
 		</nav>
 
 		<div
@@ -53,7 +64,10 @@
 					<span class="block">
 						<span class="inline-block">{line1}</span>
 						{#if hasAmp}
-							<span class="svc-hero-amp">&amp;</span>
+							<span
+								class="ml-2 inline-block translate-y-[-0.08em] rotate-[-6deg] font-hand text-[0.78em] font-medium text-yellow"
+								>&amp;</span
+							>
 						{/if}
 					</span>
 					<span class="block">
@@ -64,25 +78,31 @@
 					</span>
 				</h1>
 
-				<div
-					class="svc-hero-kicker mt-5 inline-block translate-x-1 rotate-[-1.5deg] font-hand text-[clamp(1.375rem,2.2vw,1.875rem)] text-charcoal"
-				>
-					{service.kicker}
-				</div>
+				{#if kicker}
+					<div
+						class="svc-hero-kicker mt-5 inline-block translate-x-1 rotate-[-1.5deg] font-hand text-[clamp(1.375rem,2.2vw,1.875rem)] text-charcoal"
+					>
+						{kicker}
+					</div>
+				{/if}
 
-				<p class="svc-hero-lead mt-7 max-w-136 font-mono text-[0.875rem] leading-7 text-body">
-					{#each service.lead as seg (seg.text)}
-						{#if seg.bold}<strong>{seg.text}</strong>{:else}{seg.text}{/if}
-					{/each}
-				</p>
+				{#if copy.length}
+					<p class="svc-hero-lead mt-7 max-w-136 font-mono text-[0.875rem] leading-7 text-body">
+						{#each copy as seg (seg.text + seg.highlight)}
+							{#if seg.highlight}<strong>{seg.text}</strong>{:else}{seg.text}{/if}
+						{/each}
+					</p>
+				{/if}
 
 				<div class="mt-8 flex flex-wrap gap-3.5">
-					<Button href="#contact">{service.ctaLabel}</Button>
+					<Button href={cta?.href ?? '#contact'} target={cta?.target} rel={cta?.rel}
+						>{ctaLabel}</Button
+					>
 				</div>
 			</div>
 
-			<div class="svc-hero-visual w-full">
-				<BlueprintDiagram diagram={service.diagram} />
+			<div class="w-full animate-[bpIn_0.7s_cubic-bezier(0.2,0.7,0.2,1)_0.15s_both]">
+				<BlueprintDiagram {diagram} />
 			</div>
 		</div>
 	</div>
@@ -102,26 +122,6 @@
 		opacity: 0.75;
 	}
 
-	.svc-hero-amp {
-		display: inline-block;
-		margin-left: 0.5rem;
-		font-family: var(--hand);
-		font-weight: 500;
-		color: var(--yellow);
-		font-size: 0.78em;
-		transform: translateY(-0.08em) rotate(-6deg);
-	}
-
-	.scribble :global(svg) {
-		position: absolute;
-		left: -6%;
-		right: -6%;
-		bottom: -0.875rem;
-		width: 112%;
-		height: 1.125rem;
-		overflow: visible;
-	}
-
 	.svc-hero-kicker::before {
 		content: '↳ ';
 		color: var(--yellow);
@@ -133,10 +133,6 @@
 		color: var(--ink);
 		font-weight: 700;
 		background: linear-gradient(transparent 65%, rgba(255, 205, 103, 0.45) 65%);
-	}
-
-	.svc-hero-visual {
-		animation: bpIn 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) 0.15s both;
 	}
 
 	@keyframes bpIn {

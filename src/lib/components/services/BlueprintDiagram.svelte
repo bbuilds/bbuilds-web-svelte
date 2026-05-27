@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Diagram, DiagramNode } from '$lib/services/types';
+	import type { Diagram, DiagramNode } from '$lib/types/services';
 
 	interface Props {
 		diagram: Diagram;
@@ -20,9 +20,16 @@
 		class="flex items-center gap-3 border-b border-ink bg-[rgba(26,26,26,0.04)] px-3.5 py-2 text-[0.6875rem] tracking-wider"
 	>
 		<div class="flex gap-1.25">
-			<span class="h-2 w-2 rounded-full border border-ink bg-[#f7c5a6]"></span>
-			<span class="h-2 w-2 rounded-full border border-ink bg-[#ffdf95]"></span>
-			<span class="h-2 w-2 rounded-full border border-ink bg-[#b6dbb6]"></span>
+			<span class="h-2 w-2 rounded-full border border-ink" style="background: var(--bp-chrome-red)"
+			></span>
+			<span
+				class="h-2 w-2 rounded-full border border-ink"
+				style="background: var(--bp-chrome-yellow)"
+			></span>
+			<span
+				class="h-2 w-2 rounded-full border border-ink"
+				style="background: var(--bp-chrome-green)"
+			></span>
 		</div>
 		<div class="flex-1 font-medium text-charcoal">~ / {diagram.title}</div>
 		<div class="flex items-center gap-1.5 text-muted uppercase">
@@ -79,14 +86,23 @@
 				font-size="9"
 				letter-spacing="1">VISION</text
 			>
+			<g stroke="var(--muted)" stroke-width="0.7" opacity="0.5" fill="none">
+				<line x1="10" y1="20" x2="10" y2="34" />
+				<path d="M 6 30 L 10 36 L 14 30" stroke-linecap="round" stroke-linejoin="round" />
+			</g>
 			<text
-				x="10"
+				x="510"
 				y="354"
+				text-anchor="end"
 				fill="var(--muted)"
 				font-family="var(--mono)"
 				font-size="9"
 				letter-spacing="1">REALITY</text
 			>
+			<g stroke="var(--muted)" stroke-width="0.7" opacity="0.5" fill="none">
+				<line x1="510" y1="346" x2="510" y2="332" />
+				<path d="M 506 336 L 510 330 L 514 336" stroke-linecap="round" stroke-linejoin="round" />
+			</g>
 			<text
 				x="510"
 				y="14"
@@ -116,10 +132,53 @@
 				{/if}
 			{/each}
 
+			{#if diagram.loop}
+				{#each diagram.loop.paths as d, i (i)}
+					<path
+						{d}
+						fill="none"
+						stroke="var(--yellow)"
+						stroke-width="1.4"
+						stroke-opacity="0.85"
+						stroke-linecap="round"
+						marker-end="url(#bp-arrow-yellow)"
+						class="bp-loop"
+					/>
+				{/each}
+				{#if diagram.loop.label}
+					{@const lx = diagram.loop.labelX ?? 260}
+					{@const ly = diagram.loop.labelY ?? 348}
+					{@const lw = diagram.loop.label.length * 5 + 14}
+					<rect
+						x={lx - lw / 2}
+						y={ly - 8}
+						width={lw}
+						height="14"
+						rx="2"
+						fill="var(--paper)"
+						stroke="var(--yellow)"
+						stroke-width="0.6"
+						opacity="0.95"
+					/>
+					<text
+						x={lx}
+						y={ly + 2.5}
+						text-anchor="middle"
+						fill="var(--ink)"
+						font-family="var(--mono)"
+						font-size="8"
+						letter-spacing="0.6">{diagram.loop.label}</text
+					>
+				{/if}
+			{/if}
+
 			{#each diagram.nodes as node, i (node.id)}
 				{@const w = node.w ?? 110}
 				{@const h = 32}
-				<g class="bp-node {node.hot ? 'bp-node-hot' : ''}" style="--i:{i}">
+				<g
+					class="bp-node {node.hot ? 'bp-node-hot' : ''} {node.warm ? 'bp-node-warm' : ''}"
+					style="--i:{i}"
+				>
 					<rect
 						x={node.x - w / 2}
 						y={node.y - h / 2}
@@ -127,8 +186,8 @@
 						height={h}
 						rx="3"
 						fill={node.hot ? 'var(--pale-fire)' : 'var(--paper)'}
-						stroke="var(--ink)"
-						stroke-width={node.hot ? 1.4 : 1}
+						stroke={node.warm ? 'var(--yellow)' : 'var(--ink)'}
+						stroke-width={node.hot ? 1.4 : node.warm ? 1.4 : 1}
 					/>
 					<text
 						x={node.x}
@@ -137,9 +196,19 @@
 						fill="var(--ink)"
 						font-family="var(--mono)"
 						font-size="10"
-						font-weight={node.hot ? 700 : 500}
+						font-weight={node.hot || node.warm ? 700 : 500}
 						letter-spacing="0.5">{node.label}</text
 					>
+					{#if node.tag}
+						<text
+							x={node.x - w / 2}
+							y={node.y - h / 2 - 5}
+							fill="var(--muted)"
+							font-family="var(--mono)"
+							font-size="8"
+							letter-spacing="0.7">{node.tag}</text
+						>
+					{/if}
 				</g>
 			{/each}
 
@@ -155,11 +224,29 @@
 					class="bp-pulse"
 				/>
 			{/each}
+
+			{#each diagram.nodes.filter((n) => n.warm && !n.hot) as node (node.id)}
+				{@const w = node.w ?? 110}
+				<rect
+					x={node.x - w / 2 - 3}
+					y={node.y - 19}
+					width={w + 6}
+					height={38}
+					rx="4"
+					fill="none"
+					stroke="var(--yellow)"
+					stroke-width="0.6"
+					stroke-dasharray="2 3"
+					opacity="0.55"
+					class="bp-warm-frame"
+				/>
+			{/each}
 		</svg>
 	</div>
 
 	<div
-		class="flex items-center gap-2 border-t border-ink bg-ink px-3.5 py-2.5 text-[0.6875rem] tracking-[0.04em] text-[#cfc4ad]"
+		class="flex items-center gap-2 border-t border-ink bg-ink px-3.5 py-2.5 text-[0.6875rem] tracking-[0.04em]"
+		style="color: var(--bp-grid-label)"
 	>
 		<span class="font-bold text-teal">$</span>
 		<span class="text-paper-line">{diagram.cmd ?? ''}</span>
@@ -205,6 +292,26 @@
 
 	:global(.bp-node-hot rect) {
 		filter: drop-shadow(0 0.25rem 0.625rem rgba(255, 205, 103, 0.45));
+	}
+
+	:global(.bp-node-warm rect) {
+		filter: drop-shadow(0 0.1875rem 0.5rem rgba(255, 205, 103, 0.22));
+	}
+
+	.bp-warm-frame {
+		transform-origin: center;
+		transform-box: fill-box;
+		animation: bpWarmBreathe 3.6s ease-in-out infinite;
+	}
+
+	@keyframes bpWarmBreathe {
+		0%,
+		100% {
+			opacity: 0.4;
+		}
+		50% {
+			opacity: 0.7;
+		}
 	}
 
 	.bp-pulse {

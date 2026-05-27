@@ -6,15 +6,17 @@
 	import Contact from '$lib/components/Contact.svelte';
 
 	let { data }: { data: PageData } = $props();
-	const service = $derived(data.service);
+
+	const content = $derived(data.story.content);
+	const hero = $derived(content.hero?.[0]);
 </script>
 
 <svelte:head>
-	<title>{service.title} — Branden Builds</title>
-	<meta name="description" content={service.lead.map((s) => s.text).join('')} />
+	<title>{data.story.name} — Branden Builds</title>
+	<meta name="description" content={hero?.copy ?? ''} />
 </svelte:head>
 
-<ServiceHero {service} />
-<Pillars head={service.pillarsHead} items={service.pillars} />
-<OtherServices currentSlug={service.slug} />
+<ServiceHero slug={data.slug} {hero} />
+<Pillars slug={data.slug} {content} />
+<OtherServices currentSlug={data.slug} liveSlugs={data.liveSlugs} />
 <Contact />
