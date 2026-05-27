@@ -11,11 +11,6 @@
 	const hero = $derived(content.hero?.[0]);
 </script>
 
-<svelte:head>
-	<title>{data.story.name} — Branden Builds</title>
-	<meta name="description" content={hero?.copy ?? ''} />
-</svelte:head>
-
 <ServiceHero slug={data.slug} {hero} />
 <Pillars slug={data.slug} {content} />
 <OtherServices currentSlug={data.slug} liveSlugs={data.liveSlugs} />

@@ -1,9 +1,10 @@
 import { apiPlugin, storyblokInit, useStoryblokApi } from '@storyblok/svelte';
 import type { ISbStoryData } from '@storyblok/js';
 import type { StoryblokGlobals } from '$lib/types/storyblok';
+import { resolveSEO } from '$lib/utils/seo';
 import type { LayoutLoad } from './$types';
 
-export const load: LayoutLoad = async () => {
+export const load: LayoutLoad = async ({ url }) => {
 	storyblokInit({
 		accessToken: import.meta.env.VITE_STORYBLOK_DELIVERY_API_TOKEN,
 		apiOptions: {
@@ -23,9 +24,15 @@ export const load: LayoutLoad = async () => {
 		console.error('Failed to fetch globals:', e);
 	}
 
+	const seo = resolveSEO({
+		globalSEO: globals?.content?.seo?.[0],
+		fallbacks: { title: 'Branden Builds', pathname: url.pathname }
+	});
+
 	return {
 		storyblokAPI,
 		version,
-		globals
+		globals,
+		seo
 	};
 };

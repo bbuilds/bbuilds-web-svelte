@@ -1,9 +1,11 @@
 import type { ISbStoryData } from '@storyblok/js';
 import type { StoryblokBlogPost, StoryblokHomePage } from '$lib/types/storyblok';
+import { resolveSEO } from '$lib/utils/seo';
+import { organizationLd, webSiteLd } from '$lib/utils/jsonLd';
 import type { PageLoad } from './$types';
 
-export const load: PageLoad = async ({ parent }) => {
-	const { storyblokAPI, version } = await parent();
+export const load: PageLoad = async ({ parent, url }) => {
+	const { storyblokAPI, version, globals } = await parent();
 	try {
 		const response = await storyblokAPI.get('cdn/stories/home-page', {
 			version,
@@ -36,9 +38,21 @@ export const load: PageLoad = async ({ parent }) => {
 			}
 		}
 
-		return { story, posts };
+		const seo = resolveSEO({
+			pageSEO: story?.content?.seo?.[0],
+			globalSEO: globals?.content?.seo?.[0],
+			fallbacks: { title: 'BrandenBuilds', pathname: url.pathname },
+			extraJsonLd: [organizationLd(), webSiteLd()]
+		});
+
+		return { story, posts, seo };
 	} catch (e) {
 		console.error(e);
-		return { story: null, posts: [] };
+		const seo = resolveSEO({
+			globalSEO: globals?.content?.seo?.[0],
+			fallbacks: { title: 'Branden Builds', pathname: url.pathname },
+			extraJsonLd: [organizationLd(), webSiteLd()]
+		});
+		return { story: null, posts: [], seo };
 	}
 };

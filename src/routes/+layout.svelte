@@ -1,6 +1,8 @@
 <script lang="ts">
 	import './layout.css';
 	import favicon from '$lib/assets/favicon.svg';
+	import { page } from '$app/state';
+	import SEO from '$lib/components/SEO.svelte';
 	import Header from '$lib/components/Header.svelte';
 	import Footer from '$lib/components/Footer.svelte';
 	import BottomNav from '$lib/components/BottomNav.svelte';
@@ -9,6 +11,7 @@
 	let { children, data } = $props();
 </script>
 
+<SEO seo={page.data.seo} />
 <svelte:head>
 	<link rel="icon" href={favicon} />
 	<link rel="preconnect" href="https://fonts.googleapis.com" />
