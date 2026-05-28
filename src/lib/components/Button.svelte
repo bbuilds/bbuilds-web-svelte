@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 
-	type Variant = 'primary' | 'ghost' | 'teal' | 'yellow';
+	type Variant = 'primary' | 'ghost' | 'dark' | 'ghost-light' | 'teal' | 'yellow';
 	type Size = 'sm' | 'md' | 'lg';
 
 	interface Props {
@@ -124,6 +124,23 @@
 		transform: translate3d(100%, 0, 0);
 	}
 
+	/*Dark: transparent bg, paper border, paper text, hover bg color-paper text-ink  */
+	.btn-dark {
+		background: transparent;
+		color: var(--paper);
+		border-color: var(--paper);
+	}
+	.btn-dark::before {
+		background: var(--paper);
+		transform: translate3d(-110%, 0, 0) skewX(30deg);
+	}
+	.btn-dark:hover {
+		color: var(--black);
+	}
+	.btn-dark:hover::before {
+		transform: translate3d(0, 0, 0) skewX(30deg);
+	}
+
 	/* Ghost: ink overlay starts off-screen left, slides in on hover */
 	.btn-ghost {
 		background: transparent;
@@ -135,6 +152,20 @@
 		transform: translate3d(-110%, 0, 0) skewX(30deg);
 	}
 	.btn-ghost:hover::before {
+		transform: translate3d(0, 0, 0) skewX(30deg);
+	}
+
+	/* Ghost-light: for use on dark/ink backgrounds — paper border, paper overlay on hover */
+	.btn-ghost-light {
+		background: transparent;
+		color: var(--paper);
+		border-color: rgba(244, 237, 224, 0.45);
+	}
+	.btn-ghost-light::before {
+		background: var(--paper);
+		transform: translate3d(-110%, 0, 0) skewX(30deg);
+	}
+	.btn-ghost-light:hover::before {
 		transform: translate3d(0, 0, 0) skewX(30deg);
 	}
 
