@@ -1,5 +1,7 @@
 <script lang="ts">
 	import ShareButtons from './ShareButtons.svelte';
+	import TableOfContents from './TableOfContents.svelte';
+	import type { TocHeading } from '$lib/utils/format';
 
 	interface PrevPost {
 		title: string;
@@ -10,15 +12,22 @@
 		title: string;
 		prev?: PrevPost;
 		topics?: string[];
+		headings?: TocHeading[];
 	}
 
-	let { title, prev, topics = [] }: Props = $props();
+	let { title, prev, topics = [], headings = [] }: Props = $props();
 </script>
 
 <aside
 	class="sticky top-22 hidden min-w-0 flex-col gap-0 self-start py-10 lg:flex"
 	aria-label="Article sidebar"
 >
+	<TableOfContents {headings} />
+
+	{#if headings.length > 0}
+		<hr class="my-5.5 border-t border-paper-line" />
+	{/if}
+
 	<div class="mb-3 font-mono text-[0.625rem] font-semibold tracking-widest text-ink-soft uppercase">
 		share
 	</div>

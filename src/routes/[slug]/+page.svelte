@@ -4,7 +4,7 @@
 	import RichTextRenderer from '$lib/components/posts/RichTextRenderer.svelte';
 	import ReadingProgress from '$lib/components/posts/ReadingProgress.svelte';
 	import NextPostCard from '$lib/components/posts/NextPostCard.svelte';
-	import { formatDate, kickerTag, readTime } from '$lib/utils/format';
+	import { formatDate, kickerTag, readTime, extractHeadings } from '$lib/utils/format';
 	import type { RichTextDoc } from '$lib/types/post';
 	import type { PageData } from './$types';
 
@@ -17,6 +17,7 @@
 	const readTimeDisplay = $derived(richTextDoc ? readTime(richTextDoc) : '');
 	const kicker = $derived(kickerTag(content?.Category, story.tag_list ?? []));
 	const hero = $derived(content?.featured_image);
+	const headings = $derived(extractHeadings(richTextDoc?.content));
 </script>
 
 <ReadingProgress />
@@ -33,7 +34,7 @@
 	<div
 		class="post-wrap mx-auto grid max-w-352 grid-cols-1 px-4.5 md:px-8 lg:grid-cols-[13.5rem_1fr] lg:items-start lg:gap-x-16 lg:px-10"
 	>
-		<PostSidebar title={story.name} topics={story.tag_list ?? []} />
+		<PostSidebar title={story.name} topics={story.tag_list ?? []} {headings} />
 
 		<article class="min-w-0 pt-8 pb-12 md:pt-11 md:pb-16">
 			{#if hero?.filename}

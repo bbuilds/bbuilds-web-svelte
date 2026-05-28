@@ -1,0 +1,63 @@
+<script lang="ts">
+	import type { TocHeading } from '$lib/utils/format';
+
+	interface Props {
+		headings: TocHeading[];
+	}
+
+	let { headings }: Props = $props();
+
+	let active: string | null = $state(null);
+
+	$effect(() => {
+		if (headings.length === 0) return;
+
+		const update = () => {
+			const threshold = window.innerHeight * 0.3;
+			let current: string | null = null;
+			for (const { id } of headings) {
+				const el = document.getElementById(id);
+				if (el && el.getBoundingClientRect().top - threshold <= 0) {
+					current = id;
+				}
+			}
+			active = current ?? headings[0]?.id ?? null;
+		};
+
+		window.addEventListener('scroll', update, { passive: true });
+		window.addEventListener('resize', update, { passive: true });
+		update();
+
+		return () => {
+			window.removeEventListener('scroll', update);
+			window.removeEventListener('resize', update);
+		};
+	});
+</script>
+
+{#if headings.length > 0}
+	<nav aria-label="Table of contents">
+		<div
+			class="mb-3 font-mono text-[0.625rem] font-semibold tracking-widest text-ink-soft uppercase"
+		>
+			on this page
+		</div>
+		<ul
+			class="relative before:absolute before:top-[0.375rem] before:bottom-[0.375rem] before:left-0 before:w-px before:bg-paper-line before:content-['']"
+		>
+			{#each headings as { id, text } (id)}
+				<li>
+					<a
+						href="#{id}"
+						class="-ml-px block border-l-2 py-[0.4375rem] pl-[0.875rem] text-[0.8125rem] leading-snug no-underline transition-colors hover:text-ink {active ===
+						id
+							? 'border-yellow font-semibold text-ink'
+							: 'border-transparent text-charcoal'}"
+					>
+						{text}
+					</a>
+				</li>
+			{/each}
+		</ul>
+	</nav>
+{/if}
