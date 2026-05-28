@@ -23,8 +23,12 @@ describe('RichTextRenderer', () => {
 			const { container } = render(RichTextRenderer, {
 				nodes: [{ type: 'heading', attrs: { level: 2 }, content: [textNode('Title')] }]
 			});
-			expect(container.querySelector('h2')).not.toBeNull();
-			expect(container.querySelector('h2')?.textContent).toBe('Title');
+			const h2 = container.querySelector('h2');
+			expect(h2).not.toBeNull();
+			// h2 includes a permalink anchor (#); check text content excluding it
+			const clone = h2!.cloneNode(true) as Element;
+			clone.querySelector('a')?.remove();
+			expect(clone.textContent?.trim()).toBe('Title');
 		});
 
 		it('renders <h2> as default when level is not 3', () => {
