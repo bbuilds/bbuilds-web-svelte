@@ -132,6 +132,8 @@ export interface StoryblokArticleCards {
 }
 
 export interface StoryblokBlogIndex {
+	hero?: StoryblokHero[];
+	seo?: StoryblokSEO[];
 	component: 'Blog Index';
 	_uid: string;
 }
