@@ -4,6 +4,7 @@
 	import PostCard from '$lib/components/PostCard.svelte';
 	import { formatDate, kickerTag } from '$lib/utils/format';
 	import { resolveMultilink } from '$lib/utils/links';
+	import Button from '$lib/components/Button.svelte';
 
 	let { data }: { data: PageData } = $props();
 
@@ -154,13 +155,16 @@
 		<!-- load more -->
 		{#if hasMore}
 			<div class="mt-12 flex justify-center">
-				<button
+				<!-- <button
 					type="button"
 					onclick={() => (extraLoads += 1)}
 					class="btn btn-ghost inline-flex cursor-pointer items-center rounded-full border border-ink px-[1.375rem] py-[0.875rem] font-mono text-[0.8125rem] text-ink transition-colors hover:bg-ink hover:text-paper"
 				>
 					Load More Articles
-				</button>
+				</button> -->
+				<Button onclick={() => (extraLoads += 1)} variant="ghost" class="text-ink">
+					Load More Articles
+				</Button>
 			</div>
 		{/if}
 	</div>

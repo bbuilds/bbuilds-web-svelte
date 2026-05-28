@@ -144,8 +144,11 @@
 	/* Ghost: ink overlay starts off-screen left, slides in on hover */
 	.btn-ghost {
 		background: transparent;
-		color: #fff;
+		color: var(--ink);
 		border-color: var(--ink);
+	}
+	.btn-ghost:hover {
+		color: var(--paper);
 	}
 	.btn-ghost::before {
 		background: var(--ink);
