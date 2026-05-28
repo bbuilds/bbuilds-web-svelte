@@ -6,11 +6,22 @@
 		kicker: string;
 		dateDisplay: string;
 		datetime: string;
+		updatedDateDisplay?: string;
+		updatedDatetime?: string;
 		readTime: string;
 		topics: string[];
 	}
 
-	let { name, kicker, dateDisplay, datetime, readTime, topics }: Props = $props();
+	let {
+		name,
+		kicker,
+		dateDisplay,
+		datetime,
+		updatedDateDisplay,
+		updatedDatetime,
+		readTime,
+		topics
+	}: Props = $props();
 </script>
 
 <header
@@ -26,6 +37,13 @@
 			</span>
 			<span class="text-[0.3125rem] text-muted opacity-50">●</span>
 			<time {datetime} class="font-mono text-xs tracking-[0.03em] text-muted">{dateDisplay}</time>
+			{#if updatedDateDisplay && updatedDatetime}
+				<span class="text-[0.3125rem] text-muted opacity-50">●</span>
+				<span class="font-mono text-xs tracking-[0.03em] text-muted italic">Updated</span>
+				<time datetime={updatedDatetime} class="font-mono text-xs tracking-[0.03em] text-muted"
+					>{updatedDateDisplay}</time
+				>
+			{/if}
 			<span class="text-[0.3125rem] text-muted opacity-50">●</span>
 			<span class="font-mono text-xs tracking-[0.03em] text-muted">{readTime}</span>
 		</div>
