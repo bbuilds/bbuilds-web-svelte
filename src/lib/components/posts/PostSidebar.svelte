@@ -36,12 +36,12 @@
 		</div>
 		<div class="flex flex-wrap gap-1.5">
 			{#each topics as topic (topic)}
-				<a
-					href="/#blog"
-					class="rounded-full border border-paper-line px-2.25 py-0.75 font-mono text-[0.625rem] tracking-[0.06em] text-ink-soft uppercase no-underline transition-colors hover:border-ink hover:bg-ink/4 hover:text-ink"
+				<!-- @TODO: Add link to topic page -->
+				<span
+					class="rounded-full border border-paper-line px-2.25 py-0.75 font-mono text-[0.625rem] tracking-[0.06em] text-ink-soft uppercase no-underline"
 				>
 					{topic}
-				</a>
+				</span>
 			{/each}
 		</div>
 
