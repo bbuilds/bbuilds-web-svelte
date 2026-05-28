@@ -137,6 +137,7 @@ export interface StoryblokBlogIndex {
 }
 
 export interface StoryblokBlogPost {
+	updated_date?: string;
 	featured_image?: StoryblokAsset;
 	summary?: string;
 	Category?: (number | string)[];
