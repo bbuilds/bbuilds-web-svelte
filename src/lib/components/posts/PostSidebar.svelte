@@ -1,5 +1,7 @@
 <script lang="ts">
 	import ShareButtons from './ShareButtons.svelte';
+	import TableOfContents from './TableOfContents.svelte';
+	import type { TocHeading } from '$lib/utils/format';
 
 	interface PrevPost {
 		title: string;
@@ -9,21 +11,51 @@
 	interface Props {
 		title: string;
 		prev?: PrevPost;
+		topics?: string[];
+		headings?: TocHeading[];
 	}
 
-	let { title, prev }: Props = $props();
+	let { title, prev, topics = [], headings = [] }: Props = $props();
 </script>
 
 <aside
-	class="sticky top-[5.5rem] hidden min-w-0 flex-col gap-0 self-start py-10 lg:flex"
+	class="sticky top-22 hidden min-w-0 flex-col gap-0 self-start py-10 lg:flex"
 	aria-label="Article sidebar"
 >
-	<div class="mb-3 font-mono text-[0.625rem] tracking-[0.1em] text-muted uppercase">share</div>
+	<TableOfContents {headings} />
+
+	{#if headings.length > 0}
+		<hr class="my-5.5 border-t border-paper-line" />
+	{/if}
+
+	<div class="mb-3 font-mono text-[0.625rem] font-semibold tracking-widest text-ink-soft uppercase">
+		share
+	</div>
 	<div class="flex flex-col gap-1.75">
 		<ShareButtons {title} variant="sidebar" />
 	</div>
 
 	<hr class="my-5.5 border-t border-paper-line" />
+
+	{#if topics.length > 0}
+		<div
+			class="mb-3 font-mono text-[0.625rem] font-semibold tracking-widest text-ink-soft uppercase"
+		>
+			topics
+		</div>
+		<div class="flex flex-wrap gap-1.5">
+			{#each topics as topic (topic)}
+				<!-- @TODO: Add link to topic page -->
+				<span
+					class="rounded-full border border-paper-line px-2.25 py-0.75 font-mono text-[0.625rem] tracking-[0.06em] text-ink-soft uppercase no-underline"
+				>
+					{topic}
+				</span>
+			{/each}
+		</div>
+
+		<hr class="my-5.5 border-t border-paper-line" />
+	{/if}
 
 	<nav class="flex flex-col gap-0" aria-label="Post navigation">
 		<a
@@ -36,7 +68,7 @@
 
 		{#if prev}
 			<div class="mt-5">
-				<span class="mb-1.5 block font-mono text-[0.5625rem] tracking-[0.1em] text-muted uppercase">
+				<span class="mb-1.5 block font-mono text-[0.5625rem] tracking-widest text-muted uppercase">
 					previous post
 				</span>
 				<a

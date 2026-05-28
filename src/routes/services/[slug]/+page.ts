@@ -7,30 +7,32 @@ import type { PageLoad } from './$types';
 export const load: PageLoad = async ({ params, parent, url }) => {
 	const { storyblokAPI, version, globals } = await parent();
 
-	try {
-		const storyResponse = await storyblokAPI.get(`cdn/stories/services/${params.slug}`, {
-			version
+	const storyResponse = await storyblokAPI
+		.get(`cdn/stories/services/${params.slug}`, { version })
+		.catch((err: unknown) => {
+			// Only swallow Storyblok's real 404; network / 5xx / auth failures
+			// must bubble so handleError logs them and SvelteKit returns 500.
+			if ((err as { status?: number } | null)?.status === 404) return null;
+			throw err;
 		});
 
-		const story = storyResponse.data?.story;
-		if (!story) error(404, 'Service not found');
-
-		const seo = resolveSEO({
-			pageSEO: story.content?.seo?.[0],
-			globalSEO: globals?.content?.seo?.[0],
-			fallbacks: { title: `${story.name} — ${SITE_NAME}`, pathname: url.pathname },
-			extraJsonLd: [
-				breadcrumbLd([
-					{ name: 'Home', url: SITE_URL },
-					{ name: 'Services', url: `${SITE_URL}/services` },
-					{ name: story.name, url: `${SITE_URL}/services/${params.slug}` }
-				])
-			]
-		});
-
-		return { story, slug: params.slug, seo };
-	} catch (e: unknown) {
-		if (e && typeof e === 'object' && 'status' in e) throw e;
+	const story = storyResponse?.data?.story;
+	if (!story) {
 		error(404, 'Service not found');
 	}
+
+	const seo = resolveSEO({
+		pageSEO: story.content?.seo?.[0],
+		globalSEO: globals?.content?.seo?.[0],
+		fallbacks: { title: `${story.name} — ${SITE_NAME}`, pathname: url.pathname },
+		extraJsonLd: [
+			breadcrumbLd([
+				{ name: 'Home', url: SITE_URL },
+				{ name: 'Services', url: `${SITE_URL}/services` },
+				{ name: story.name, url: `${SITE_URL}/services/${params.slug}` }
+			])
+		]
+	});
+
+	return { story, slug: params.slug, seo };
 };

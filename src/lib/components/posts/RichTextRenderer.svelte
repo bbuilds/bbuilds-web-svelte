@@ -2,6 +2,7 @@
 	import type { RichTextDoc, RichTextNode } from '$lib/types/post';
 	import RichTextRenderer from './RichTextRenderer.svelte';
 	import RichTextText from './RichTextText.svelte';
+	import { headingSlugs } from '$lib/utils/format';
 
 	interface Props {
 		doc?: RichTextDoc;
@@ -11,6 +12,7 @@
 	let { doc, nodes }: Props = $props();
 
 	const list = $derived<RichTextNode[]>(nodes ?? doc?.content ?? []);
+	const anchors = $derived(headingSlugs(list));
 
 	const headingLevel = (node: RichTextNode): 2 | 3 => ((node.attrs?.level as number) === 3 ? 3 : 2);
 
@@ -32,15 +34,23 @@
 
 {#each list as node, i (i)}
 	{#if node.type === 'paragraph'}
-		<p
-			class="mb-[1.375rem] font-sans text-base leading-[1.78] text-pretty text-body md:text-[1.0625rem]"
-		>
+		<p class="mb-5.5 font-sans text-base leading-[1.78] text-pretty text-body md:text-[1.0625rem]">
 			<RichTextRenderer nodes={node.content ?? []} />
 		</p>
 	{:else if node.type === 'heading' && headingLevel(node) === 2}
+		{@const id = anchors[i]}
 		<h2
-			class="mt-12 mb-4 inline-block border-b-2 border-[#ffcd67] pb-2 text-[1.25rem] font-bold tracking-tight text-ink md:text-[clamp(1.375rem,2.4vw,1.875rem)]"
+			id={id ?? undefined}
+			class="group relative mt-12 mb-4 inline-block scroll-mt-20 border-b-2 border-pale-fire pb-2 text-[1.25rem] font-bold tracking-tight text-ink md:text-[clamp(1.375rem,2.4vw,1.875rem)]"
 		>
+			{#if id}
+				<a
+					href="#{id}"
+					aria-label="Permalink to this section"
+					class="pointer-events-none absolute top-0 right-full hidden -translate-x-1 pr-1.5 text-yellow no-underline opacity-0 transition duration-200 group-hover:pointer-events-auto group-hover:translate-x-0 group-hover:opacity-100 focus-visible:pointer-events-auto focus-visible:translate-x-0 focus-visible:opacity-100 md:block"
+					>#</a
+				>
+			{/if}
 			<RichTextRenderer nodes={node.content ?? []} />
 		</h2>
 	{:else if node.type === 'heading'}
@@ -71,7 +81,7 @@
 			data-language={node.attrs?.language as string | undefined}><code>{codeText(node)}</code></pre>
 	{:else if node.type === 'blockquote'}
 		<blockquote
-			class="my-8 rounded-r-lg border-l-[3px] border-[#ffcd67] bg-yellow/5 px-6 py-4.5 font-mono text-[0.9375rem] leading-[1.65] text-body italic"
+			class="my-8 rounded-r-lg border-l-[3px] border-pale-fire bg-yellow/5 px-6 py-4.5 font-mono text-[0.9375rem] leading-[1.65] text-body italic"
 		>
 			<RichTextRenderer nodes={node.content ?? []} />
 		</blockquote>

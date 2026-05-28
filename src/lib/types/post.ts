@@ -28,22 +28,3 @@ export interface RichTextDoc {
 	type: 'doc';
 	content: RichTextNode[];
 }
-
-export interface StoryblokAsset {
-	filename: string;
-	alt?: string;
-	title?: string;
-}
-
-export interface Post {
-	slug: string;
-	name: string;
-	first_published_at: string;
-	tag_list: string[];
-	content: {
-		summary: string;
-		featured_image: StoryblokAsset;
-		Category: string[];
-		content: RichTextDoc;
-	};
-}

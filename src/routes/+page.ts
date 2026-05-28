@@ -9,53 +9,54 @@ import type { PageLoad } from './$types';
 export const load: PageLoad = async ({ parent, url }) => {
 	const { storyblokAPI, version, globals } = await parent();
 	const services = await fetchServiceLinks(storyblokAPI, version);
-	try {
-		const response = await storyblokAPI.get('cdn/stories/home-page', {
+
+	const story = await storyblokAPI
+		.get('cdn/stories/home-page', {
 			version,
 			resolve_relations: ['Home Page.featured_services', 'Article Cards.articles']
-		});
-
-		const story: ISbStoryData<StoryblokHomePage> | undefined = response.data.story;
-		const block = story?.content?.articles?.[0];
-		const explicit = (block?.articles ?? []).filter(
-			(a): a is ISbStoryData<StoryblokBlogPost> => typeof a !== 'string'
-		);
-
-		let posts: ISbStoryData<StoryblokBlogPost>[] = explicit.slice(0, 3);
-
-		if (posts.length < 3) {
-			try {
-				const recentResponse = await storyblokAPI.get('cdn/stories', {
-					version,
-					starts_with: 'posts/',
-					sort_by: 'first_published_at:desc',
-					per_page: 3,
-					is_startpage: false
-				});
-				const explicitUuids = new Set(explicit.map((s) => s.uuid));
-				const recentStories: ISbStoryData<StoryblokBlogPost>[] = recentResponse.data?.stories ?? [];
-				const recent = recentStories.filter((s) => !explicitUuids.has(s.uuid));
-				posts = [...posts, ...recent].slice(0, 3);
-			} catch (e) {
-				console.error('Failed to fetch recent posts:', e);
+		})
+		.then((res) => res.data?.story as ISbStoryData<StoryblokHomePage> | undefined)
+		.catch((err: unknown) => {
+			// Don't noise the logs when the CMS entry is genuinely missing; do log real outages.
+			if ((err as { status?: number } | null)?.status !== 404) {
+				console.error('Failed to fetch home-page story:', err);
 			}
-		}
-
-		const seo = resolveSEO({
-			pageSEO: story?.content?.seo?.[0],
-			globalSEO: globals?.content?.seo?.[0],
-			fallbacks: { title: SITE_NAME, pathname: url.pathname },
-			extraJsonLd: [organizationLd(services), webSiteLd()]
+			return undefined;
 		});
 
-		return { story, posts, seo };
-	} catch (e) {
-		console.error(e);
-		const seo = resolveSEO({
-			globalSEO: globals?.content?.seo?.[0],
-			fallbacks: { title: SITE_NAME, pathname: url.pathname },
-			extraJsonLd: [organizationLd(services), webSiteLd()]
-		});
-		return { story: null, posts: [], seo };
+	const block = story?.content?.articles?.[0];
+	const explicit = (block?.articles ?? []).filter(
+		(a): a is ISbStoryData<StoryblokBlogPost> => typeof a !== 'string'
+	);
+
+	let posts: ISbStoryData<StoryblokBlogPost>[] = explicit.slice(0, 3);
+
+	if (posts.length < 3) {
+		const recent = await storyblokAPI
+			.get('cdn/stories', {
+				version,
+				starts_with: 'posts/',
+				sort_by: 'first_published_at:desc',
+				per_page: 3,
+				is_startpage: false
+			})
+			.then((res) => (res.data?.stories ?? []) as ISbStoryData<StoryblokBlogPost>[])
+			.catch((err: unknown) => {
+				if ((err as { status?: number } | null)?.status !== 404) {
+					console.error('Failed to fetch recent posts:', err);
+				}
+				return [];
+			});
+		const explicitUuids = new Set(explicit.map((s) => s.uuid));
+		posts = [...posts, ...recent.filter((s) => !explicitUuids.has(s.uuid))].slice(0, 3);
 	}
+
+	const seo = resolveSEO({
+		pageSEO: story?.content?.seo?.[0],
+		globalSEO: globals?.content?.seo?.[0],
+		fallbacks: { title: SITE_NAME, pathname: url.pathname },
+		extraJsonLd: [organizationLd(services), webSiteLd()]
+	});
+
+	return { story: story ?? null, posts, seo };
 };

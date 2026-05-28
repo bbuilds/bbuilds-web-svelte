@@ -20,9 +20,9 @@
 	);
 
 	const sidebarCls =
-		'flex w-full items-center gap-2.5 rounded-lg border border-paper-line bg-transparent px-3 py-2 text-left font-mono text-xs text-charcoal no-underline transition-colors hover:border-charcoal hover:bg-black/[0.03] hover:text-ink';
+		'flex w-full items-center gap-2.5 rounded-lg border border-paper-line bg-transparent px-3 py-2 text-left font-mono text-xs text-ink no-underline transition-colors hover:border-ink hover:bg-ink/4 hover:text-ink';
 	const mobileCls =
-		'inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border border-paper-line bg-transparent px-3 py-1.5 font-mono text-[0.6875rem] text-charcoal no-underline transition-colors hover:border-ink hover:text-ink';
+		'inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border border-paper-line bg-transparent px-3 py-1.5 font-mono text-[0.6875rem] text-ink no-underline transition-colors hover:border-ink hover:text-ink';
 
 	const cls = $derived(variant === 'mobile' ? mobileCls : sidebarCls);
 	const iconCls = $derived(

@@ -1,4 +1,4 @@
-import type { Post, RichTextDoc, RichTextNode } from '$lib/types/post';
+import type { RichTextDoc, RichTextNode } from '$lib/types/post';
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
@@ -26,10 +26,50 @@ export const readTime = (doc: RichTextDoc): string => {
 	return `${minutes} min read`;
 };
 
-export const kickerTag = (post: Post): string => {
-	if (post.content.Category.length > 0) return post.content.Category[0];
-	if (post.tag_list.length > 0) return post.tag_list[0];
+export const kickerTag = (category: (number | string)[] | undefined, tagList: string[]): string => {
+	const cats = (category ?? []).filter((c): c is string => typeof c === 'string');
+	if (cats.length > 0) return cats[0];
+	if (tagList.length > 0) return tagList[0];
 	return 'Writing';
+};
+
+export interface TocHeading {
+	id: string;
+	text: string;
+}
+
+export const slugify = (s: string): string =>
+	s
+		.toLowerCase()
+		.trim()
+		.replace(/&/g, 'and')
+		.replace(/[^a-z0-9\s-]/g, '')
+		.replace(/\s+/g, '-')
+		.replace(/-+/g, '-');
+
+export const headingSlugs = (nodes: RichTextNode[]): (string | null)[] => {
+	const counts = new Map<string, number>();
+	return nodes.map((node) => {
+		if (node.type !== 'heading' || (node.attrs?.level as number) !== 2) return null;
+		const parts: string[] = [];
+		collectText(node, parts);
+		const base = slugify(parts.join(' '));
+		const count = counts.get(base) ?? 0;
+		counts.set(base, count + 1);
+		return count === 0 ? base : `${base}-${count}`;
+	});
+};
+
+export const extractHeadings = (nodes: RichTextNode[] | undefined): TocHeading[] => {
+	if (!nodes) return [];
+	const slugs = headingSlugs(nodes);
+	return nodes.flatMap((node, i) => {
+		const id = slugs[i];
+		if (!id) return [];
+		const parts: string[] = [];
+		collectText(node, parts);
+		return [{ id, text: parts.join(' ') }];
+	});
 };
 
 export type TitleSegment = { text: string; underline: boolean; hand: boolean };
