@@ -34,16 +34,14 @@
 
 {#each list as node, i (i)}
 	{#if node.type === 'paragraph'}
-		<p
-			class="mb-[1.375rem] font-sans text-base leading-[1.78] text-pretty text-body md:text-[1.0625rem]"
-		>
+		<p class="mb-5.5 font-sans text-base leading-[1.78] text-pretty text-body md:text-[1.0625rem]">
 			<RichTextRenderer nodes={node.content ?? []} />
 		</p>
 	{:else if node.type === 'heading' && headingLevel(node) === 2}
 		{@const id = anchors[i]}
 		<h2
 			id={id ?? undefined}
-			class="group relative mt-12 mb-4 inline-block scroll-mt-20 border-b-2 border-[#ffcd67] pb-2 text-[1.25rem] font-bold tracking-tight text-ink md:text-[clamp(1.375rem,2.4vw,1.875rem)]"
+			class="group relative mt-12 mb-4 inline-block scroll-mt-20 border-b-2 border-pale-fire pb-2 text-[1.25rem] font-bold tracking-tight text-ink md:text-[clamp(1.375rem,2.4vw,1.875rem)]"
 		>
 			{#if id}
 				<a
@@ -83,7 +81,7 @@
 			data-language={node.attrs?.language as string | undefined}><code>{codeText(node)}</code></pre>
 	{:else if node.type === 'blockquote'}
 		<blockquote
-			class="my-8 rounded-r-lg border-l-[3px] border-[#ffcd67] bg-yellow/5 px-6 py-4.5 font-mono text-[0.9375rem] leading-[1.65] text-body italic"
+			class="my-8 rounded-r-lg border-l-[3px] border-pale-fire bg-yellow/5 px-6 py-4.5 font-mono text-[0.9375rem] leading-[1.65] text-body italic"
 		>
 			<RichTextRenderer nodes={node.content ?? []} />
 		</blockquote>

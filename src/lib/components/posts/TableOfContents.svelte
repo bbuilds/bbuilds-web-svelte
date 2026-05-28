@@ -43,13 +43,13 @@
 			on this page
 		</div>
 		<ul
-			class="relative before:absolute before:top-[0.375rem] before:bottom-[0.375rem] before:left-0 before:w-px before:bg-paper-line before:content-['']"
+			class="relative before:absolute before:top-1.5 before:bottom-1.5 before:left-0 before:w-px before:bg-paper-line before:content-['']"
 		>
 			{#each headings as { id, text } (id)}
 				<li>
 					<a
 						href="#{id}"
-						class="-ml-px block border-l-2 py-[0.4375rem] pl-[0.875rem] text-[0.8125rem] leading-snug no-underline transition-colors hover:text-ink {active ===
+						class="-ml-px block border-l-2 py-1.75 pl-3.5 text-[0.8125rem] leading-snug no-underline transition-colors hover:text-ink {active ===
 						id
 							? 'border-yellow font-semibold text-ink'
 							: 'border-transparent text-charcoal'}"
