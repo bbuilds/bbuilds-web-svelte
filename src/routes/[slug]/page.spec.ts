@@ -74,11 +74,27 @@ describe('GET /[slug] (blog post)', () => {
 		await expect(load(event('not-found'))).rejects.toMatchObject({ status: 404 });
 	});
 
-	it('throws 404 when the API call fails', async () => {
-		mockGet.mockRejectedValue(new Error('network'));
+	it('throws 404 when Storyblok rejects with status 404', async () => {
+		mockGet.mockRejectedValue({ status: 404, message: 'Not found', response: { status: 404 } });
 		const { load } = await import('./+page');
 
-		await expect(load(event('my-post'))).rejects.toMatchObject({ status: 404 });
+		await expect(load(event('not-found'))).rejects.toMatchObject({ status: 404 });
+	});
+
+	it('re-throws non-404 Storyblok errors so SvelteKit returns 500', async () => {
+		const sbError = { status: 503, message: 'Service unavailable' };
+		mockGet.mockRejectedValue(sbError);
+		const { load } = await import('./+page');
+
+		await expect(load(event('my-post'))).rejects.toBe(sbError);
+	});
+
+	it('re-throws network errors without a status field', async () => {
+		const netErr = new Error('network');
+		mockGet.mockRejectedValue(netErr);
+		const { load } = await import('./+page');
+
+		await expect(load(event('my-post'))).rejects.toBe(netErr);
 	});
 
 	it('re-throws SvelteKit errors with a status field', async () => {
