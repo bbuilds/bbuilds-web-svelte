@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 
-	type Variant = 'primary' | 'ghost' | 'teal' | 'yellow';
+	type Variant = 'primary' | 'ghost' | 'dark' | 'teal' | 'yellow';
 	type Size = 'sm' | 'md' | 'lg';
 
 	interface Props {
@@ -124,11 +124,31 @@
 		transform: translate3d(100%, 0, 0);
 	}
 
+	/*Dark: transparent bg, paper border, paper text, hover bg color-paper text-ink  */
+	.btn-dark {
+		background: transparent;
+		color: var(--paper);
+		border-color: var(--paper);
+	}
+	.btn-dark::before {
+		background: var(--paper);
+		transform: translate3d(-110%, 0, 0) skewX(30deg);
+	}
+	.btn-dark:hover {
+		color: var(--black);
+	}
+	.btn-dark:hover::before {
+		transform: translate3d(0, 0, 0) skewX(30deg);
+	}
+
 	/* Ghost: ink overlay starts off-screen left, slides in on hover */
 	.btn-ghost {
 		background: transparent;
-		color: #fff;
+		color: var(--ink);
 		border-color: var(--ink);
+	}
+	.btn-ghost:hover {
+		color: var(--paper);
 	}
 	.btn-ghost::before {
 		background: var(--ink);
