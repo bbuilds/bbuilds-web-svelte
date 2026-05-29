@@ -8,8 +8,8 @@ const doc = (...texts: string[]): RichTextDoc => ({
 });
 
 const post = (overrides: { Category?: string[]; tag_list?: string[] } = {}) => ({
-	category: overrides.Category ?? ([] as string[]),
-	tagList: overrides.tag_list ?? ([] as string[])
+	category: overrides.Category ?? [],
+	tagList: overrides.tag_list ?? []
 });
 
 describe('formatDate', () => {

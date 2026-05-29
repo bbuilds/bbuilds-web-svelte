@@ -1,7 +1,7 @@
 import type { ISourceOptions } from '@tsparticles/engine';
 import { LEAF_IMAGES } from '$lib/particles/leafImages';
 
-export const leafParticleOptions = {
+export const leafParticleOptions: ISourceOptions = {
 	fullScreen: { enable: true },
 	background: { color: 'transparent' },
 	fpsLimit: 60,
@@ -25,7 +25,6 @@ export const leafParticleOptions = {
 			speed: { min: 0.4, max: 0.9 },
 			straight: false,
 			gravity: { enable: true, acceleration: 0.3, maxSpeed: 2 },
-			wobble: { enable: true, distance: 30, speed: { min: -8, max: 8 } },
 			outModes: { default: 'destroy', top: 'none' }
 		}
 	},
@@ -42,4 +41,4 @@ export const leafParticleOptions = {
 			repulse: { distance: 90, duration: 0.4, factor: 100, speed: 1, easing: 'ease-out-quad' }
 		}
 	}
-} as ISourceOptions;
+};

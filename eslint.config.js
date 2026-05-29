@@ -23,7 +23,15 @@ export default defineConfig(
 		rules: {
 			// typescript-eslint strongly recommend that you do not use the no-undef lint rule on TypeScript projects.
 			// see: https://typescript-eslint.io/troubleshooting/faqs/eslint/#i-get-errors-from-the-no-undef-rule-about-global-variables-not-being-defined-even-though-there-are-no-typescript-errors
-			'no-undef': 'off'
+			'no-undef': 'off',
+			// Prefer type annotations (`const x: T = ...`) over type assertions (`... as T`).
+			'@typescript-eslint/consistent-type-assertions': [
+				'error',
+				{
+					assertionStyle: 'as',
+					objectLiteralTypeAssertions: 'never'
+				}
+			]
 		}
 	},
 	{
@@ -43,6 +51,18 @@ export default defineConfig(
 		rules: {
 			// Typed routes are not enabled in this project (svelte.config.js has no typedRoutes: true)
 			'svelte/no-navigation-without-resolve': 'off'
+		}
+	},
+	{
+		files: ['**/*.{test,spec}.{js,ts}'],
+		rules: {
+			// Test mocks legitimately use object-literal assertions for partial fixtures
+			// (e.g. `{...} as unknown as Api`, `{ event: { url } } as ErrorArgs`), which cannot
+			// be expressed as annotations. Relax the rule here instead of scattering disables.
+			'@typescript-eslint/consistent-type-assertions': [
+				'error',
+				{ assertionStyle: 'as', objectLiteralTypeAssertions: 'allow' }
+			]
 		}
 	}
 );
