@@ -65,7 +65,6 @@
 		"wrangler": "^4.95.0"
 	},
 	"dependencies": {
-		"@formspree/ajax": "^1.1.5",
 		"@storyblok/svelte": "^6.1.9",
 		"@tsparticles/engine": "^4.0.5",
 		"@tsparticles/plugin-emitters": "^4.0.5",
