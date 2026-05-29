@@ -149,10 +149,31 @@ export interface StoryblokBlogPost {
 	_uid: string;
 }
 
+export interface StoryblokContactForm {
+	eyebrow?: string;
+	title?: string;
+	copy?: string;
+	fields?: StoryblokFormInput[];
+	cta_text?: string;
+	success_message?: string;
+	component: 'Contact Form';
+	_uid: string;
+}
+
 export interface StoryblokCTA {
 	label?: string;
 	link?: Exclude<StoryblokMultilink, { linktype?: 'asset' }>;
 	component: 'CTA';
+	_uid: string;
+}
+
+export interface StoryblokFormInput {
+	name?: string;
+	label?: string;
+	placeholder?: string;
+	error_message_required?: string;
+	error_message_invalid?: string;
+	component: 'Form Input';
 	_uid: string;
 }
 
@@ -162,6 +183,7 @@ export interface StoryblokGlobals {
 	contact_copy?: string;
 	contact_cta?: StoryblokCTA[];
 	seo?: StoryblokSEO[];
+	contact_modal?: StoryblokContactForm[];
 	component: 'Globals';
 	_uid: string;
 }
@@ -211,7 +233,9 @@ export interface StoryblokPage {
 		| StoryblokArticleCards
 		| StoryblokBlogIndex
 		| StoryblokBlogPost
+		| StoryblokContactForm
 		| StoryblokCTA
+		| StoryblokFormInput
 		| StoryblokGlobals
 		| StoryblokHero
 		| StoryblokHomePage
