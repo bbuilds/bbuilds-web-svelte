@@ -23,7 +23,7 @@ afterEach(() => {
 
 describe('handleError (server)', () => {
 	it('returns a safe message and an errorId', () => {
-		const result = handleError(args());
+		const result = handleError(args()) as App.Error;
 
 		expect(result).toEqual({
 			message: 'Something went wrong on our end.',
@@ -32,17 +32,17 @@ describe('handleError (server)', () => {
 	});
 
 	it('returns a unique errorId per call', () => {
-		const a = handleError(args());
-		const b = handleError(args());
+		const a = handleError(args()) as App.Error;
+		const b = handleError(args()) as App.Error;
 
 		expect(a?.errorId).not.toBe(b?.errorId);
 	});
 
 	it('logs the errorId alongside the error details', () => {
-		const result = handleError(args());
+		const result = handleError(args()) as App.Error;
 
 		expect(console.error).toHaveBeenCalledWith(
-			result?.errorId,
+			result.errorId,
 			expect.objectContaining({
 				message: 'boom',
 				url: 'https://example.com/broken'

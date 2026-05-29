@@ -2,25 +2,27 @@ import { describe, expect, it } from 'vitest';
 import type { StoryblokMultilink } from '$lib/types/storyblok';
 import { isExternalUrl, resolveMultilink } from './links';
 
-const storyLink = (overrides: Partial<Extract<StoryblokMultilink, { linktype: 'story' }>> = {}) =>
-	({
-		fieldtype: 'multilink',
-		id: 'id',
-		url: '',
-		cached_url: '',
-		linktype: 'story',
-		...overrides
-	}) as Extract<StoryblokMultilink, { linktype: 'story' }>;
+const storyLink = (
+	overrides: Partial<Extract<StoryblokMultilink, { linktype: 'story' }>> = {}
+): Extract<StoryblokMultilink, { linktype: 'story' }> => ({
+	fieldtype: 'multilink',
+	id: 'id',
+	url: '',
+	cached_url: '',
+	linktype: 'story',
+	...overrides
+});
 
-const urlLink = (overrides: Partial<Extract<StoryblokMultilink, { linktype: 'url' }>> = {}) =>
-	({
-		fieldtype: 'multilink',
-		id: 'id',
-		url: '',
-		cached_url: '',
-		linktype: 'url',
-		...overrides
-	}) as Extract<StoryblokMultilink, { linktype: 'url' }>;
+const urlLink = (
+	overrides: Partial<Extract<StoryblokMultilink, { linktype: 'url' }>> = {}
+): Extract<StoryblokMultilink, { linktype: 'url' }> => ({
+	fieldtype: 'multilink',
+	id: 'id',
+	url: '',
+	cached_url: '',
+	linktype: 'url',
+	...overrides
+});
 
 describe('isExternalUrl', () => {
 	it('matches http and https', () => {
@@ -104,14 +106,14 @@ describe('resolveMultilink', () => {
 
 	describe('email linktype', () => {
 		it('returns a mailto href from the email field', () => {
-			const link = {
+			const link: Extract<StoryblokMultilink, { linktype: 'email' }> = {
 				fieldtype: 'multilink',
 				id: '',
 				url: 'hello@brandenbuilds.com',
 				cached_url: 'hello@brandenbuilds.com',
 				linktype: 'email',
 				email: 'hello@brandenbuilds.com'
-			} as Extract<StoryblokMultilink, { linktype: 'email' }>;
+			};
 			expect(resolveMultilink(link)).toEqual({ href: 'mailto:hello@brandenbuilds.com' });
 		});
 	});
