@@ -1,6 +1,7 @@
 <script lang="ts">
 	import './layout.css';
 	import favicon from '$lib/assets/favicon.ico';
+	import faviconPng from '$lib/assets/favicon.png';
 	import { page } from '$app/state';
 	import SEO from '$lib/components/SEO.svelte';
 	import Header from '$lib/components/Header.svelte';
@@ -13,7 +14,8 @@
 
 <SEO seo={page.data.seo} />
 <svelte:head>
-	<link rel="icon" href={favicon} />
+	<link rel="icon" type="image/x-icon" href={favicon} />
+	<link rel="icon" type="image/png" href={faviconPng} />
 	<link rel="preconnect" href="https://fonts.googleapis.com" />
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
 	<link

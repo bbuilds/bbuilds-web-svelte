@@ -1,8 +1,9 @@
 <script lang="ts">
 	import type { ISbStoryData } from '@storyblok/js';
 	import type { StoryblokHomePage, StoryblokBlogPost } from '$lib/types/storyblok';
-	import { formatDate, parseTitleSegments } from '$lib/utils/format';
+	import { parseTitleSegments } from '$lib/utils/format';
 	import { resolveMultilink } from '$lib/utils/links';
+	import { toBlogCard } from '$lib/utils/blog';
 	import Button from '$lib/components/Button.svelte';
 	import PostCard from '$lib/components/PostCard.svelte';
 	import SectionHeader from '$lib/components/SectionHeader.svelte';
@@ -22,23 +23,7 @@
 	const cta = $derived(content?.CTA?.[0]);
 	const ctaLink = $derived(resolveMultilink(cta?.link));
 
-	const cards = $derived(
-		posts
-			.filter((story) => story && story.slug)
-			.map((story) => {
-				const published = story.first_published_at ?? story.published_at ?? null;
-				return {
-					key: story.uuid ?? story.slug,
-					tag: String(story.content?.Category?.[0] ?? ''),
-					datetime: published ?? '',
-					date: published ? formatDate(published) : '',
-					title: story.name ?? '',
-					blurb: story.content?.summary ?? '',
-					href: `/${story.slug}`,
-					image: story.content?.featured_image
-				};
-			})
-	);
+	const cards = $derived(posts.filter((story) => story && story.slug).map(toBlogCard));
 </script>
 
 <section id="blog" class="paper-bg relative pt-18 pb-20">

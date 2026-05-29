@@ -2,7 +2,7 @@
 	import type { PageData } from './$types';
 	import BlogHero from '$lib/components/blog/BlogHero.svelte';
 	import PostCard from '$lib/components/PostCard.svelte';
-	import { formatDate, kickerTag } from '$lib/utils/format';
+	import { toBlogCard } from '$lib/utils/blog';
 	import { resolveMultilink } from '$lib/utils/links';
 	import Button from '$lib/components/Button.svelte';
 
@@ -18,45 +18,24 @@
 	const allCards = $derived(
 		data.posts
 			.filter((p) => p && p.slug)
-			.map((story) => {
-				const updated =
-					story.content?.updated_date && !isNaN(new Date(story.content.updated_date).getTime())
-						? story.content.updated_date
-						: undefined;
-				const effectiveIso = updated ?? story.first_published_at ?? story.published_at ?? '';
-				const tag = kickerTag(story.content?.Category, story.tag_list ?? []);
-				return {
-					key: story.uuid ?? story.slug,
-					tag,
-					datetime: effectiveIso,
-					date: effectiveIso ? formatDate(effectiveIso) : '',
-					effectiveAt: effectiveIso ? new Date(effectiveIso).getTime() : 0,
-					title: story.name ?? '',
-					blurb: story.content?.summary ?? '',
-					href: `/${story.slug}`,
-					image: story.content?.featured_image,
-					searchHaystack: [
-						story.name ?? '',
-						story.content?.summary ?? '',
-						tag,
-						...(story.tag_list ?? [])
-					]
-						.join(' ')
-						.toLowerCase()
-				};
-			})
+			.map(toBlogCard)
 			.sort((a, b) => b.effectiveAt - a.effectiveAt)
 	);
 
+	const term = $derived(query.trim().toLowerCase());
+
 	const filtered = $derived(
-		query.trim()
-			? allCards.filter((c) => c.searchHaystack.includes(query.trim().toLowerCase()))
-			: allCards
+		term ? allCards.filter((c) => c.searchHaystack.includes(term)) : allCards
 	);
 	const visible = $derived((1 + extraLoads) * PAGE_SIZE);
 	const shown = $derived(filtered.slice(0, visible));
 	const hasMore = $derived(visible < filtered.length);
-	const isFiltered = $derived(query.trim().length > 0);
+	const isFiltered = $derived(term.length > 0);
+
+	function reset() {
+		query = '';
+		extraLoads = 0;
+	}
 </script>
 
 <BlogHero
@@ -93,7 +72,7 @@
 					query = e.currentTarget.value;
 					extraLoads = 0;
 				}}
-				name="search posts"
+				id="search-posts"
 				placeholder="Search Branden Builds"
 				aria-label="Search posts"
 				class="w-full rounded-[0.625rem] border border-paper-line bg-gray py-3 pr-4 pl-10 font-mono text-sm text-ink placeholder:text-muted focus-visible:border-yellow focus-visible:ring-2 focus-visible:ring-yellow/10 focus-visible:outline-none"
@@ -105,14 +84,11 @@
 			<div class="mb-6 flex items-center gap-4 font-mono text-[0.6875rem] text-muted">
 				<span>
 					{filtered.length}
-					{filtered.length === 1 ? 'post' : 'posts'} found matching "{query.trim()}"
+					{filtered.length === 1 ? 'post' : 'posts'} found matching "{term}"
 				</span>
 				<button
 					type="button"
-					onclick={() => {
-						query = '';
-						extraLoads = 0;
-					}}
+					onclick={reset}
 					class="cursor-pointer text-yellow transition-colors hover:text-yellow/70"
 				>
 					✕ clear
@@ -137,13 +113,10 @@
 			{:else}
 				<div class="col-span-full py-16 text-center font-mono text-muted">
 					<div class="mb-2 text-[1.25rem] opacity-40">∅</div>
-					No posts found matching "{query.trim()}".
+					No posts found matching "{term}".
 					<button
 						type="button"
-						onclick={() => {
-							query = '';
-							extraLoads = 0;
-						}}
+						onclick={reset}
 						class="mt-4 block w-full text-yellow hover:text-yellow/70 transition-colors cursor-pointer"
 					>
 						clear filters
@@ -155,16 +128,7 @@
 		<!-- load more -->
 		{#if hasMore}
 			<div class="mt-12 flex justify-center">
-				<!-- <button
-					type="button"
-					onclick={() => (extraLoads += 1)}
-					class="btn btn-ghost inline-flex cursor-pointer items-center rounded-full border border-ink px-[1.375rem] py-[0.875rem] font-mono text-[0.8125rem] text-ink transition-colors hover:bg-ink hover:text-paper"
-				>
-					Load More Articles
-				</button> -->
-				<Button onclick={() => (extraLoads += 1)} variant="ghost" class="text-ink">
-					Load More Articles
-				</Button>
+				<Button onclick={() => (extraLoads += 1)} variant="ghost">Load More Articles</Button>
 			</div>
 		{/if}
 	</div>
