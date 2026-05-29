@@ -12,7 +12,9 @@
 	let { children, data } = $props();
 </script>
 
-<SEO seo={page.data.seo} />
+{#if !page.error}
+	<SEO seo={page.data.seo} />
+{/if}
 <svelte:head>
 	<link rel="icon" type="image/x-icon" href={favicon} />
 	<link rel="icon" type="image/png" href={faviconPng} />
