@@ -6,7 +6,6 @@
 	import FallingLeaves from '$lib/components/error/FallingLeaves.svelte';
 
 	const statusStr = $derived(String(page.status));
-	const firstZeroIdx = $derived(statusStr.indexOf('0'));
 
 	const copy = $derived(
 		page.status === 404
@@ -52,15 +51,7 @@
 					class="font-sans font-bold tracking-[-0.04em] leading-[0.86] text-[clamp(6rem,18vw,12rem)] flex items-start"
 					aria-label={statusStr}
 				>
-					{#each statusStr.split('') as digit, i (i)}
-						{#if digit === '0' && i === firstZeroIdx}
-							<span class="relative inline-block">
-								<span class="text-ink relative">{digit}</span>
-							</span>
-						{:else}
-							<span class="text-ink relative">{digit}</span>
-						{/if}
-					{/each}
+					{statusStr}
 				</div>
 
 				<h1
@@ -108,27 +99,9 @@
 </section>
 
 <style>
-	.container {
-		z-index: 2;
-	}
-
 	.meta-dot::before {
 		content: '●';
 		color: var(--yellow);
 		margin-right: 0.5rem;
-	}
-
-	@keyframes sproutGrow {
-		0% {
-			transform: scaleY(0.05) scaleX(0.6);
-			opacity: 0;
-		}
-		55% {
-			opacity: 1;
-		}
-		100% {
-			transform: scaleY(1) scaleX(1);
-			opacity: 1;
-		}
 	}
 </style>

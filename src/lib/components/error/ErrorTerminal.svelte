@@ -12,16 +12,18 @@
 		const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
 		const timeoutIds: ReturnType<typeof setTimeout>[] = [];
 
+		const safePath = path.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
 		const lines = [
 			{
-				h: `<span class="text-teal">branden@builds</span> <span class="t-path">~/site</span> $ open <span class="t-path">${path}</span>`
+				h: `<span class="text-teal">branden@builds</span> <span class="t-path">~/site</span> $ open <span class="t-path">${safePath}</span>`
 			},
 			{ h: `<span class="text-muted-dark">resolving route…</span>` },
 			{
 				h: `<span class="t-err">✖ Error: HTTP ${status} — ${status === 404 ? 'page not found' : 'internal server error'}</span>`
 			},
 			{
-				h: `<span class="text-muted-dark">  at Router.resolve (<span class="t-path">${path}</span>)</span>`
+				h: `<span class="text-muted-dark">  at Router.resolve (<span class="t-path">${safePath}</span>)</span>`
 			},
 			{ h: `<span class="text-muted-dark">  at Server.handle (request.js:42)</span>` },
 			{
