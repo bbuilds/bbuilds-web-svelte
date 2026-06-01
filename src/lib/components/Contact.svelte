@@ -1,5 +1,6 @@
 <script lang="ts">
 	import SectionHeader from '$lib/components/SectionHeader.svelte';
+	import Sprout from '$lib/components/svgs/illustrations/Sprout.svelte';
 	import { parseTitleSegments } from '$lib/utils/format';
 	import { resolveMultilink } from '$lib/utils/links';
 	import type { StoryblokGlobals } from '$lib/types/storyblok';
@@ -21,53 +22,6 @@
 	] as const;
 </script>
 
-{#snippet sprout()}
-	<svg viewBox="0 0 100 160" style="width:6.875rem" aria-hidden="true">
-		<path
-			d="M50 155 C 50 130, 52 100, 50 70 C 49 50, 50 30, 50 12"
-			stroke="#1a1a1a"
-			stroke-width="1.8"
-			fill="none"
-			stroke-linecap="round"
-		/>
-		<path
-			d="M50 95 C 32 92, 18 76, 16 50 C 32 56, 46 74, 50 95 Z"
-			fill="#7ba87b"
-			stroke="#1a1a1a"
-			stroke-width="1.3"
-			stroke-linejoin="round"
-		/>
-		<path
-			d="M50 95 C 38 88, 28 74, 22 60"
-			stroke="#1a1a1a"
-			stroke-width="0.6"
-			fill="none"
-			opacity="0.5"
-		/>
-		<path
-			d="M50 65 C 68 62, 82 46, 84 20 C 68 26, 54 44, 50 65 Z"
-			fill="#7ba87b"
-			stroke="#1a1a1a"
-			stroke-width="1.3"
-			stroke-linejoin="round"
-		/>
-		<path
-			d="M50 65 C 62 58, 72 44, 78 30"
-			stroke="#1a1a1a"
-			stroke-width="0.6"
-			fill="none"
-			opacity="0.5"
-		/>
-		<path
-			d="M50 40 C 42 30, 42 18, 50 8 C 58 18, 58 30, 50 40 Z"
-			fill="#7ba87b"
-			stroke="#1a1a1a"
-			stroke-width="1.3"
-			stroke-linejoin="round"
-		/>
-	</svg>
-{/snippet}
-
 {#if content}
 	<section id="contact" class="paper-bg relative overflow-hidden pt-22 pb-20 text-center">
 		{#each PLANTS as p, i (i)}
@@ -79,7 +33,7 @@
 				style="bottom: -1.25rem; {p.side}: {p.offset}; transform-origin: bottom center;"
 			>
 				<div class="plant-sway plant-sway-{i}" style="transform-origin: bottom center;">
-					{@render sprout()}
+					<Sprout class="w-27.5" />
 				</div>
 			</div>
 		{/each}

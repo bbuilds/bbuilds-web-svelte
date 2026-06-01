@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Button from '$lib/components/Button.svelte';
-	import ScribbleUnderline from '$lib/components/ScribbleUnderline.svelte';
+	import ScribbleUnderline from '$lib/components/svgs/illustrations/ScribbleUnderline.svelte';
 	import type { TitleSegment } from '$lib/utils/format';
 	import type { ResolvedLink } from '$lib/utils/links';
 

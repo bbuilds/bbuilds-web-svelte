@@ -3,7 +3,7 @@
 	import { SITE_NAME } from '$lib/config/site';
 	import Button from '$lib/components/Button.svelte';
 	import ErrorTerminal from '$lib/components/error/ErrorTerminal.svelte';
-	import FallingLeaves from '$lib/components/error/FallingLeaves.svelte';
+	import FallingLeaves from '$lib/components/svgs/illustrations/FallingLeaves.svelte';
 
 	const statusStr = $derived(String(page.status));
 

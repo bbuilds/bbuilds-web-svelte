@@ -4,7 +4,7 @@
 	import { resolveMultilink } from '$lib/utils/links';
 	import { parseHighlights } from '$lib/utils/parseHighlights';
 	import Button from '$lib/components/Button.svelte';
-	import ScribbleUnderline from '$lib/components/ScribbleUnderline.svelte';
+	import ScribbleUnderline from '$lib/components/svgs/illustrations/ScribbleUnderline.svelte';
 	import BlueprintDiagram from './BlueprintDiagram.svelte';
 
 	interface Props {
