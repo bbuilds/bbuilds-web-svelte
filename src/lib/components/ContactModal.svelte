@@ -4,6 +4,7 @@
 	import Button from '$lib/components/Button.svelte';
 	import FormField from '$lib/components/FormField.svelte';
 	import { validateName, validateEmail, validateMessage } from '$lib/utils/validation';
+	import { banner } from '$lib/state/banner.svelte';
 
 	let dialog = $state<HTMLDialogElement | undefined>(undefined);
 	const isOpen = $derived(page.url.hash === '#contact-modal');
@@ -15,6 +16,8 @@
 		email: false,
 		message: false
 	});
+	let submitting = $state(false);
+	let submitError = $state<string | undefined>(undefined);
 
 	const validators = {
 		name: validateName,
@@ -37,18 +40,36 @@
 		if (touched[field]) runValidation(field);
 	}
 
-	function onSubmit(e: SubmitEvent) {
+	async function onSubmit(e: SubmitEvent) {
 		e.preventDefault();
 		(Object.keys(validators) as Field[]).forEach((f) => {
 			touched[f] = true;
 			runValidation(f);
 		});
-		const valid = !errors.name && !errors.email && !errors.message;
-		if (valid) {
-			values = { name: '', email: '', message: '' };
-			errors = {};
-			touched = { name: false, email: false, message: false };
-			close();
+		if (errors.name || errors.email || errors.message) return;
+
+		submitting = true;
+		submitError = undefined;
+		try {
+			const res = await fetch('https://formspree.io/f/xjvjpbqb', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+				body: JSON.stringify({ name: values.name, email: values.email, message: values.message })
+			});
+			const data: { errors?: { message: string }[] } = await res.json();
+			if (!res.ok) {
+				submitError = data.errors?.[0]?.message ?? 'Something went wrong. Please try again.';
+			} else {
+				values = { name: '', email: '', message: '' };
+				errors = {};
+				touched = { name: false, email: false, message: false };
+				banner.success("Message sent! I'll be in touch soon.");
+				close();
+			}
+		} catch {
+			submitError = 'Network error. Please check your connection and try again.';
+		} finally {
+			submitting = false;
 		}
 	}
 
@@ -74,6 +95,7 @@
 	function onDialogClose() {
 		errors = {};
 		touched = { name: false, email: false, message: false };
+		submitError = undefined;
 		if (page.url.hash !== '#contact-modal') return;
 		goto(page.url.pathname + page.url.search, {
 			replaceState: true,
@@ -94,8 +116,23 @@
 	class="fixed inset-0 m-auto h-fit max-h-[calc(100dvh-2rem)] w-full max-w-xl rounded-xl"
 >
 	<div class="rounded-xl border border-pale-fire/50 bg-ink p-10">
-		<div class="mb-5 flex items-center justify-between">
-			<h2 class="font-mono text-base font-bold tracking-tight text-white">Contact</h2>
+		<div class="mb-6 flex items-start justify-between">
+			<div>
+				<div class="flex items-center gap-2">
+					<span class="relative inline-flex h-2 w-2">
+						<span
+							class="absolute inline-flex h-full w-full animate-ping rounded-full bg-pale-fire opacity-75"
+						></span>
+						<span class="relative inline-flex h-2 w-2 rounded-full bg-pale-fire"></span>
+					</span>
+					<span class="font-mono text-xs uppercase tracking-widest text-pale-fire"
+						>Start a project</span
+					>
+				</div>
+				<h2 class="mt-3 text-[1.85rem] font-bold leading-[1.02] tracking-tight text-white">
+					Let's build something good.
+				</h2>
+			</div>
 			<button
 				type="button"
 				aria-label="Close"
@@ -153,7 +190,12 @@
 				onInput={() => onInput('message')}
 				onBlur={() => onBlur('message')}
 			/>
-			<Button type="submit" rounded="lg" class="btn-yellow mt-1 w-full">Send message</Button>
+			<Button type="submit" disabled={submitting} rounded="lg" class="btn-yellow mt-1 w-full">
+				{submitting ? 'Sending…' : 'Send message'}
+			</Button>
+			{#if submitError}
+				<p class="font-mono text-xs text-red-400">{submitError}</p>
+			{/if}
 		</form>
 	</div>
 </dialog>

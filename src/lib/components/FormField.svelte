@@ -31,7 +31,7 @@
 
 	const errorId = $derived(`${id}-error`);
 	const inputClass = $derived(
-		`w-full rounded-lg border bg-paper px-3 py-2.5 text-sm leading-normal text-ink transition-colors placeholder:text-charcoal focus:outline-none ${error ? 'border-red-500 focus:border-red-500' : 'border-black/10 focus:border-ink'}`
+		`w-full rounded-lg border bg-paper px-3 py-2.5 text-sm leading-normal text-ink transition-colors placeholder:text-charcoal focus:outline-none focus:ring-2 ${error ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20' : 'border-black/10 focus:border-pale-fire focus:ring-pale-fire/20'}`
 	);
 </script>
 
