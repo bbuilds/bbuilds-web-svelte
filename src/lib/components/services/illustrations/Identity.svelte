@@ -9,15 +9,6 @@
 {#if pillarId === 'brand-strategy'}
 	<svg viewBox="0 0 240 158" class="mx-auto block h-auto w-full max-w-md" aria-hidden="true">
 		<defs>
-			<pattern id="pi-grid-bstr" width="16" height="16" patternUnits="userSpaceOnUse">
-				<path
-					d="M 16 0 L 0 0 0 16"
-					fill="none"
-					stroke="var(--grid-line)"
-					stroke-width="0.4"
-					opacity="0.5"
-				/>
-			</pattern>
 			<marker id="bstr-ax" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto">
 				<path
 					d="M0,0.5 L4,2.5 L0,4.5"
@@ -39,7 +30,6 @@
 				/>
 			</marker>
 		</defs>
-		<rect width="240" height="158" fill="url(#pi-grid-bstr)" />
 
 		<text
 			x="14"
@@ -236,19 +226,6 @@
 	</svg>
 {:else if pillarId === 'brand-identity'}
 	<svg viewBox="0 0 240 200" class="mx-auto block h-auto w-full max-w-md" aria-hidden="true">
-		<defs>
-			<pattern id="pi-grid-bid" width="16" height="16" patternUnits="userSpaceOnUse">
-				<path
-					d="M 16 0 L 0 0 0 16"
-					fill="none"
-					stroke="var(--grid-line)"
-					stroke-width="0.4"
-					opacity="0.5"
-				/>
-			</pattern>
-		</defs>
-		<rect width="240" height="200" fill="url(#pi-grid-bid)" />
-
 		<rect
 			x="14"
 			y="20"
@@ -440,15 +417,6 @@
 {:else if pillarId === 'brand-system'}
 	<svg viewBox="0 0 240 200" class="mx-auto block h-auto w-full max-w-md" aria-hidden="true">
 		<defs>
-			<pattern id="pi-grid-bds" width="16" height="16" patternUnits="userSpaceOnUse">
-				<path
-					d="M 16 0 L 0 0 0 16"
-					fill="none"
-					stroke="var(--grid-line)"
-					stroke-width="0.4"
-					opacity="0.5"
-				/>
-			</pattern>
 			<marker id="bds-arr" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
 				<path
 					d="M0,1 L6,4 L0,7"
@@ -460,7 +428,6 @@
 				/>
 			</marker>
 		</defs>
-		<rect width="240" height="200" fill="url(#pi-grid-bds)" />
 
 		<text
 			x="14"
@@ -773,19 +740,6 @@
 	</svg>
 {:else if pillarId === 'brand-ia'}
 	<svg viewBox="0 0 240 184" class="mx-auto block h-auto w-full max-w-md" aria-hidden="true">
-		<defs>
-			<pattern id="pi-grid-bia" width="16" height="16" patternUnits="userSpaceOnUse">
-				<path
-					d="M 16 0 L 0 0 0 16"
-					fill="none"
-					stroke="var(--grid-line)"
-					stroke-width="0.4"
-					opacity="0.5"
-				/>
-			</pattern>
-		</defs>
-		<rect width="240" height="200" fill="url(#pi-grid-bia)" />
-
 		<text
 			x="14"
 			y="14"
@@ -941,15 +895,6 @@
 {:else if pillarId === 'brand-ux'}
 	<svg viewBox="0 0 240 200" class="mx-auto block h-auto w-full max-w-md" aria-hidden="true">
 		<defs>
-			<pattern id="pi-grid-bux" width="16" height="16" patternUnits="userSpaceOnUse">
-				<path
-					d="M 16 0 L 0 0 0 16"
-					fill="none"
-					stroke="var(--grid-line)"
-					stroke-width="0.4"
-					opacity="0.5"
-				/>
-			</pattern>
 			<marker id="bux-arr" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
 				<path
 					d="M0,1 L6,4 L0,7"
@@ -960,7 +905,6 @@
 				/>
 			</marker>
 		</defs>
-		<rect width="240" height="200" fill="url(#pi-grid-bux)" />
 
 		<text
 			x="14"

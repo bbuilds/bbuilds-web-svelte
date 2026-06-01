@@ -8,18 +8,6 @@
 
 {#if pillarId === 'frontend'}
 	<svg viewBox="0 0 240 200" class="mx-auto block h-auto w-full max-w-md" aria-hidden="true">
-		<defs>
-			<pattern id="pi-grid-fe" width="16" height="16" patternUnits="userSpaceOnUse">
-				<path
-					d="M 16 0 L 0 0 0 16"
-					fill="none"
-					stroke="var(--grid-line)"
-					stroke-width="0.4"
-					opacity="0.5"
-				/>
-			</pattern>
-		</defs>
-		<rect width="240" height="200" fill="url(#pi-grid-fe)" />
 		<rect
 			x="88"
 			y="14"
@@ -272,15 +260,6 @@
 {:else if pillarId === 'mobile'}
 	<svg viewBox="0 0 240 200" class="mx-auto block h-auto w-full max-w-md" aria-hidden="true">
 		<defs>
-			<pattern id="pi-grid-mob" width="16" height="16" patternUnits="userSpaceOnUse">
-				<path
-					d="M 16 0 L 0 0 0 16"
-					fill="none"
-					stroke="var(--grid-line)"
-					stroke-width="0.4"
-					opacity="0.5"
-				/>
-			</pattern>
 			<marker id="mob-arr" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
 				<path
 					d="M0,1 L5,3.5 L0,6"
@@ -292,7 +271,6 @@
 				/>
 			</marker>
 		</defs>
-		<rect width="240" height="200" fill="url(#pi-grid-mob)" />
 
 		<rect x="88" y="2" width="64" height="13" rx="2" fill="var(--ink)" />
 		<text
@@ -622,15 +600,6 @@
 {:else if pillarId === 'backend'}
 	<svg viewBox="0 0 240 200" class="mx-auto block h-auto w-full max-w-md" aria-hidden="true">
 		<defs>
-			<pattern id="pi-grid-be" width="16" height="16" patternUnits="userSpaceOnUse">
-				<path
-					d="M 16 0 L 0 0 0 16"
-					fill="none"
-					stroke="var(--grid-line)"
-					stroke-width="0.4"
-					opacity="0.5"
-				/>
-			</pattern>
 			<marker id="be-arr" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
 				<path
 					d="M0,1 L6,4 L0,7"
@@ -651,7 +620,6 @@
 				/>
 			</marker>
 		</defs>
-		<rect width="240" height="200" fill="url(#pi-grid-be)" />
 		<text
 			x="14"
 			y="14"
@@ -900,15 +868,6 @@
 {:else if pillarId === 'cms'}
 	<svg viewBox="0 0 240 200" class="mx-auto block h-auto w-full max-w-md" aria-hidden="true">
 		<defs>
-			<pattern id="pi-grid-cms" width="16" height="16" patternUnits="userSpaceOnUse">
-				<path
-					d="M 16 0 L 0 0 0 16"
-					fill="none"
-					stroke="var(--grid-line)"
-					stroke-width="0.4"
-					opacity="0.5"
-				/>
-			</pattern>
 			<marker id="cms-arr" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
 				<path
 					d="M0,1 L5,3.5 L0,6"
@@ -920,7 +879,6 @@
 				/>
 			</marker>
 		</defs>
-		<rect width="240" height="200" fill="url(#pi-grid-cms)" />
 		<text
 			x="14"
 			y="14"
@@ -1058,15 +1016,6 @@
 {:else if pillarId === 'ecommerce'}
 	<svg viewBox="0 0 240 200" class="mx-auto block h-auto w-full max-w-md" aria-hidden="true">
 		<defs>
-			<pattern id="pi-grid-eco" width="16" height="16" patternUnits="userSpaceOnUse">
-				<path
-					d="M 16 0 L 0 0 0 16"
-					fill="none"
-					stroke="var(--grid-line)"
-					stroke-width="0.4"
-					opacity="0.5"
-				/>
-			</pattern>
 			<marker id="eco-arr" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
 				<path
 					d="M0,1 L5,3.5 L0,6"
@@ -1087,7 +1036,6 @@
 				/>
 			</marker>
 		</defs>
-		<rect width="240" height="200" fill="url(#pi-grid-eco)" />
 		<text
 			x="120"
 			y="14"
