@@ -9,6 +9,7 @@
 	import BottomNav from '$lib/components/BottomNav.svelte';
 	import Contact from '$lib/components/Contact.svelte';
 	import ContactModal from '$lib/components/ContactModal.svelte';
+	import SuccessBanner from '$lib/components/SuccessBanner.svelte';
 	let { children, data } = $props();
 </script>
 
@@ -30,5 +31,6 @@
 {@render children()}
 <Contact content={data.globals?.content} />
 <ContactModal />
+<SuccessBanner />
 <Footer />
 <BottomNav />
