@@ -8,19 +8,6 @@
 
 {#if pillarId === 'ai'}
 	<svg viewBox="0 0 240 200" class="mx-auto block h-auto w-full max-w-md" aria-hidden="true">
-		<defs>
-			<pattern id="pi-grid-int-ai" width="16" height="16" patternUnits="userSpaceOnUse">
-				<path
-					d="M 16 0 L 0 0 0 16"
-					fill="none"
-					stroke="var(--grid-line)"
-					stroke-width="0.4"
-					opacity="0.5"
-				/>
-			</pattern>
-		</defs>
-		<rect width="240" height="200" fill="url(#pi-grid-int-ai)" />
-
 		<line x1="20" y1="50" x2="20" y2="172" stroke="var(--ink)" stroke-width="0.8" opacity="0.4" />
 		<line x1="20" y1="172" x2="220" y2="172" stroke="var(--ink)" stroke-width="0.8" opacity="0.4" />
 		<text
@@ -205,19 +192,6 @@
 	</svg>
 {:else if pillarId === 'ml'}
 	<svg viewBox="0 0 240 200" class="mx-auto block h-auto w-full max-w-md" aria-hidden="true">
-		<defs>
-			<pattern id="pi-grid-int-ml" width="16" height="16" patternUnits="userSpaceOnUse">
-				<path
-					d="M 16 0 L 0 0 0 16"
-					fill="none"
-					stroke="var(--grid-line)"
-					stroke-width="0.4"
-					opacity="0.5"
-				/>
-			</pattern>
-		</defs>
-		<rect width="240" height="200" fill="url(#pi-grid-int-ml)" />
-
 		<line x1="24" y1="24" x2="24" y2="166" stroke="var(--ink)" stroke-width="0.9" opacity="0.55" />
 		<line
 			x1="24"
@@ -355,15 +329,6 @@
 {:else if pillarId === 'agent'}
 	<svg viewBox="0 0 240 200" class="mx-auto block h-auto w-full max-w-md" aria-hidden="true">
 		<defs>
-			<pattern id="pi-grid-int-agt" width="16" height="16" patternUnits="userSpaceOnUse">
-				<path
-					d="M 16 0 L 0 0 0 16"
-					fill="none"
-					stroke="var(--grid-line)"
-					stroke-width="0.4"
-					opacity="0.5"
-				/>
-			</pattern>
 			<marker id="int-agt-arr" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
 				<path
 					d="M0,1 L5,3.5 L0,6"
@@ -384,7 +349,6 @@
 				/>
 			</marker>
 		</defs>
-		<rect width="240" height="200" fill="url(#pi-grid-int-agt)" />
 		<text
 			x="14"
 			y="14"
@@ -619,15 +583,6 @@
 {:else if pillarId === 'rag'}
 	<svg viewBox="0 0 240 200" class="mx-auto block h-auto w-full max-w-md" aria-hidden="true">
 		<defs>
-			<pattern id="pi-grid-int-rag" width="16" height="16" patternUnits="userSpaceOnUse">
-				<path
-					d="M 16 0 L 0 0 0 16"
-					fill="none"
-					stroke="var(--grid-line)"
-					stroke-width="0.4"
-					opacity="0.5"
-				/>
-			</pattern>
 			<marker id="int-rag-arr" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
 				<path
 					d="M0,1 L5,3.5 L0,6"
@@ -648,7 +603,6 @@
 				/>
 			</marker>
 		</defs>
-		<rect width="240" height="200" fill="url(#pi-grid-int-rag)" />
 		<text
 			x="14"
 			y="14"
@@ -1045,15 +999,6 @@
 {:else if pillarId === 'hardening'}
 	<svg viewBox="0 0 240 200" class="mx-auto block h-auto w-full max-w-md" aria-hidden="true">
 		<defs>
-			<pattern id="pi-grid-int-hrd" width="16" height="16" patternUnits="userSpaceOnUse">
-				<path
-					d="M 16 0 L 0 0 0 16"
-					fill="none"
-					stroke="var(--grid-line)"
-					stroke-width="0.4"
-					opacity="0.5"
-				/>
-			</pattern>
 			<marker id="int-hrd-arr" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
 				<path
 					d="M0,1 L5,3.5 L0,6"
@@ -1064,7 +1009,6 @@
 				/>
 			</marker>
 		</defs>
-		<rect width="240" height="200" fill="url(#pi-grid-int-hrd)" />
 
 		<text
 			x="52"
@@ -1273,15 +1217,6 @@
 {:else if pillarId === 'innovation'}
 	<svg viewBox="0 0 240 200" class="mx-auto block h-auto w-full max-w-md" aria-hidden="true">
 		<defs>
-			<pattern id="pi-grid-int-inn" width="16" height="16" patternUnits="userSpaceOnUse">
-				<path
-					d="M 16 0 L 0 0 0 16"
-					fill="none"
-					stroke="var(--grid-line)"
-					stroke-width="0.4"
-					opacity="0.5"
-				/>
-			</pattern>
 			<marker id="int-inn-arr" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
 				<path
 					d="M0,1 L6,4 L0,7"
@@ -1293,7 +1228,6 @@
 				/>
 			</marker>
 		</defs>
-		<rect width="240" height="200" fill="url(#pi-grid-int-inn)" />
 
 		<text
 			x="50"

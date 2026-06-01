@@ -8,18 +8,6 @@
 
 {#if pillarId === 'ai'}
 	<svg viewBox="0 0 240 200" class="mx-auto block h-auto w-full max-w-md" aria-hidden="true">
-		<defs>
-			<pattern id="pi-grid-ai" width="16" height="16" patternUnits="userSpaceOnUse">
-				<path
-					d="M 16 0 L 0 0 0 16"
-					fill="none"
-					stroke="var(--grid-line)"
-					stroke-width="0.4"
-					opacity="0.5"
-				/>
-			</pattern>
-		</defs>
-		<rect width="240" height="200" fill="url(#pi-grid-ai)" />
 		<line x1="20" y1="20" x2="20" y2="180" stroke="var(--ink)" stroke-width="0.8" opacity="0.4" />
 		<line x1="20" y1="180" x2="220" y2="180" stroke="var(--ink)" stroke-width="0.8" opacity="0.4" />
 		<text
@@ -175,18 +163,6 @@
 	</svg>
 {:else if pillarId === 'systems'}
 	<svg viewBox="0 0 240 200" class="mx-auto block h-auto w-full max-w-md" aria-hidden="true">
-		<defs>
-			<pattern id="pi-grid-sys" width="16" height="16" patternUnits="userSpaceOnUse">
-				<path
-					d="M 16 0 L 0 0 0 16"
-					fill="none"
-					stroke="var(--grid-line)"
-					stroke-width="0.4"
-					opacity="0.5"
-				/>
-			</pattern>
-		</defs>
-		<rect width="240" height="200" fill="url(#pi-grid-sys)" />
 		<text
 			x="14"
 			y="42"
@@ -340,18 +316,6 @@
 	</svg>
 {:else if pillarId === 'research'}
 	<svg viewBox="0 0 240 200" class="mx-auto block h-auto w-full max-w-md" aria-hidden="true">
-		<defs>
-			<pattern id="pi-grid-res" width="16" height="16" patternUnits="userSpaceOnUse">
-				<path
-					d="M 16 0 L 0 0 0 16"
-					fill="none"
-					stroke="var(--grid-line)"
-					stroke-width="0.4"
-					opacity="0.5"
-				/>
-			</pattern>
-		</defs>
-		<rect width="240" height="200" fill="url(#pi-grid-res)" />
 		<line x1="28" y1="24" x2="28" y2="170" stroke="var(--ink)" stroke-width="0.9" opacity="0.55" />
 		<line
 			x1="28"
@@ -466,18 +430,6 @@
 	</svg>
 {:else if pillarId === 'innovation'}
 	<svg viewBox="0 0 240 200" class="mx-auto block h-auto w-full max-w-md" aria-hidden="true">
-		<defs>
-			<pattern id="pi-grid-inn" width="16" height="16" patternUnits="userSpaceOnUse">
-				<path
-					d="M 16 0 L 0 0 0 16"
-					fill="none"
-					stroke="var(--grid-line)"
-					stroke-width="0.4"
-					opacity="0.5"
-				/>
-			</pattern>
-		</defs>
-		<rect width="240" height="200" fill="url(#pi-grid-inn)" />
 		<text
 			x="50"
 			y="20"

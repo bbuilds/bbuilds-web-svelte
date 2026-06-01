@@ -8,15 +8,6 @@
 {#if pillarId === 'geo'}
 	<svg viewBox="0 0 240 200" class="mx-auto block h-auto w-full max-w-md" aria-hidden="true">
 		<defs>
-			<pattern id="pi-grid-geo" width="16" height="16" patternUnits="userSpaceOnUse">
-				<path
-					d="M 16 0 L 0 0 0 16"
-					fill="none"
-					stroke="var(--grid-line)"
-					stroke-width="0.4"
-					opacity="0.5"
-				/>
-			</pattern>
 			<marker id="geo-arr-hot" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
 				<path
 					d="M0,1 L6,4 L0,7"
@@ -37,7 +28,6 @@
 				/>
 			</marker>
 		</defs>
-		<rect width="240" height="200" fill="url(#pi-grid-geo)" />
 
 		<text
 			x="14"
@@ -362,15 +352,6 @@
 {:else if pillarId === 'semantic-seo'}
 	<svg viewBox="0 0 240 200" class="mx-auto block h-auto w-full max-w-md" aria-hidden="true">
 		<defs>
-			<pattern id="pi-grid-seo" width="16" height="16" patternUnits="userSpaceOnUse">
-				<path
-					d="M 16 0 L 0 0 0 16"
-					fill="none"
-					stroke="var(--grid-line)"
-					stroke-width="0.4"
-					opacity="0.5"
-				/>
-			</pattern>
 			<marker id="seo-arr" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
 				<path
 					d="M0,1 L6,4 L0,7"
@@ -382,7 +363,6 @@
 				/>
 			</marker>
 		</defs>
-		<rect width="240" height="200" fill="url(#pi-grid-seo)" />
 
 		<text
 			x="14"
@@ -627,19 +607,6 @@
 	</svg>
 {:else if pillarId === 'performance'}
 	<svg viewBox="0 0 240 200" class="mx-auto block h-auto w-full max-w-md" aria-hidden="true">
-		<defs>
-			<pattern id="pi-grid-vit" width="16" height="16" patternUnits="userSpaceOnUse">
-				<path
-					d="M 16 0 L 0 0 0 16"
-					fill="none"
-					stroke="var(--grid-line)"
-					stroke-width="0.4"
-					opacity="0.5"
-				/>
-			</pattern>
-		</defs>
-		<rect width="240" height="200" fill="url(#pi-grid-vit)" />
-
 		<text
 			x="14"
 			y="14"
@@ -893,15 +860,6 @@
 {:else if pillarId === 'evolution'}
 	<svg viewBox="0 0 240 200" class="mx-auto block h-auto w-full max-w-md" aria-hidden="true">
 		<defs>
-			<pattern id="pi-grid-evol" width="16" height="16" patternUnits="userSpaceOnUse">
-				<path
-					d="M 16 0 L 0 0 0 16"
-					fill="none"
-					stroke="var(--grid-line)"
-					stroke-width="0.4"
-					opacity="0.5"
-				/>
-			</pattern>
 			<marker id="evol-arr" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
 				<path
 					d="M0,1 L6,4 L0,7"
@@ -913,7 +871,6 @@
 				/>
 			</marker>
 		</defs>
-		<rect width="240" height="200" fill="url(#pi-grid-evol)" />
 
 		<text
 			x="14"
