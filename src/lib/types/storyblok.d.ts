@@ -152,7 +152,6 @@ export interface StoryblokBlogPost {
 export interface StoryblokContactForm {
 	eyebrow?: string;
 	title?: string;
-	copy?: string;
 	fields?: StoryblokFormInput[];
 	cta_text?: string;
 	success_eyebrow?: string;
