@@ -30,7 +30,7 @@
 <Header />
 {@render children()}
 <Contact content={data.globals?.content} />
-<ContactModal />
+<ContactModal content={data.globals?.content?.contact_modal?.[0]} />
 <SuccessBanner />
 <Footer />
 <BottomNav />

@@ -87,10 +87,11 @@
 			</span>
 
 			<div class="min-w-0 flex-1">
-				<p class="font-mono text-[0.9rem] font-bold tracking-[-0.01em]">Message planted.</p>
+				{#if banner.eyebrow}
+					<p class="font-mono text-[0.9rem] font-bold tracking-[-0.01em]">{banner.eyebrow}</p>
+				{/if}
 				<p class="mt-[0.1rem] font-mono text-[0.8rem] leading-[1.4] text-[#243a18]">
-					Thanks for reaching out — I'll dig in and reply within a day or two.
-					<span class="font-hand text-[1.05rem] font-bold not-italic">Talk soon!</span>
+					{banner.message}
 				</p>
 			</div>
 
