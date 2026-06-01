@@ -155,6 +155,7 @@ export interface StoryblokContactForm {
 	copy?: string;
 	fields?: StoryblokFormInput[];
 	cta_text?: string;
+	success_eyebrow?: string;
 	success_message?: string;
 	component: 'Contact Form';
 	_uid: string;
