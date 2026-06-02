@@ -37,6 +37,7 @@ export async function GET() {
 
 	const entries = new Map<string, string>();
 	entries.set(SITE_URL + '/', today);
+	entries.set(SITE_URL + '/blog', today);
 
 	try {
 		const params = { version: 'published' as const, include_dates: 1 };
