@@ -7,10 +7,37 @@ const config = {
 		runes: ({ filename }) => (filename.split(/[/\\]/).includes('node_modules') ? undefined : true)
 	},
 	kit: {
-		// adapter-auto only supports some environments, see https://svelte.dev/docs/kit/adapter-auto for a list.
-		// If your environment is not supported, or you settled on a specific environment, switch out the adapter.
-		// See https://svelte.dev/docs/kit/adapters for more information about adapters.
-		adapter: adapter()
+		adapter: adapter(),
+		csp: {
+			mode: 'auto',
+			directives: {
+				'default-src': ['self'],
+				'script-src': ['self', 'https://www.googletagmanager.com'],
+				'style-src': ['self', 'unsafe-inline', 'https://fonts.googleapis.com'],
+				'font-src': ['self', 'https://fonts.gstatic.com'],
+				'img-src': [
+					'self',
+					'data:',
+					'https://a.storyblok.com',
+					'https://www.googletagmanager.com',
+					'https://www.google-analytics.com'
+				],
+				'connect-src': [
+					'self',
+					'https://api.storyblok.com',
+					'https://www.googletagmanager.com',
+					'https://www.google-analytics.com',
+					'https://*.google-analytics.com',
+					'https://*.analytics.google.com',
+					'https://formspree.io'
+				],
+				'manifest-src': ['self'],
+				'base-uri': ['self'],
+				'form-action': ['self', 'https://formspree.io'],
+				'frame-ancestors': ['none'],
+				'object-src': ['none']
+			}
+		}
 	}
 };
 

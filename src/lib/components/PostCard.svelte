@@ -46,7 +46,7 @@
 					height={image.height ?? undefined}
 					loading={eager ? 'eager' : 'lazy'}
 					decoding="async"
-					{...eager ? { fetchpriority: 'high' } : {}}
+					fetchpriority={eager ? 'high' : undefined}
 					class="h-full w-full object-cover"
 				/>
 				<div
