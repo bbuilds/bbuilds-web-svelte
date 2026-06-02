@@ -125,7 +125,7 @@
 				class="flex items-center gap-2 font-mono font-bold tracking-tight text-ink no-underline"
 			>
 				<Logo class="h-5 w-auto fill-current" />
-				<span>{SITE_NAME}<span class="text-teal">.</span></span>
+				<span>{SITE_NAME}</span>
 			</a>
 
 			<p class="m-0 font-mono text-[0.8125rem] leading-[1.6] text-ink">

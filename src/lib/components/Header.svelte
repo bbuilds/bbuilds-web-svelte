@@ -19,7 +19,7 @@
 			class="flex items-center gap-2.5 font-mono font-bold tracking-tight text-ink no-underline"
 		>
 			<Logo class="h-5.5 w-auto fill-current" />
-			<span>{SITE_NAME}<span class="text-teal">.</span></span>
+			<span>{SITE_NAME}</span>
 		</a>
 
 		<div class="hidden gap-7 font-mono text-[0.8125rem] md:flex">

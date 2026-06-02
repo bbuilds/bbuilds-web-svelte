@@ -59,7 +59,7 @@
 	});
 </script>
 
-<section class="paper-bg relative overflow-hidden pt-16 pb-30">
+<section class="paper-bg relative overflow-hidden pt-16 pb-20">
 	<!-- Falling leaves layer -->
 	{#if showLeaves}
 		<div class="hero-leaves-layer" aria-hidden="true">
