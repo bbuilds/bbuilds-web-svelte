@@ -1,21 +1,15 @@
 <script lang="ts">
-	let progress = $state(0);
+	let scrollY = $state(0);
+	let innerHeight = $state(0);
 
-	$effect(() => {
-		const update = () => {
-			const doc = document.documentElement;
-			const max = Math.max(document.body.scrollHeight, doc.scrollHeight) - window.innerHeight;
-			progress = max > 0 ? Math.min(window.scrollY / max, 1) : 0;
-		};
-		update();
-		window.addEventListener('scroll', update, { passive: true });
-		window.addEventListener('resize', update, { passive: true });
-		return () => {
-			window.removeEventListener('scroll', update);
-			window.removeEventListener('resize', update);
-		};
+	const progress = $derived.by(() => {
+		const doc = document.documentElement;
+		const max = Math.max(document.body.scrollHeight, doc.scrollHeight) - innerHeight;
+		return max > 0 ? Math.min(scrollY / max, 1) : 0;
 	});
 </script>
+
+<svelte:window bind:scrollY bind:innerHeight />
 
 <div
 	class="pointer-events-none fixed top-0 right-0 left-0 z-200 h-0.75 bg-transparent"

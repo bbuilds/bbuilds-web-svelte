@@ -15,27 +15,23 @@
 		};
 	});
 
-	$effect(() => {
-		function onKeydown(e: KeyboardEvent) {
-			if (e.key === 'Escape' && banner.visible) {
-				banner.dismiss();
-			}
+	function onKeydown(e: KeyboardEvent) {
+		if (e.key === 'Escape' && banner.visible) {
+			banner.dismiss();
 		}
-
-		document.addEventListener('keydown', onKeydown);
-
-		return () => {
-			document.removeEventListener('keydown', onKeydown);
-		};
-	});
+	}
 </script>
+
+<svelte:document onkeydown={onKeydown} />
 
 <div
 	role="status"
 	aria-live="polite"
 	aria-atomic="true"
-	class="toast pointer-events-none fixed left-0 right-0 top-0 z-80 flex justify-center"
-	class:visible={banner.visible}
+	class={[
+		'toast pointer-events-none fixed left-0 right-0 top-0 z-80 flex justify-center',
+		{ visible: banner.visible }
+	]}
 >
 	<div
 		class="toast-inner pointer-events-auto w-full border-b border-[#14210f]/20 bg-green text-[#14210f]"

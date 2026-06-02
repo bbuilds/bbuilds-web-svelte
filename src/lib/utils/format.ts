@@ -1,15 +1,12 @@
 import type { RichTextDoc, RichTextNode } from '$lib/types/post';
+import { collectText } from '$lib/utils/richtext';
+export { collectText } from '$lib/utils/richtext';
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 export const formatDate = (iso: string): string => {
 	const d = new Date(iso);
 	return `${MONTHS[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`;
-};
-
-const collectText = (node: RichTextNode, out: string[]): void => {
-	if (node.text) out.push(node.text);
-	if (node.content) for (const child of node.content) collectText(child, out);
 };
 
 export const wordCount = (doc: RichTextDoc): number => {
