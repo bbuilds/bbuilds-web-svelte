@@ -6,6 +6,7 @@
 	import { resolveMultilink } from '$lib/utils/links';
 	import type { StoryblokHomePage } from '$lib/types/storyblok';
 	import { SITE_NAME } from '$lib/config/site';
+	import { prefersReducedMotion } from '$lib/utils/motion';
 
 	interface Props {
 		content?: StoryblokHomePage;
@@ -37,8 +38,7 @@
 	let showLeaves = $state(false);
 
 	onMount(() => {
-		const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-		if (prefersReducedMotion) {
+		if (prefersReducedMotion()) {
 			return;
 		}
 
