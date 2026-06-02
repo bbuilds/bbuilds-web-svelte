@@ -90,7 +90,7 @@
 		submitting = true;
 		submitError = undefined;
 		try {
-			const res = await fetch('https://formspree.io/f/xjvjpbqb', {
+			const res = await fetch(import.meta.env.VITE_FORMSPREE_URL, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
 				body: JSON.stringify(values)
