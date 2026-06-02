@@ -64,6 +64,11 @@ E2E tests (`*.e2e.ts`) are separate — they run under Playwright and the config
 - **Use `rem` for all size measurements — never `px`.** This applies to Tailwind arbitrary values (e.g. `text-[0.8125rem]`, `h-[1.375rem]`), custom CSS properties, and inline styles. Standard Tailwind scale utilities (`px-4`, `py-2`, `text-sm`, `h-5`, etc.) are rem-based already and are fine as-is.
 - Conversion reference: divide px value by 16 (e.g. 13px → 0.8125rem, 22px → 1.375rem).
 
+### Svelte attributes under strict CSP
+
+- **Never use attribute spreads (`{...}`) on media/embedded elements** (`<img>`, `<video>`, `<audio>`, `<source>`, `<iframe>`). Svelte switches spread elements to dynamic attribute handling and injects inline `onload`/`onerror` capture handlers (`this.__e=event`). The project's strict `script-src` (no `'unsafe-inline'`, see `kit.csp` in [svelte.config.js](svelte.config.js)) blocks inline event handlers — and nonces/hashes can't cover them — so the element breaks at runtime.
+- Use explicit conditional attributes instead: `fetchpriority={eager ? 'high' : undefined}`, **not** `{...eager ? { fetchpriority: 'high' } : {}}`. An attribute set to `undefined` is omitted from the output.
+
 ---
 
 ## Svelte MCP Tools

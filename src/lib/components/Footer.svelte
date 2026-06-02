@@ -151,7 +151,7 @@
 			</p>
 
 			<p class="m-0 text-xs text-ink">
-				<a href="/sitemap.xml" class="text-ink underline">/sitemap.xml</a>
+				<a href="/sitemap.xml" data-sveltekit-reload class="text-ink underline">/sitemap.xml</a>
 				<span aria-hidden="true"> · </span>
 				<span>© 2026</span>
 			</p>

@@ -1,8 +1,11 @@
 <script lang="ts">
+	import { browser } from '$app/environment';
+
 	let scrollY = $state(0);
 	let innerHeight = $state(0);
 
 	const progress = $derived.by(() => {
+		if (!browser) return 0;
 		const doc = document.documentElement;
 		const max = Math.max(document.body.scrollHeight, doc.scrollHeight) - innerHeight;
 		return max > 0 ? Math.min(scrollY / max, 1) : 0;

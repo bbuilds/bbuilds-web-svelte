@@ -36,7 +36,7 @@ export const load: PageLoad = async ({ parent, url }) => {
 			.get('cdn/stories', {
 				version,
 				starts_with: 'posts/',
-				sort_by: 'first_published_at:desc',
+				sort_by: 'published_at:desc',
 				per_page: 3,
 				is_startpage: false
 			})
@@ -47,8 +47,23 @@ export const load: PageLoad = async ({ parent, url }) => {
 				}
 				return [];
 			});
+
+		const effectiveTime = (s: ISbStoryData<StoryblokBlogPost>): number => {
+			const updated =
+				s.content?.updated_date && !isNaN(new Date(s.content.updated_date).getTime())
+					? new Date(s.content.updated_date).getTime()
+					: 0;
+			const published = new Date(s.first_published_at ?? s.published_at ?? '').getTime() || 0;
+			return Math.max(updated, published);
+		};
+
 		const explicitUuids = new Set(explicit.map((s) => s.uuid));
-		posts = [...posts, ...recent.filter((s) => !explicitUuids.has(s.uuid))].slice(0, 3);
+		const fillers = recent
+			.filter((s) => !explicitUuids.has(s.uuid))
+			.sort((a, b) => effectiveTime(b) - effectiveTime(a))
+			.slice(0, 3 - posts.length);
+
+		posts = [...posts, ...fillers];
 	}
 
 	const seo = resolveSEO({
