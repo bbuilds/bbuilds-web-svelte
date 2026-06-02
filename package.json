@@ -41,6 +41,7 @@
 		"@sveltejs/kit": "^2.61.1",
 		"@sveltejs/vite-plugin-svelte": "^7.0.0",
 		"@tailwindcss/vite": "^4.2.2",
+		"@types/gtag.js": "^0.0.20",
 		"@types/node": "^25",
 		"@vitest/browser-playwright": "^4.1.7",
 		"eslint": "^10.4.0",
