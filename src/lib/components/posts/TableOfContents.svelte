@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { browser } from '$app/environment';
 	import type { TocHeading } from '$lib/utils/format';
 
 	interface Props {
@@ -11,7 +12,7 @@
 	let innerHeight = $state(0);
 
 	const active = $derived.by(() => {
-		if (headings.length === 0) return null;
+		if (!browser || headings.length === 0) return headings[0]?.id ?? null;
 		const threshold = innerHeight * 0.3;
 		let current: string | null = null;
 		for (const { id } of headings) {
