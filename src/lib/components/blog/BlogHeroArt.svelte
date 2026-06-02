@@ -31,7 +31,7 @@
 	];
 </script>
 
-<svg viewBox="0 0 520 352" style="width:100%;height:100%;display:block" aria-hidden="true">
+<svg viewBox="0 0 520 352" class="block h-full w-full" aria-hidden="true">
 	<defs>
 		<radialGradient id="hbg" cx="50%" cy="50%" r="70%">
 			<stop offset="0%" stop-color="#212121" />

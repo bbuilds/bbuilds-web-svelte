@@ -2,8 +2,9 @@
    Design Tokens — BrandenBuilds
    ============================================================================= */
 
-/* --- Tailwind v4 theme: maps brand tokens to utility classes ---
-   bg-yellow, text-ink, font-mono, border-paper-line, etc.          */
+/* --- Tailwind v4 theme: the single source of truth for brand tokens. ---
+   These emit `--color-*` / `--font-*` CSS variables AND generate utility
+   classes (bg-yellow, text-ink, font-mono, border-paper-line, etc.).        */
 @theme {
 	--color-pale-fire: #ffcd67;
 	--color-yellow: #b8821a;
@@ -20,43 +21,72 @@
 	--color-gray: #e6e7e8;
 	--color-green: #7ba87b;
 
+	/* BlueprintDiagram window chrome + terminal label */
+	--color-bp-chrome-red: #f7c5a6;
+	--color-bp-chrome-yellow: #ffdf95;
+	--color-bp-chrome-green: #b6dbb6;
+	--color-bp-grid-label: #cfc4ad;
+
 	--font-sans: 'Geist', 'Inter', system-ui, sans-serif;
 	--font-mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
 	--font-hand: 'Caveat', cursive;
 }
 
-/* --- Raw CSS variables (short aliases for non-Tailwind contexts) --- */
+/* --- Short aliases for non-Tailwind contexts (SVG fills, <style> blocks). ---
+   These point at the @theme tokens above so colors live in exactly one place. */
 :root {
-	--pale-fire: #ffcd67;
-	--yellow: #b8821a;
-	--teal: #01fdf6;
-	--ink: #1a1a1a;
-	--ink-soft: #292929;
-	--charcoal: #5d543f;
-	--body: #3a3528;
-	--muted: #7a6f55;
-	--muted-dark: #8a8676;
-	--paper: #f4ede0;
-	--paper-2: #ece3d2;
-	--paper-line: #d8cdb6;
-	--gray: #e6e7e8;
-	--green: #7ba87b;
+	--pale-fire: var(--color-pale-fire);
+	--yellow: var(--color-yellow);
+	--teal: var(--color-teal);
+	--ink: var(--color-ink);
+	--ink-soft: var(--color-ink-soft);
+	--charcoal: var(--color-charcoal);
+	--body: var(--color-body);
+	--muted: var(--color-muted);
+	--muted-dark: var(--color-muted-dark);
+	--paper: var(--color-paper);
+	--paper-2: var(--color-paper-2);
+	--paper-line: var(--color-paper-line);
+	--gray: var(--color-gray);
+	--green: var(--color-green);
 
-	--sans: 'Geist', 'Inter', system-ui, sans-serif;
-	--mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
-	--hand: 'Caveat', cursive;
+	--sans: var(--font-sans);
+	--mono: var(--font-mono);
+	--hand: var(--font-hand);
 
 	--container-max: 80rem;
 	--container-gutter: 1.5rem;
+}
 
-	/* SVG grid stroke shared by illustrations + BlueprintDiagram */
-	--grid-line: rgba(26, 26, 26, 0.35);
+/* Responsive container sizing */
+@media (min-width: 48rem) {
+	/* Tablet */
+	:root {
+		--container-gutter: 2rem;
+	}
+}
 
-	/* BlueprintDiagram window chrome */
-	--bp-chrome-red: #f7c5a6;
-	--bp-chrome-yellow: #ffdf95;
-	--bp-chrome-green: #b6dbb6;
-	--bp-grid-label: #cfc4ad;
+@media (min-width: 64rem) {
+	/* Desktop */
+	:root {
+		--container-gutter: 2.5rem;
+		--container-max: 85rem;
+	}
+}
+
+@media (min-width: 90rem) {
+	/* Large desktop — MBP 14" XDR (~94.5rem logical) */
+	:root {
+		--container-gutter: 3rem;
+		--container-max: 88rem;
+	}
+}
+
+@media (min-width: 100rem) {
+	/* Ultra-wide */
+	:root {
+		--container-max: 96rem;
+	}
 }
 
 /* =============================================================================
@@ -88,6 +118,13 @@
 		-webkit-font-smoothing: antialiased;
 	}
 
+	/* Prevent content from hiding under the mobile bottom nav */
+	@media (max-width: 47.9375rem) {
+		body {
+			padding-bottom: calc(3.5rem + env(safe-area-inset-bottom));
+		}
+	}
+
 	a {
 		color: inherit;
 	}
@@ -117,102 +154,68 @@
 }
 
 /* =============================================================================
-   Utility Classes
+   Component Classes
+   In @layer components so Tailwind utilities (bg-paper, etc.) can override them.
    ============================================================================= */
 
-/* Tablet */
-@media (min-width: 48rem) {
-	:root {
-		--container-gutter: 2rem;
+@layer components {
+	.container {
+		width: min(100% - (var(--container-gutter) * 2), var(--container-max));
+		margin-inline: auto;
+		position: relative;
+		z-index: 1;
 	}
-}
 
-/* Desktop */
-@media (min-width: 64rem) {
-	:root {
-		--container-gutter: 2.5rem;
-		--container-max: 85rem;
+	/* Backgrounds */
+	.paper-bg {
+		background:
+			radial-gradient(75rem 37.5rem at 15% 0%, rgba(255, 205, 103, 0.18), transparent 60%),
+			radial-gradient(56.25rem 31.25rem at 85% 20%, rgba(1, 253, 246, 0.06), transparent 60%),
+			var(--paper);
+		position: relative;
 	}
-}
 
-/* Large desktop — MBP 14" XDR (~94.5rem logical) */
-@media (min-width: 90rem) {
-	:root {
-		--container-gutter: 3rem;
-		--container-max: 88rem;
+	.paper-bg::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+		background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.07  0 0 0 0 0.06  0 0 0 0 0.05  0 0 0 0.35 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/></svg>");
+		mix-blend-mode: multiply;
+		opacity: 0.35;
 	}
-}
 
-/* Ultra-wide */
-@media (min-width: 100rem) {
-	:root {
-		--container-max: 96rem;
+	.ink-bg {
+		background:
+			radial-gradient(75rem 43.75rem at 80% 10%, rgba(1, 253, 246, 0.07), transparent 60%),
+			radial-gradient(56.25rem 31.25rem at 10% 90%, rgba(255, 205, 103, 0.08), transparent 60%),
+			var(--ink);
+		color: var(--paper);
+		position: relative;
 	}
-}
 
-.container {
-	width: min(100% - (var(--container-gutter) * 2), var(--container-max));
-	margin-inline: auto;
-	position: relative;
-	z-index: 1;
-}
+	.ink-bg::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+		background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.06 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+		opacity: 0.6;
+	}
 
-/* Backgrounds */
-.paper-bg {
-	background:
-		radial-gradient(75rem 37.5rem at 15% 0%, rgba(255, 205, 103, 0.18), transparent 60%),
-		radial-gradient(56.25rem 31.25rem at 85% 20%, rgba(1, 253, 246, 0.06), transparent 60%),
-		var(--paper);
-	position: relative;
-}
+	/* Hand-drawn underline (wrap text in .scribble, inject SVG as child) */
+	.scribble {
+		position: relative;
+		display: inline-block;
+	}
 
-.paper-bg::before {
-	content: '';
-	position: absolute;
-	inset: 0;
-	pointer-events: none;
-	background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.07  0 0 0 0 0.06  0 0 0 0 0.05  0 0 0 0.35 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/></svg>");
-	mix-blend-mode: multiply;
-	opacity: 0.35;
-}
-
-.ink-bg {
-	background:
-		radial-gradient(75rem 43.75rem at 80% 10%, rgba(1, 253, 246, 0.07), transparent 60%),
-		radial-gradient(56.25rem 31.25rem at 10% 90%, rgba(255, 205, 103, 0.08), transparent 60%),
-		var(--ink);
-	color: var(--paper);
-	position: relative;
-}
-
-.ink-bg::before {
-	content: '';
-	position: absolute;
-	inset: 0;
-	pointer-events: none;
-	background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.06 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
-	opacity: 0.6;
-}
-
-/* Hand-drawn underline (wrap text in .scribble, inject SVG as child) */
-.scribble {
-	position: relative;
-	display: inline-block;
-}
-
-.scribble svg {
-	position: absolute;
-	left: -6%;
-	right: -6%;
-	bottom: -0.875rem;
-	width: 112%;
-	height: 1.125rem;
-	overflow: visible;
-}
-
-/* Prevent content from hiding under the mobile bottom nav */
-@media (max-width: 47.9375rem) {
-	body {
-		padding-bottom: calc(3.5rem + env(safe-area-inset-bottom));
+	.scribble svg {
+		position: absolute;
+		left: -6%;
+		right: -6%;
+		bottom: -0.875rem;
+		width: 112%;
+		height: 1.125rem;
+		overflow: visible;
 	}
 }

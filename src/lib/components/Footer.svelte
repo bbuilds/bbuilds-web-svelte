@@ -128,30 +128,30 @@
 				<span>{SITE_NAME}<span class="text-teal">.</span></span>
 			</a>
 
-			<p class="built-with">
+			<p class="m-0 font-mono text-[0.8125rem] leading-[1.6] text-ink">
 				<span class="sr-only">built with Svelte, Cloudflare and Claude</span>
 				<span aria-hidden="true"
 					>&gt; built with <span
 						class="bw-slot"
 						{@attach animateSlot(SLOTS[0], 0)}
-						style="width: {SLOTS[0].words[0].length}ch">{SLOTS[0].words[0]}</span
+						style:width="{SLOTS[0].words[0].length}ch">{SLOTS[0].words[0]}</span
 					>
 					<span
 						class="bw-slot"
 						{@attach animateSlot(SLOTS[1], 1)}
-						style="width: {SLOTS[1].words[0].length}ch">{SLOTS[1].words[0]}</span
+						style:width="{SLOTS[1].words[0].length}ch">{SLOTS[1].words[0]}</span
 					>
 					and
 					<span
 						class="bw-slot"
 						{@attach animateSlot(SLOTS[2], 2)}
-						style="width: {SLOTS[2].words[0].length}ch">{SLOTS[2].words[0]}</span
+						style:width="{SLOTS[2].words[0].length}ch">{SLOTS[2].words[0]}</span
 					></span
 				>
 			</p>
 
-			<p class="meta">
-				<a href="/sitemap.xml" class="sitemap-link">/sitemap.xml</a>
+			<p class="m-0 text-xs text-ink">
+				<a href="/sitemap.xml" class="text-ink underline">/sitemap.xml</a>
 				<span aria-hidden="true"> · </span>
 				<span>© 2026</span>
 			</p>
@@ -168,14 +168,6 @@
 		footer {
 			padding-bottom: calc(1.5rem + 4.5rem + env(safe-area-inset-bottom));
 		}
-	}
-
-	.built-with {
-		font-family: var(--mono);
-		font-size: 0.8125rem;
-		color: var(--ink);
-		line-height: 1.6;
-		margin: 0;
 	}
 
 	.bw-slot {
@@ -197,20 +189,5 @@
 	:global(.bw-char) {
 		display: inline-block;
 		will-change: transform;
-	}
-
-	.meta {
-		font-size: 0.75rem;
-		color: var(--ink);
-		margin: 0;
-	}
-
-	.sitemap-link {
-		color: var(--ink);
-		text-decoration: underline;
-	}
-
-	.sitemap-link:hover {
-		text-decoration: underline;
 	}
 </style>

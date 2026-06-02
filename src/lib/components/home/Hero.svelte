@@ -68,10 +68,7 @@
 	{/if}
 
 	<!-- Sun sticker -->
-	<div
-		class="pointer-events-none absolute opacity-25 md:opacity-100"
-		style="right: 8%; top: 3.75rem;"
-	>
+	<div class="pointer-events-none absolute top-15 right-[8%] opacity-25 md:opacity-100">
 		<div class="sticker" aria-hidden="true"></div>
 	</div>
 

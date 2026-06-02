@@ -65,7 +65,7 @@
 						<span class="inline-block">{line1}</span>
 						{#if hasAmp}
 							<span
-								class="ml-2 inline-block translate-y-[-0.08em] rotate-[-6deg] font-hand text-[0.78em] font-medium text-yellow"
+								class="ml-2 inline-block translate-y-[-0.08em] -rotate-6 font-hand text-[0.78em] font-medium text-yellow"
 								>&amp;</span
 							>
 						{/if}

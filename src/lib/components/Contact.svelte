@@ -27,12 +27,12 @@
 		{#each PLANTS as p, i (i)}
 			<div
 				aria-hidden="true"
-				class="plant plant-{i} pointer-events-none absolute {p.mobile
+				class="plant plant-{i} pointer-events-none absolute -bottom-5 origin-bottom {p.mobile
 					? 'opacity-25 md:opacity-70'
 					: 'hidden md:block md:opacity-70'}"
-				style="bottom: -1.25rem; {p.side}: {p.offset}; transform-origin: bottom center;"
+				style="{p.side}: {p.offset}"
 			>
-				<div class="plant-sway plant-sway-{i}" style="transform-origin: bottom center;">
+				<div class="plant-sway plant-sway-{i} origin-bottom">
 					<Sprout class="w-27.5" />
 				</div>
 			</div>

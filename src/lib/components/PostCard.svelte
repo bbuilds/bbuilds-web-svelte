@@ -30,7 +30,7 @@
 
 <article
 	class="post-card group relative flex flex-col overflow-hidden rounded-2xl border border-paper-line bg-white/40 transition-[transform,box-shadow,border-color] duration-350 hover:-translate-y-1.5 hover:border-ink hover:shadow-[0_1.5rem_3rem_-1.5rem_rgba(0,0,0,0.25)]"
-	style="--i: {index}"
+	style:--i={index}
 >
 	<header class="flex flex-col">
 		<div class="relative aspect-video overflow-hidden bg-ink">
