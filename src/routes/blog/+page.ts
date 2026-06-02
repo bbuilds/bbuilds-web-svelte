@@ -2,7 +2,7 @@ import type { ISbStoryData } from '@storyblok/js';
 import type { StoryblokBlogIndex, StoryblokBlogPost } from '$lib/types/storyblok';
 import { resolveSEO } from '$lib/utils/seo';
 import { breadcrumbLd } from '$lib/utils/jsonLd';
-import { SITE_NAME, SITE_URL } from '$lib/config/site';
+import { SITE_NAME, SITE_URL, SITE_OG_IMAGE } from '$lib/config/site';
 import type { PageLoad } from './$types';
 
 export const load: PageLoad = async ({ parent, url }) => {
@@ -41,7 +41,8 @@ export const load: PageLoad = async ({ parent, url }) => {
 		fallbacks: {
 			title: `Blog — ${SITE_NAME}`,
 			description: 'Read articles and posts on web development, SEO, and branding.',
-			pathname: url.pathname
+			pathname: url.pathname,
+			ogImagePath: SITE_OG_IMAGE
 		},
 		extraJsonLd: [
 			breadcrumbLd([

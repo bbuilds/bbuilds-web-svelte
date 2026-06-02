@@ -3,7 +3,7 @@ import type { StoryblokBlogPost, StoryblokHomePage } from '$lib/types/storyblok'
 import { resolveSEO } from '$lib/utils/seo';
 import { organizationLd, webSiteLd } from '$lib/utils/jsonLd';
 import { fetchServiceLinks } from '$lib/utils/services';
-import { SITE_NAME } from '$lib/config/site';
+import { SITE_NAME, SITE_OG_IMAGE } from '$lib/config/site';
 import type { PageLoad } from './$types';
 
 export const load: PageLoad = async ({ parent, url }) => {
@@ -54,7 +54,7 @@ export const load: PageLoad = async ({ parent, url }) => {
 	const seo = resolveSEO({
 		pageSEO: story?.content?.seo?.[0],
 		globalSEO: globals?.content?.seo?.[0],
-		fallbacks: { title: SITE_NAME, pathname: url.pathname },
+		fallbacks: { title: SITE_NAME, pathname: url.pathname, ogImagePath: SITE_OG_IMAGE },
 		extraJsonLd: [organizationLd(services), webSiteLd()]
 	});
 
