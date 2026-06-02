@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Button from '$lib/components/Button.svelte';
+	import Eyebrow from '$lib/components/Eyebrow.svelte';
 	import ScribbleUnderline from '$lib/components/svgs/illustrations/ScribbleUnderline.svelte';
 	import type { TitleSegment } from '$lib/utils/format';
 	import type { ResolvedLink } from '$lib/utils/links';
@@ -34,11 +35,7 @@
 </script>
 
 {#if eyebrow}
-	<div
-		class="font-mono text-sm tracking-wider text-muted uppercase before:mr-2 before:text-yellow before:content-['●']"
-	>
-		{eyebrowPrefix ? `// ${eyebrow}` : eyebrow}
-	</div>
+	<Eyebrow text={eyebrow} prefix={eyebrowPrefix} class="text-sm" />
 {/if}
 
 {#if titleSegments.length}

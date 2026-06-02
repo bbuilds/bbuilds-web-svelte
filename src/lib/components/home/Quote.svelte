@@ -1,6 +1,7 @@
 <script lang="ts">
 	import ScribbleUnderline from '$lib/components/svgs/illustrations/ScribbleUnderline.svelte';
 	import QuoteMark from '$lib/components/svgs/icons/QuoteMark.svelte';
+	import Eyebrow from '$lib/components/Eyebrow.svelte';
 
 	const QUOTE = {
 		body: "I've had the chance to work with Branden for 4+ years. Everything he touches is thoughtful, scalable, and intentionally set up to last. He's always thinking a few steps ahead, which means his work doesn't just solve the immediate need — it actually future-proofs whatever we're building so we're not backtracking later. Reliable, collaborative, and consistently raises the bar.",
@@ -12,11 +13,7 @@
 
 <section id="proof" class="paper-bg quote-section relative overflow-hidden pt-20 pb-18">
 	<div class="container flex max-w-208 flex-col items-center text-center">
-		<div
-			class="mb-7 font-mono text-sm tracking-wider text-muted uppercase before:mr-2 before:text-yellow before:content-['●']"
-		>
-			// 04.proof
-		</div>
+		<Eyebrow text="// 04.proof" class="mb-7 text-sm" />
 
 		<figure class="m-0 flex flex-col items-center">
 			<QuoteMark class="mb-2 block h-11 w-11" />

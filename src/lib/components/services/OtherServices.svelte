@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { SERVICES_INDEX } from '$lib/services';
+	import Eyebrow from '$lib/components/Eyebrow.svelte';
 
 	interface Props {
 		currentSlug: string;
@@ -19,9 +20,7 @@
 
 <section class="paper-bg relative border-t border-paper-line pt-20 pb-24">
 	<div class="container">
-		<div class="meta-dot mb-4 font-mono text-[0.8125rem] tracking-[0.06em] text-muted uppercase">
-			// continue reading
-		</div>
+		<Eyebrow text="// continue reading" class="mb-4 text-[0.8125rem] tracking-[0.06em]" />
 		<h2 class="mb-12 text-[clamp(2rem,4vw,3.25rem)]">
 			The other <span class="scribble relative inline-block"
 				>pillars
@@ -117,11 +116,3 @@
 		</div>
 	</div>
 </section>
-
-<style>
-	.meta-dot::before {
-		content: '●';
-		color: var(--yellow);
-		margin-right: 0.5rem;
-	}
-</style>

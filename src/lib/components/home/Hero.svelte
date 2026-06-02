@@ -7,6 +7,7 @@
 	import type { StoryblokHomePage } from '$lib/types/storyblok';
 	import { SITE_NAME } from '$lib/config/site';
 	import { prefersReducedMotion } from '$lib/utils/motion';
+	import Eyebrow from '$lib/components/Eyebrow.svelte';
 
 	interface Props {
 		content?: StoryblokHomePage;
@@ -75,11 +76,7 @@
 	</div>
 
 	<div class="relative z-2 container">
-		<span
-			class="mb-4 flex items-center font-mono text-sm tracking-[0.06em] text-muted uppercase before:mr-2 before:text-yellow before:content-['●'] md:text-base"
-		>
-			{eyebrow}
-		</span>
+		<Eyebrow text={eyebrow} class="mb-4 flex items-center text-sm tracking-[0.06em] md:text-base" />
 		<h1>
 			I enjoy building <span
 				class="hidden font-hand text-8xl font-medium text-charcoal md:inline-block md:translate-y-4"

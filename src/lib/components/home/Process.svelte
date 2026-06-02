@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { StoryblokHomePage } from '$lib/types/storyblok';
+	import Eyebrow from '$lib/components/Eyebrow.svelte';
 
 	const DURATION = 4200;
 
@@ -33,11 +34,7 @@
 	<div class="container">
 		<header class="mb-14 flex flex-wrap items-end justify-between gap-8">
 			<div>
-				<div
-					class="font-mono text-sm tracking-wider text-muted-dark uppercase before:mr-2 before:text-yellow before:content-['●']"
-				>
-					{content?.process_eyebrow}
-				</div>
+				<Eyebrow text={content?.process_eyebrow} tone="dark" class="text-sm" />
 				<h2 class="mt-2 text-paper">The runtime <span class="text-teal">loop</span>.</h2>
 				<p class="mt-3.5 max-w-145 font-mono text-[0.8125rem] leading-[1.7] text-muted-dark">
 					{content?.process_copy}
