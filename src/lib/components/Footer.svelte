@@ -173,7 +173,7 @@
 	.built-with {
 		font-family: var(--mono);
 		font-size: 0.8125rem;
-		color: var(--muted);
+		color: var(--ink);
 		line-height: 1.6;
 		margin: 0;
 	}
@@ -201,16 +201,16 @@
 
 	.meta {
 		font-size: 0.75rem;
-		color: var(--muted);
+		color: var(--ink);
 		margin: 0;
 	}
 
 	.sitemap-link {
-		color: var(--muted);
-		text-decoration: none;
+		color: var(--ink);
+		text-decoration: underline;
 	}
 
 	.sitemap-link:hover {
-		color: var(--ink);
+		text-decoration: underline;
 	}
 </style>
