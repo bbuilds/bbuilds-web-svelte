@@ -20,16 +20,9 @@
 		class="flex items-center gap-3 border-b border-ink bg-[rgba(26,26,26,0.04)] px-3.5 py-2 text-[0.6875rem] tracking-wider"
 	>
 		<div class="flex gap-1.25">
-			<span class="h-2 w-2 rounded-full border border-ink" style="background: var(--bp-chrome-red)"
-			></span>
-			<span
-				class="h-2 w-2 rounded-full border border-ink"
-				style="background: var(--bp-chrome-yellow)"
-			></span>
-			<span
-				class="h-2 w-2 rounded-full border border-ink"
-				style="background: var(--bp-chrome-green)"
-			></span>
+			<span class="h-2 w-2 rounded-full border border-ink bg-bp-chrome-red"></span>
+			<span class="h-2 w-2 rounded-full border border-ink bg-bp-chrome-yellow"></span>
+			<span class="h-2 w-2 rounded-full border border-ink bg-bp-chrome-green"></span>
 		</div>
 		<div class="flex-1 font-medium text-charcoal">~ / {diagram.title}</div>
 		<div class="flex items-center gap-1.5 text-muted uppercase">
@@ -177,7 +170,7 @@
 				{@const h = 32}
 				<g
 					class="bp-node {node.hot ? 'bp-node-hot' : ''} {node.warm ? 'bp-node-warm' : ''}"
-					style="--i:{i}"
+					style:--i={i}
 				>
 					<rect
 						x={node.x - w / 2}
@@ -245,8 +238,7 @@
 	</div>
 
 	<div
-		class="flex items-center gap-2 border-t border-ink bg-ink px-3.5 py-2.5 text-[0.6875rem] tracking-[0.04em]"
-		style="color: var(--bp-grid-label)"
+		class="flex items-center gap-2 border-t border-ink bg-ink px-3.5 py-2.5 text-[0.6875rem] tracking-[0.04em] text-bp-grid-label"
 	>
 		<span class="font-bold text-teal">$</span>
 		<span class="text-paper-line">{diagram.cmd ?? ''}</span>

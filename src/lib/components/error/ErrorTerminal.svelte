@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Attachment } from 'svelte/attachments';
+	import { prefersReducedMotion } from '$lib/utils/motion';
 
 	interface Props {
 		path: string;
@@ -9,7 +10,6 @@
 	let { path, status }: Props = $props();
 
 	const typeRows: Attachment<HTMLElement> = (el) => {
-		const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
 		const timeoutIds: ReturnType<typeof setTimeout>[] = [];
 
 		const safePath = path.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -45,7 +45,7 @@
 			}
 		];
 
-		if (mq.matches) {
+		if (prefersReducedMotion()) {
 			for (const line of lines) {
 				const span = document.createElement('span');
 				span.className = 't-row';

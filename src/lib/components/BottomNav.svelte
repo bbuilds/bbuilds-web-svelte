@@ -1,5 +1,9 @@
 <script lang="ts">
 	import { page } from '$app/state';
+	import ToolsIcon from '$lib/components/svgs/icons/ToolsIcon.svelte';
+	import ProcessIcon from '$lib/components/svgs/icons/ProcessIcon.svelte';
+	import BlogIcon from '$lib/components/svgs/icons/BlogIcon.svelte';
+	import MailIcon from '$lib/components/svgs/icons/MailIcon.svelte';
 
 	let scrollY = $state(0);
 
@@ -32,54 +36,15 @@
 	aria-label="Mobile navigation"
 >
 	<a href="/#services" aria-label="Services" class={linkClass('/#services')}>
-		<svg
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			stroke-width="2"
-			stroke-linecap="round"
-			stroke-linejoin="round"
-			aria-hidden="true"
-			class="h-5 w-5"
-		>
-			<path
-				d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"
-			/>
-		</svg>
+		<ToolsIcon />
 	</a>
 
 	<a href="/#process" aria-label="Process" class={linkClass('/#process')}>
-		<svg
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			stroke-width="2"
-			stroke-linecap="round"
-			stroke-linejoin="round"
-			aria-hidden="true"
-			class="h-5 w-5"
-		>
-			<line x1="6" x2="6" y1="3" y2="15" />
-			<circle cx="18" cy="6" r="3" />
-			<circle cx="6" cy="18" r="3" />
-			<path d="M18 9a9 9 0 0 1-9 9" />
-		</svg>
+		<ProcessIcon />
 	</a>
 
 	<a href="/#blog" aria-label="Blog" class={linkClass('/#blog')}>
-		<svg
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			stroke-width="2"
-			stroke-linecap="round"
-			stroke-linejoin="round"
-			aria-hidden="true"
-			class="h-5 w-5"
-		>
-			<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-			<path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-		</svg>
+		<BlogIcon />
 	</a>
 
 	<a
@@ -88,19 +53,7 @@
 		aria-label="Contact"
 		class={linkClass('#contact-modal')}
 	>
-		<svg
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			stroke-width="2"
-			stroke-linecap="round"
-			stroke-linejoin="round"
-			aria-hidden="true"
-			class="h-5 w-5"
-		>
-			<path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7" />
-			<rect x="2" y="4" width="20" height="16" rx="2" />
-		</svg>
+		<MailIcon />
 	</a>
 </nav>
 

@@ -5,6 +5,7 @@
 	import { toBlogCard } from '$lib/utils/blog';
 	import { resolveMultilink } from '$lib/utils/links';
 	import Button from '$lib/components/Button.svelte';
+	import SearchIcon from '$lib/components/svgs/icons/SearchIcon.svelte';
 
 	let { data }: { data: PageData } = $props();
 
@@ -52,19 +53,9 @@
 	<div class="container">
 		<!-- search -->
 		<div class="relative mb-8 w-full">
-			<svg
+			<SearchIcon
 				class="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-muted"
-				viewBox="0 0 24 24"
-				fill="none"
-				stroke="currentColor"
-				stroke-width="2"
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				aria-hidden="true"
-			>
-				<circle cx="11" cy="11" r="8" />
-				<path d="m21 21-4.35-4.35" />
-			</svg>
+			/>
 			<input
 				type="search"
 				value={query}

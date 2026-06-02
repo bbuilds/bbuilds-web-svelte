@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Attachment } from 'svelte/attachments';
 	import { SITE_NAME } from '$lib/config/site';
+	import Logo from '$lib/components/svgs/icons/Logo.svelte';
 
 	const SLOTS = [
 		{ words: ['Svelte,', 'tears,', 'terminal,'] },
@@ -123,47 +124,34 @@
 				aria-label={SITE_NAME}
 				class="flex items-center gap-2 font-mono font-bold tracking-tight text-ink no-underline"
 			>
-				<svg
-					class="h-5 w-auto fill-current"
-					viewBox="0 0 178.565 291.148"
-					xmlns="http://www.w3.org/2000/svg"
-					aria-hidden="true"
-					focusable="false"
-				>
-					<rect width="33.422" height="145.57"></rect>
-					<rect width="78.641" height="78.641" transform="translate(67.079 34)"></rect>
-					<path
-						d="M5017.408,471.579H4905.343V617.148h145.486V471.579Zm0,112.147h-78.642V505h78.642Z"
-						transform="translate(-4872.264 -326)"
-					></path>
-				</svg>
-				<span>{SITE_NAME}<span class="text-teal">.</span></span>
+				<Logo class="h-5 w-auto fill-current" />
+				<span>{SITE_NAME}</span>
 			</a>
 
-			<p class="built-with">
+			<p class="m-0 font-mono text-[0.8125rem] leading-[1.6] text-ink">
 				<span class="sr-only">built with Svelte, Cloudflare and Claude</span>
 				<span aria-hidden="true"
 					>&gt; built with <span
 						class="bw-slot"
 						{@attach animateSlot(SLOTS[0], 0)}
-						style="width: {SLOTS[0].words[0].length}ch">{SLOTS[0].words[0]}</span
+						style:width="{SLOTS[0].words[0].length}ch">{SLOTS[0].words[0]}</span
 					>
 					<span
 						class="bw-slot"
 						{@attach animateSlot(SLOTS[1], 1)}
-						style="width: {SLOTS[1].words[0].length}ch">{SLOTS[1].words[0]}</span
+						style:width="{SLOTS[1].words[0].length}ch">{SLOTS[1].words[0]}</span
 					>
 					and
 					<span
 						class="bw-slot"
 						{@attach animateSlot(SLOTS[2], 2)}
-						style="width: {SLOTS[2].words[0].length}ch">{SLOTS[2].words[0]}</span
+						style:width="{SLOTS[2].words[0].length}ch">{SLOTS[2].words[0]}</span
 					></span
 				>
 			</p>
 
-			<p class="meta">
-				<a href="/sitemap.xml" class="sitemap-link">/sitemap.xml</a>
+			<p class="m-0 text-xs text-ink">
+				<a href="/sitemap.xml" class="text-ink underline">/sitemap.xml</a>
 				<span aria-hidden="true"> · </span>
 				<span>© 2026</span>
 			</p>
@@ -180,14 +168,6 @@
 		footer {
 			padding-bottom: calc(1.5rem + 4.5rem + env(safe-area-inset-bottom));
 		}
-	}
-
-	.built-with {
-		font-family: var(--mono);
-		font-size: 0.8125rem;
-		color: var(--muted);
-		line-height: 1.6;
-		margin: 0;
 	}
 
 	.bw-slot {
@@ -209,20 +189,5 @@
 	:global(.bw-char) {
 		display: inline-block;
 		will-change: transform;
-	}
-
-	.meta {
-		font-size: 0.75rem;
-		color: var(--muted);
-		margin: 0;
-	}
-
-	.sitemap-link {
-		color: var(--muted);
-		text-decoration: none;
-	}
-
-	.sitemap-link:hover {
-		color: var(--ink);
 	}
 </style>

@@ -4,6 +4,7 @@
 	import faviconPng from '$lib/assets/favicon.png';
 	import { page } from '$app/state';
 	import SEO from '$lib/components/SEO.svelte';
+	import Analytics from '$lib/components/Analytics.svelte';
 	import Header from '$lib/components/Header.svelte';
 	import Footer from '$lib/components/Footer.svelte';
 	import BottomNav from '$lib/components/BottomNav.svelte';
@@ -16,6 +17,7 @@
 {#if !page.error}
 	<SEO seo={page.data.seo} />
 {/if}
+<Analytics gaId={import.meta.env.VITE_GA_ID || undefined} />
 <svelte:head>
 	<link rel="icon" type="image/x-icon" href={favicon} />
 	<link rel="icon" type="image/png" href={faviconPng} />

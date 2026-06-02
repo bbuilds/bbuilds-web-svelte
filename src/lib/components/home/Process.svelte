@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { StoryblokHomePage } from '$lib/types/storyblok';
+	import Eyebrow from '$lib/components/Eyebrow.svelte';
 
 	const DURATION = 4200;
 
@@ -33,11 +34,7 @@
 	<div class="container">
 		<header class="mb-14 flex flex-wrap items-end justify-between gap-8">
 			<div>
-				<div
-					class="font-mono text-sm tracking-wider text-muted-dark uppercase before:mr-2 before:text-yellow before:content-['●']"
-				>
-					{content?.process_eyebrow}
-				</div>
+				<Eyebrow text={content?.process_eyebrow} tone="dark" class="text-sm" />
 				<h2 class="mt-2 text-paper">The runtime <span class="text-teal">loop</span>.</h2>
 				<p class="mt-3.5 max-w-145 font-mono text-[0.8125rem] leading-[1.7] text-muted-dark">
 					{content?.process_copy}
@@ -80,7 +77,10 @@
 						<textPath
 							href="#loopArc"
 							startOffset="0"
-							style="font-family:var(--mono);font-size:0.5625rem;fill:#8a8676;letter-spacing:0.125rem"
+							font-family="var(--mono)"
+							font-size="0.5625rem"
+							fill="#8a8676"
+							letter-spacing="0.125rem"
 						>
 							ITERATE · REPEAT · ITERATE · REPEAT ·
 						</textPath>
@@ -93,7 +93,7 @@
 			<svg
 				viewBox="0 0 1000 80"
 				preserveAspectRatio="none"
-				style="width:100%;height:100%;display:block;overflow:visible"
+				class="block h-full w-full overflow-visible"
 			>
 				<line
 					x1="500"
@@ -196,9 +196,10 @@
 						'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow focus-visible:outline-solid',
 						isActive &&
 							'is-active border-yellow/55 bg-yellow/6 shadow-[0_1.875rem_3.75rem_-1.875rem_rgba(255,205,103,0.25),inset_0_0_0_0.0625rem_rgba(255,205,103,0.18)]',
-						isDone && 'border-white/18'
+						isDone && 'border-white/18',
+						'[animation-delay:calc(var(--i)*90ms)]'
 					]}
-					style="--i: {i}; animation-delay: calc(var(--i) * 90ms)"
+					style:--i={i}
 					onclick={() => (active = i)}
 					aria-current={isActive ? 'step' : undefined}
 				>
@@ -215,7 +216,9 @@
 						>
 					</div>
 					<h3 class="text-[1.75rem] font-medium tracking-[-0.02em] text-paper">{p.title}</h3>
-					<p class="mt-2.5 mb-5.5 flex-1 font-mono text-[0.78125rem] leading-[1.65] text-[#cfc4ad]">
+					<p
+						class="mt-2.5 mb-5.5 flex-1 font-mono text-[0.78125rem] leading-[1.65] text-bp-grid-label"
+					>
 						{p.copy}
 					</p>
 					<div class="absolute inset-x-0 bottom-0 h-0.75 bg-white/6" aria-hidden="true">
@@ -226,11 +229,12 @@
 									? 'bg-[color-mix(in_srgb,var(--green)_55%,transparent)] shadow-none'
 									: 'bg-linear-to-r from-yellow to-[#ffd982] shadow-[0_0_0.75rem_rgba(255,205,103,0.4)]'
 							]}
-							style="width: {isActive || isDone ? '100%' : '0%'}; transition: {isActive
+							style:width={isActive || isDone ? '100%' : '0%'}
+							style:transition={isActive
 								? `width ${DURATION}ms linear`
 								: isDone
 									? 'none'
-									: 'width 0.35s ease'}"
+									: 'width 0.35s ease'}
 						></div>
 					</div>
 				</button>

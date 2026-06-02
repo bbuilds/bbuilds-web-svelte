@@ -1,7 +1,7 @@
 import { error } from '@sveltejs/kit';
 import { resolveSEO } from '$lib/utils/seo';
 import { breadcrumbLd } from '$lib/utils/jsonLd';
-import { SITE_URL, SITE_NAME } from '$lib/config/site';
+import { SITE_URL, SITE_NAME, SITE_OG_IMAGE } from '$lib/config/site';
 import type { PageLoad } from './$types';
 
 export const load: PageLoad = async ({ params, parent, url }) => {
@@ -27,7 +27,8 @@ export const load: PageLoad = async ({ params, parent, url }) => {
 		fallbacks: {
 			title: `${story.name} — ${SITE_NAME}`,
 			description: story.content?.summary,
-			pathname: url.pathname
+			pathname: url.pathname,
+			ogImagePath: SITE_OG_IMAGE
 		},
 		extraJsonLd: [
 			breadcrumbLd([

@@ -1,9 +1,9 @@
 <script lang="ts">
 	import type { Attachment } from 'svelte/attachments';
+	import { prefersReducedMotion } from '$lib/utils/motion';
 
 	const spawnLeaves: Attachment<HTMLElement> = (el) => {
-		const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-		if (mq.matches) return;
+		if (prefersReducedMotion()) return;
 
 		const greens = ['#7ba87b', '#6f9c6e', '#8ab98a', '#b8821a'];
 		const intervalIds: ReturnType<typeof setInterval>[] = [];

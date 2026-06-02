@@ -7,33 +7,24 @@
 
 	let { headings }: Props = $props();
 
-	let active: string | null = $state(null);
+	let scrollY = $state(0);
+	let innerHeight = $state(0);
 
-	$effect(() => {
-		if (headings.length === 0) return;
-
-		const update = () => {
-			const threshold = window.innerHeight * 0.3;
-			let current: string | null = null;
-			for (const { id } of headings) {
-				const el = document.getElementById(id);
-				if (el && el.getBoundingClientRect().top - threshold <= 0) {
-					current = id;
-				}
+	const active = $derived.by(() => {
+		if (headings.length === 0) return null;
+		const threshold = innerHeight * 0.3;
+		let current: string | null = null;
+		for (const { id } of headings) {
+			const el = document.getElementById(id);
+			if (el && el.offsetTop <= scrollY + threshold) {
+				current = id;
 			}
-			active = current ?? headings[0]?.id ?? null;
-		};
-
-		window.addEventListener('scroll', update, { passive: true });
-		window.addEventListener('resize', update, { passive: true });
-		update();
-
-		return () => {
-			window.removeEventListener('scroll', update);
-			window.removeEventListener('resize', update);
-		};
+		}
+		return current ?? headings[0]?.id ?? null;
 	});
 </script>
+
+<svelte:window bind:scrollY bind:innerHeight />
 
 {#if headings.length > 0}
 	<nav aria-label="Table of contents">

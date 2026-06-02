@@ -4,7 +4,7 @@
 	import { resolveMultilink } from '$lib/utils/links';
 	import { parseHighlights } from '$lib/utils/parseHighlights';
 	import Button from '$lib/components/Button.svelte';
-	import ScribbleUnderline from '$lib/components/ScribbleUnderline.svelte';
+	import ScribbleUnderline from '$lib/components/svgs/illustrations/ScribbleUnderline.svelte';
 	import BlueprintDiagram from './BlueprintDiagram.svelte';
 
 	interface Props {
@@ -65,7 +65,7 @@
 						<span class="inline-block">{line1}</span>
 						{#if hasAmp}
 							<span
-								class="ml-2 inline-block translate-y-[-0.08em] rotate-[-6deg] font-hand text-[0.78em] font-medium text-yellow"
+								class="ml-2 inline-block translate-y-[-0.08em] -rotate-6 font-hand text-[0.78em] font-medium text-yellow"
 								>&amp;</span
 							>
 						{/if}

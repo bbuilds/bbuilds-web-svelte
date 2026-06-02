@@ -25,8 +25,7 @@
 </script>
 
 <header
-	class="paper-bg relative border-b border-paper-line pt-8 pb-7 md:pt-14 md:pb-11"
-	style="background: var(--paper)"
+	class="paper-bg relative border-b border-paper-line bg-paper bg-none pt-8 pb-7 md:pt-14 md:pb-11"
 >
 	<div class="container text-center">
 		<div class="mb-4 flex flex-wrap items-center justify-center gap-2.5">

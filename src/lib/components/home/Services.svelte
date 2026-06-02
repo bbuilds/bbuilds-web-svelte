@@ -1,42 +1,14 @@
 <script lang="ts">
 	import type { ISbStoryData } from '@storyblok/js';
-	import type {
-		StoryblokHomePage,
-		StoryblokRichtext,
-		StoryblokServicesTemplate
-	} from '$lib/types/storyblok';
+	import type { StoryblokHomePage, StoryblokServicesTemplate } from '$lib/types/storyblok';
 	import { parseTitleSegments } from '$lib/utils/format';
+	import { parseListItems } from '$lib/utils/richtext';
+	import SectionHeader from '$lib/components/SectionHeader.svelte';
 
 	interface Props {
 		content?: StoryblokHomePage;
 	}
 	let { content }: Props = $props();
-
-	type Run = { text: string; bold: boolean; href?: string };
-	type Item = { runs: Run[] };
-	function parseListItems(doc: StoryblokRichtext | undefined): Item[] {
-		const list = doc?.content?.find((n: StoryblokRichtext) => n.type === 'bullet_list');
-		if (!list?.content) return [];
-		return list.content
-			.filter((li: StoryblokRichtext) => li.type === 'list_item')
-			.map((li: StoryblokRichtext): Item => {
-				const paragraph = li.content?.find((n: StoryblokRichtext) => n.type === 'paragraph');
-				const runs: Run[] = [];
-				for (const node of paragraph?.content ?? []) {
-					if (node.type !== 'text' || !node.text) continue;
-					const marks = node.marks ?? [];
-					const bold = marks.some((m: StoryblokRichtext) => m.type === 'bold');
-					const href = marks.find((m: StoryblokRichtext) => m.type === 'link')?.attrs?.href as
-						| string
-						| undefined;
-					runs.push({ text: node.text, bold, href });
-				}
-				return { runs };
-			})
-			.filter((it: Item) => it.runs.length > 0);
-	}
-
-	import SectionHeader from '$lib/components/SectionHeader.svelte';
 
 	const eyebrow = $derived(content?.services_section_eyebrow ?? '02.services');
 	const title = $derived(content?.services_section_title ?? 'Diving deep into digital.');

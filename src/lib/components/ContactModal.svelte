@@ -3,6 +3,7 @@
 	import { goto } from '$app/navigation';
 	import Button from '$lib/components/Button.svelte';
 	import FormField from '$lib/components/FormField.svelte';
+	import CloseIcon from '$lib/components/svgs/icons/CloseIcon.svelte';
 	import {
 		validateName,
 		validateEmail,
@@ -40,19 +41,21 @@
 	};
 
 	function fieldType(name: string): 'text' | 'email' | 'textarea' {
-		if (name === 'email') return 'email';
-		if (name === 'message') return 'textarea';
+		const n = name.toLowerCase();
+		if (n === 'email') return 'email';
+		if (n === 'message') return 'textarea';
 		return 'text';
 	}
 
 	function fieldAutocomplete(name: string): HTMLInputAttributes['autocomplete'] {
-		if (name === 'name') return 'name';
-		if (name === 'email') return 'email';
+		const n = name.toLowerCase();
+		if (n === 'name') return 'name';
+		if (n === 'email') return 'email';
 		return undefined;
 	}
 
 	function runValidation(field: NamedField) {
-		const validate = validators[field.name];
+		const validate = validators[field.name.toLowerCase()];
 		errors[field.name] = validate
 			? validate(values[field.name] ?? '', {
 					required: field.error_message_required,
@@ -87,7 +90,7 @@
 		submitting = true;
 		submitError = undefined;
 		try {
-			const res = await fetch('https://formspree.io/f/xjvjpbqb', {
+			const res = await fetch(import.meta.env.VITE_FORMSPREE_URL, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
 				body: JSON.stringify(values)
@@ -181,19 +184,7 @@
 					onclick={close}
 					class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-md border border-paper bg-transparent p-1.5 text-white transition-colors hover:bg-charcoal"
 				>
-					<svg
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="2"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						aria-hidden="true"
-						class="h-4 w-4"
-					>
-						<line x1="18" y1="6" x2="6" y2="18" />
-						<line x1="6" y1="6" x2="18" y2="18" />
-					</svg>
+					<CloseIcon />
 				</button>
 			</div>
 

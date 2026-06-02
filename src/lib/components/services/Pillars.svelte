@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { StoryblokServicesTemplate } from '$lib/types/storyblok';
 	import PillarIcon from './PillarIcon.svelte';
+	import Eyebrow from '$lib/components/Eyebrow.svelte';
 
 	interface Props {
 		slug: string;
@@ -21,9 +22,7 @@
 >
 	<div class="container">
 		<div class="mb-16">
-			<div class="meta-dot font-mono text-[0.8125rem] tracking-[0.06em] text-muted uppercase">
-				{eyebrow}
-			</div>
+			<Eyebrow text={eyebrow} class="text-[0.8125rem] tracking-[0.06em]" />
 			<h2 class="mt-3 max-w-2/3 text-[clamp(2rem,4.2vw,3.5rem)] leading-[1.05] text-balance">
 				{title}
 			</h2>
@@ -67,12 +66,6 @@
 </section>
 
 <style>
-	.meta-dot::before {
-		content: '●';
-		color: var(--yellow);
-		margin-right: 0.5rem;
-	}
-
 	.pillar-visual {
 		position: relative;
 		background:
