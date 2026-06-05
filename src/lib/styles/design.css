@@ -166,6 +166,12 @@
 		z-index: 1;
 	}
 
+	@media (max-width: 47.9375rem) {
+		.container {
+			padding: 0 4vw;
+		}
+	}
+
 	/* Backgrounds */
 	.paper-bg {
 		background:
