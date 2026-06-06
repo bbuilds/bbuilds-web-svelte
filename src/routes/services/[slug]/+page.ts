@@ -1,8 +1,29 @@
 import { error } from '@sveltejs/kit';
+import { apiPlugin, storyblokInit, useStoryblokApi } from '@storyblok/svelte';
+import type { StoryblokMultilinkLink } from 'storyblok';
 import { resolveSEO } from '$lib/utils/seo';
 import { breadcrumbLd } from '$lib/utils/jsonLd';
 import { SITE_URL, SITE_NAME, SITE_OG_IMAGE } from '$lib/config/site';
 import type { PageLoad } from './$types';
+
+export const entries = async () => {
+	storyblokInit({
+		accessToken: import.meta.env.VITE_STORYBLOK_DELIVERY_API_TOKEN,
+		apiOptions: {
+			region: (import.meta.env.VITE_STORYBLOK_REGION ?? 'eu') as 'eu' | 'us' | 'cn' | 'ca' | 'ap'
+		},
+		use: [apiPlugin]
+	});
+	const api = useStoryblokApi();
+	const response = await api.get('cdn/links', {
+		version: 'published',
+		starts_with: 'services/'
+	});
+	const links = Object.values(response.data?.links ?? {}) as StoryblokMultilinkLink[];
+	return links
+		.filter((link) => !link.is_folder && link.slug)
+		.map((link) => ({ slug: link.slug.replace(/^services\//, '') }));
+};
 
 export const load: PageLoad = async ({ params, parent, url }) => {
 	const { storyblokAPI, version, globals } = await parent();

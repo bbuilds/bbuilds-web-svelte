@@ -1,4 +1,6 @@
 import { apiPlugin, storyblokInit, useStoryblokApi } from '@storyblok/svelte';
+
+export const prerender = true;
 import type { StoryblokMultilinkLink } from '$lib/types/storyblok';
 import { SITE_URL } from '$lib/config/site';
 

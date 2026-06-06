@@ -8,6 +8,9 @@ const config = {
 	},
 	kit: {
 		adapter: adapter(),
+		prerender: {
+			handleMissingId: 'warn'
+		},
 		csp: {
 			mode: 'auto',
 			directives: {

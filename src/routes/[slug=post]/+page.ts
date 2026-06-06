@@ -1,8 +1,27 @@
 import { error } from '@sveltejs/kit';
+import { apiPlugin, storyblokInit, useStoryblokApi } from '@storyblok/svelte';
 import { resolveSEO } from '$lib/utils/seo';
 import { breadcrumbLd } from '$lib/utils/jsonLd';
 import { SITE_URL, SITE_NAME, SITE_OG_IMAGE } from '$lib/config/site';
 import type { PageLoad } from './$types';
+
+export const entries = async () => {
+	storyblokInit({
+		accessToken: import.meta.env.VITE_STORYBLOK_DELIVERY_API_TOKEN,
+		apiOptions: {
+			region: (import.meta.env.VITE_STORYBLOK_REGION ?? 'eu') as 'eu' | 'us' | 'cn' | 'ca' | 'ap'
+		},
+		use: [apiPlugin]
+	});
+	const api = useStoryblokApi();
+	const response = await api.get('cdn/stories', {
+		version: 'published',
+		starts_with: 'posts/',
+		per_page: 100,
+		is_startpage: false
+	});
+	return ((response.data?.stories ?? []) as { slug: string }[]).map((s) => ({ slug: s.slug }));
+};
 
 export const load: PageLoad = async ({ params, parent, url }) => {
 	const { storyblokAPI, version, globals } = await parent();
