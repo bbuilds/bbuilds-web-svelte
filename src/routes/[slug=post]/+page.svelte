@@ -5,6 +5,7 @@
 	import ReadingProgress from '$lib/components/posts/ReadingProgress.svelte';
 	import NextPostCard from '$lib/components/posts/NextPostCard.svelte';
 	import { formatDate, kickerTag, readTime, extractHeadings } from '$lib/utils/format';
+	import { storyblokImageUrl, storyblokImageSrcset } from '$lib/utils/storyblokImage';
 	import type { RichTextDoc } from '$lib/types/post';
 	import type { PageData } from './$types';
 
@@ -49,8 +50,17 @@
 					class="relative mb-11 aspect-16/7 overflow-hidden rounded-2xl border border-paper-line"
 				>
 					<img
-						src={hero.filename}
+						src={storyblokImageUrl(hero.filename, { width: 1200, height: 525 })}
+						srcset={storyblokImageSrcset(hero.filename, [600, 900, 1200, 1800], {
+							aspectRatio: 16 / 7
+						})}
+						sizes="(min-width: 64rem) 60vw, 100vw"
 						alt={hero.alt || story.name}
+						width={1200}
+						height={525}
+						loading="eager"
+						decoding="async"
+						fetchpriority="high"
 						class="block h-full w-full object-cover"
 					/>
 				</div>

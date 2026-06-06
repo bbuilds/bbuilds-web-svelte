@@ -42,8 +42,8 @@
 					})}
 					sizes="(min-width: 64rem) 33vw, (min-width: 48rem) 50vw, 100vw"
 					alt={image.alt ?? ''}
-					width={image.width ?? undefined}
-					height={image.height ?? undefined}
+					width={800}
+					height={450}
 					loading={eager ? 'eager' : 'lazy'}
 					decoding="async"
 					fetchpriority={eager ? 'high' : undefined}
