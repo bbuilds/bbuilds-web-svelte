@@ -41,7 +41,7 @@
 						aspectRatio: 16 / 9
 					})}
 					sizes="(min-width: 64rem) 33vw, (min-width: 48rem) 50vw, 100vw"
-					alt={image.alt ?? ''}
+					alt={image.alt ?? title}
 					width={800}
 					height={450}
 					loading={eager ? 'eager' : 'lazy'}

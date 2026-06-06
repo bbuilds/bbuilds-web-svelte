@@ -16,8 +16,11 @@
 	<SEO seo={page.data.seo} />
 {/if}
 <Analytics gaId={import.meta.env.VITE_GA_ID || undefined} />
+<a class="skip-link" href="#main-content">Skip to content</a>
 <Header />
-{@render children()}
+<main id="main-content" tabindex="-1">
+	{@render children()}
+</main>
 <Contact content={data.globals?.content} />
 <ContactModal content={data.globals?.content?.contact_modal?.[0]} />
 <SuccessBanner />

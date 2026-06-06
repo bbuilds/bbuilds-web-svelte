@@ -77,7 +77,7 @@
 		<h1>
 			I enjoy building <span
 				class="hidden font-hand text-8xl font-medium text-charcoal md:inline-block md:translate-y-4"
-				>↳</span
+				aria-hidden="true">↳</span
 			><br />
 			<span class="scribble whitespace-nowrap">
 				{#key wi}

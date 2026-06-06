@@ -64,7 +64,7 @@
 		<ul class="mb-5.5 flex flex-col gap-2">
 			{#each node.content ?? [] as item, j (j)}
 				<li
-					class="relative pl-5.5 font-sans text-base leading-[1.72] text-body before:absolute before:top-0.5 before:left-0 before:font-mono before:text-[0.875rem] before:text-yellow before:content-['—']"
+					class="bullet-item relative pl-5.5 font-sans text-base leading-[1.72] text-body before:absolute before:top-0.5 before:left-0 before:font-mono before:text-[0.875rem] before:text-yellow"
 				>
 					<RichTextRenderer nodes={listItemNodes(item)} />
 				</li>
@@ -112,3 +112,9 @@
 		<RichTextText {node} />
 	{/if}
 {/each}
+
+<style>
+	.bullet-item::before {
+		content: '—' / '';
+	}
+</style>
