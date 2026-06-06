@@ -161,6 +161,7 @@
 
 {#if content}
 	<dialog
+		id="contact-modal"
 		bind:this={dialog}
 		onclose={onDialogClose}
 		onclick={onBackdropClick}

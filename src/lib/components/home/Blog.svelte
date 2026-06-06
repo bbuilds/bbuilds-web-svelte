@@ -15,7 +15,7 @@
 	let { content, posts = [] }: Props = $props();
 
 	const eyebrow = $derived(content?.blog_eyebrow);
-	const title = $derived(content?.blog_title);
+	const title = $derived(content?.blog_title ?? 'Fresh from the blog.');
 	const copy = $derived(content?.blog_copy);
 
 	const titleSegments = $derived(parseTitleSegments(title));

@@ -14,6 +14,7 @@
 <section id="proof" class="paper-bg quote-section relative overflow-hidden pt-20 pb-18">
 	<div class="container flex max-w-208 flex-col items-center text-center">
 		<Eyebrow text="// 04.proof" class="mb-7 text-sm" />
+		<h2 class="sr-only">What people are saying.</h2>
 
 		<figure class="m-0 flex flex-col items-center">
 			<QuoteMark class="mb-2 block h-11 w-11" />

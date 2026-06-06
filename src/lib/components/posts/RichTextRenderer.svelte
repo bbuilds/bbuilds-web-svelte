@@ -3,6 +3,7 @@
 	import RichTextRenderer from './RichTextRenderer.svelte';
 	import RichTextText from './RichTextText.svelte';
 	import { headingSlugs } from '$lib/utils/format';
+	import { storyblokImageUrl } from '$lib/utils/storyblokImage';
 
 	interface Props {
 		doc?: RichTextDoc;
@@ -28,7 +29,9 @@
 	const imgAttrs = (node: RichTextNode) => ({
 		src: String(node.attrs?.src ?? ''),
 		alt: String(node.attrs?.alt ?? ''),
-		caption: node.attrs?.caption as string | undefined
+		caption: node.attrs?.caption as string | undefined,
+		width: node.attrs?.width != null ? Number(node.attrs.width) : undefined,
+		height: node.attrs?.height != null ? Number(node.attrs.height) : undefined
 	});
 </script>
 
@@ -61,7 +64,7 @@
 		<ul class="mb-5.5 flex flex-col gap-2">
 			{#each node.content ?? [] as item, j (j)}
 				<li
-					class="relative pl-5.5 font-sans text-base leading-[1.72] text-body before:absolute before:top-0.5 before:left-0 before:font-mono before:text-[0.875rem] before:text-yellow before:content-['—']"
+					class="bullet-item relative pl-5.5 font-sans text-base leading-[1.72] text-body before:absolute before:top-0.5 before:left-0 before:font-mono before:text-[0.875rem] before:text-yellow"
 				>
 					<RichTextRenderer nodes={listItemNodes(item)} />
 				</li>
@@ -88,7 +91,15 @@
 	{:else if node.type === 'image'}
 		{@const a = imgAttrs(node)}
 		<figure class="my-6">
-			<img src={a.src} alt={a.alt} class="w-full rounded-lg" />
+			<img
+				src={storyblokImageUrl(a.src, { width: a.width ?? 1200, height: a.height })}
+				alt={a.alt}
+				width={a.width}
+				height={a.height}
+				loading="lazy"
+				decoding="async"
+				class="w-full rounded-lg"
+			/>
 			{#if a.caption}
 				<figcaption class="mt-2 text-center font-mono text-xs text-muted">{a.caption}</figcaption>
 			{/if}
@@ -101,3 +112,9 @@
 		<RichTextText {node} />
 	{/if}
 {/each}
+
+<style>
+	.bullet-item::before {
+		content: '—' / '';
+	}
+</style>

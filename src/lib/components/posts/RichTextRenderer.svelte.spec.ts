@@ -145,7 +145,7 @@ describe('RichTextRenderer', () => {
 				nodes: [{ type: 'image', attrs: { src: '/img.png', alt: 'a photo' } }]
 			});
 			const img = container.querySelector('img');
-			expect(img?.getAttribute('src')).toBe('/img.png');
+			expect(img?.getAttribute('src')).toBe('/img.png/m/1200x0/filters:format(webp):quality(80)');
 			expect(img?.getAttribute('alt')).toBe('a photo');
 		});
 

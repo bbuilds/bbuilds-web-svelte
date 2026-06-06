@@ -25,7 +25,7 @@
 			<div class="h-14 w-20 shrink-0 overflow-hidden rounded-lg bg-ink"></div>
 			<div class="min-w-0">
 				<div class="mb-1 font-mono text-[0.625rem] tracking-[0.08em] text-muted uppercase">
-					{prev.tag} · {prev.date}
+					{prev.tag}<span aria-hidden="true"> · </span>{prev.date}
 				</div>
 				<div class="text-[0.9375rem] leading-tight font-semibold tracking-[-0.015em] text-ink">
 					{prev.title}
@@ -33,7 +33,7 @@
 			</div>
 			<span
 				class="ml-auto shrink-0 text-base text-muted transition-transform group-hover:translate-x-1"
-				>→</span
+				aria-hidden="true">→</span
 			>
 		</a>
 	</div>

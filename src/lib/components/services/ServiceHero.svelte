@@ -123,7 +123,7 @@
 	}
 
 	.svc-hero-kicker::before {
-		content: '↳ ';
+		content: '↳ ' / '';
 		color: var(--yellow);
 		font-family: var(--sans);
 		font-weight: 500;

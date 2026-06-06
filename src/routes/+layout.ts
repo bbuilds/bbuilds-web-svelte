@@ -5,6 +5,8 @@ import { resolveSEO } from '$lib/utils/seo';
 import { SITE_NAME, SITE_OG_IMAGE } from '$lib/config/site';
 import type { LayoutLoad } from './$types';
 
+export const prerender = true;
+
 export const load: LayoutLoad = async ({ url }) => {
 	storyblokInit({
 		accessToken: import.meta.env.VITE_STORYBLOK_DELIVERY_API_TOKEN,

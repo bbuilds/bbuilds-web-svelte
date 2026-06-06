@@ -5,6 +5,7 @@
 	import ReadingProgress from '$lib/components/posts/ReadingProgress.svelte';
 	import NextPostCard from '$lib/components/posts/NextPostCard.svelte';
 	import { formatDate, kickerTag, readTime, extractHeadings } from '$lib/utils/format';
+	import { storyblokImageUrl, storyblokImageSrcset } from '$lib/utils/storyblokImage';
 	import type { RichTextDoc } from '$lib/types/post';
 	import type { PageData } from './$types';
 
@@ -26,45 +27,50 @@
 </script>
 
 <ReadingProgress />
-<main id="main-content">
-	<PostHeader
-		name={story.name}
-		{kicker}
-		{dateDisplay}
-		datetime={story.first_published_at.slice(0, 10)}
-		updatedDateDisplay={updatedDate ? formatDate(updatedDate) : undefined}
-		updatedDatetime={updatedDate?.slice(0, 10)}
-		readTime={readTimeDisplay}
-		topics={story.tag_list ?? []}
-	/>
+<PostHeader
+	name={story.name}
+	{kicker}
+	{dateDisplay}
+	datetime={story.first_published_at.slice(0, 10)}
+	updatedDateDisplay={updatedDate ? formatDate(updatedDate) : undefined}
+	updatedDatetime={updatedDate?.slice(0, 10)}
+	readTime={readTimeDisplay}
+	topics={story.tag_list ?? []}
+/>
 
-	<div
-		class="post-wrap mx-auto grid max-w-352 grid-cols-1 px-4.5 md:px-8 lg:grid-cols-[13.5rem_1fr] lg:items-start lg:gap-x-16 lg:px-10"
-	>
-		<PostSidebar title={story.name} topics={story.tag_list ?? []} {headings} />
+<div
+	class="post-wrap mx-auto grid max-w-352 grid-cols-1 px-4.5 md:px-8 lg:grid-cols-[13.5rem_1fr] lg:items-start lg:gap-x-16 lg:px-10"
+>
+	<PostSidebar title={story.name} topics={story.tag_list ?? []} {headings} />
 
-		<article class="min-w-0 pt-8 pb-12 md:pt-11 md:pb-16">
-			{#if hero?.filename}
-				<div
-					class="relative mb-11 aspect-16/7 overflow-hidden rounded-2xl border border-paper-line"
-				>
-					<img
-						src={hero.filename}
-						alt={hero.alt || story.name}
-						class="block h-full w-full object-cover"
-					/>
-				</div>
-			{/if}
-
-			<div class="post-body max-w-184">
-				{#if richTextDoc}
-					<RichTextRenderer doc={richTextDoc} />
-				{/if}
-				<NextPostCard />
+	<article class="min-w-0 pt-8 pb-12 md:pt-11 md:pb-16">
+		{#if hero?.filename}
+			<div class="relative mb-11 aspect-16/7 overflow-hidden rounded-2xl border border-paper-line">
+				<img
+					src={storyblokImageUrl(hero.filename, { width: 1200, height: 525 })}
+					srcset={storyblokImageSrcset(hero.filename, [600, 900, 1200, 1800], {
+						aspectRatio: 16 / 7
+					})}
+					sizes="(min-width: 64rem) 60vw, 100vw"
+					alt={hero.alt || story.name}
+					width={1200}
+					height={525}
+					loading="eager"
+					decoding="async"
+					fetchpriority="high"
+					class="block h-full w-full object-cover"
+				/>
 			</div>
-		</article>
-	</div>
-</main>
+		{/if}
+
+		<div class="post-body max-w-184">
+			{#if richTextDoc}
+				<RichTextRenderer doc={richTextDoc} />
+			{/if}
+			<NextPostCard />
+		</div>
+	</article>
+</div>
 
 <style>
 	.post-body :global(> p:first-of-type) {
