@@ -14,13 +14,14 @@ export const entries = async () => {
 		use: [apiPlugin]
 	});
 	const api = useStoryblokApi();
-	const response = await api.get('cdn/stories', {
+	// getAll paginates through every page so prerendered entries stay in sync with
+	const stories = await api.getAll('cdn/stories', {
 		version: 'published',
 		starts_with: 'posts/',
 		per_page: 100,
 		is_startpage: false
 	});
-	return ((response.data?.stories ?? []) as { slug: string }[]).map((s) => ({ slug: s.slug }));
+	return ((stories ?? []) as { slug: string }[]).map((s) => ({ slug: s.slug }));
 };
 
 export const load: PageLoad = async ({ params, parent, url }) => {
