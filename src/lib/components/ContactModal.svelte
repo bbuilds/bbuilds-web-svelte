@@ -22,6 +22,7 @@
 	type NamedField = StoryblokFormInput & { name: string };
 
 	let dialog = $state<HTMLDialogElement | undefined>(undefined);
+	let triggerEl = $state<HTMLElement | null>(null);
 	const isOpen = $derived(page.url.hash === '#contact-modal');
 
 	const fields = $derived(
@@ -115,8 +116,12 @@
 
 	$effect(() => {
 		if (!dialog) return;
-		if (isOpen && !dialog.open) dialog.showModal();
-		else if (!isOpen && dialog.open) dialog.close();
+		if (isOpen && !dialog.open) {
+			triggerEl = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+			dialog.showModal();
+		} else if (!isOpen && dialog.open) {
+			dialog.close();
+		}
 	});
 
 	$effect(() => {
@@ -136,12 +141,17 @@
 		errors = {};
 		touched = {};
 		submitError = undefined;
-		if (page.url.hash !== '#contact-modal') return;
+		const trigger = triggerEl;
+		triggerEl = null;
+		if (page.url.hash !== '#contact-modal') {
+			trigger?.focus();
+			return;
+		}
 		goto(page.url.pathname + page.url.search, {
 			replaceState: true,
 			noScroll: true,
 			keepFocus: true
-		});
+		}).then(() => trigger?.focus());
 	}
 
 	function onBackdropClick(e: MouseEvent) {
@@ -154,6 +164,8 @@
 		bind:this={dialog}
 		onclose={onDialogClose}
 		onclick={onBackdropClick}
+		aria-modal="true"
+		aria-labelledby={content.title ? 'contact-modal-title' : undefined}
 		class="fixed inset-0 m-auto h-fit max-h-[calc(100dvh-2rem)] w-full max-w-xl rounded-xl"
 	>
 		<div class="rounded-xl border border-pale-fire/50 bg-ink p-10">
@@ -173,7 +185,10 @@
 						</div>
 					{/if}
 					{#if content.title}
-						<h2 class="mt-3 text-[1.85rem] font-bold leading-[1.02] tracking-tight text-white">
+						<h2
+							id="contact-modal-title"
+							class="mt-3 text-[1.85rem] font-bold leading-[1.02] tracking-tight text-white"
+						>
 							{content.title}
 						</h2>
 					{/if}
