@@ -97,7 +97,7 @@
 			width="92"
 			height="72"
 			rx="2"
-			fill="rgba(255,205,103,0.12)"
+			fill="rgb(from var(--pale-fire) r g b / 0.12)"
 			stroke="var(--yellow)"
 			stroke-width="1.4"
 		/>

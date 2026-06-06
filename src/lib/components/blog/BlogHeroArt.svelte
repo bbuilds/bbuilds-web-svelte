@@ -3,10 +3,10 @@
 	const hLines = [88, 176, 264];
 
 	const leftNodes = [
-		{ y: 68, label: 'routes', c: '#8a8676', filled: false },
-		{ y: 114, label: 'posts', c: '#b8821a', filled: true },
-		{ y: 160, label: 'media', c: '#8a8676', filled: false },
-		{ y: 206, label: 'styles', c: '#8a8676', filled: false }
+		{ y: 68, label: 'routes', c: 'var(--muted-dark)', filled: false },
+		{ y: 114, label: 'posts', c: 'var(--yellow)', filled: true },
+		{ y: 160, label: 'media', c: 'var(--muted-dark)', filled: false },
+		{ y: 206, label: 'styles', c: 'var(--muted-dark)', filled: false }
 	];
 
 	const leftConnectors = [
@@ -17,10 +17,10 @@
 	];
 
 	const rightNodes = [
-		{ y: 68, label: 'build', c: '#b8821a', filled: true },
-		{ y: 114, label: 'serve', c: '#8a8676', filled: false },
-		{ y: 160, label: 'deploy', c: '#7ba87b', filled: false },
-		{ y: 206, label: 'cache', c: '#8a8676', filled: false }
+		{ y: 68, label: 'build', c: 'var(--yellow)', filled: true },
+		{ y: 114, label: 'serve', c: 'var(--muted-dark)', filled: false },
+		{ y: 160, label: 'deploy', c: 'var(--green)', filled: false },
+		{ y: 206, label: 'cache', c: 'var(--muted-dark)', filled: false }
 	];
 
 	const rightConnectors = [
@@ -41,7 +41,7 @@
 	<rect width="520" height="352" fill="url(#hbg)" />
 
 	<!-- subtle grid -->
-	<g stroke="rgba(1,253,246,0.04)" stroke-width="1">
+	<g stroke="rgb(from var(--teal) r g b / 0.04)" stroke-width="1">
 		{#each vLines as x (x)}
 			<line x1={x} y1="0" x2={x} y2="352" />
 		{/each}
@@ -57,15 +57,15 @@
 		width="100"
 		height="68"
 		rx="4"
-		fill="rgba(1,253,246,0.06)"
-		stroke="#01fdf6"
+		fill="rgb(from var(--teal) r g b / 0.06)"
+		stroke="var(--teal)"
 		stroke-width="1.5"
 	/>
 	<text
 		x="260"
 		y="170"
 		text-anchor="middle"
-		fill="#01fdf6"
+		fill="var(--teal)"
 		font-family="JetBrains Mono,monospace"
 		font-size="8.5"
 		letter-spacing="1.5">SCHEMA</text
@@ -74,7 +74,7 @@
 		x="260"
 		y="184"
 		text-anchor="middle"
-		fill="rgba(1,253,246,0.4)"
+		fill="rgb(from var(--teal) r g b / 0.4)"
 		font-family="JetBrains Mono,monospace"
 		font-size="7">node_01</text
 	>
@@ -82,7 +82,7 @@
 		x="260"
 		y="198"
 		text-anchor="middle"
-		fill="rgba(1,253,246,0.25)"
+		fill="rgb(from var(--teal) r g b / 0.25)"
 		font-family="JetBrains Mono,monospace"
 		font-size="6.5">content · posts · seo</text
 	>
@@ -96,8 +96,8 @@
 				width="62"
 				height="30"
 				rx="3"
-				fill={filled ? 'rgba(255,205,103,0.1)' : 'none'}
-				stroke={filled ? '#ffcd67' : '#01fdf6'}
+				fill={filled ? 'rgb(from var(--pale-fire) r g b / 0.1)' : 'none'}
+				stroke={filled ? 'var(--pale-fire)' : 'var(--teal)'}
 				stroke-width="1.2"
 				opacity="0.8"
 			/>
@@ -120,7 +120,7 @@
 			{y1}
 			x2="210"
 			{y2}
-			stroke={yellow ? '#ffcd67' : '#01fdf6'}
+			stroke={yellow ? 'var(--pale-fire)' : 'var(--teal)'}
 			stroke-width="1"
 			stroke-dasharray={dashed ? '4 3' : undefined}
 			opacity="0.35"
@@ -136,8 +136,8 @@
 				width="62"
 				height="30"
 				rx="3"
-				fill={filled ? 'rgba(255,205,103,0.1)' : 'none'}
-				stroke={filled ? '#ffcd67' : '#01fdf6'}
+				fill={filled ? 'rgb(from var(--pale-fire) r g b / 0.1)' : 'none'}
+				stroke={filled ? 'var(--pale-fire)' : 'var(--teal)'}
 				stroke-width="1.2"
 				opacity="0.8"
 			/>
@@ -160,7 +160,7 @@
 			{y1}
 			x2="398"
 			{y2}
-			stroke={yellow ? '#ffcd67' : '#01fdf6'}
+			stroke={yellow ? 'var(--pale-fire)' : 'var(--teal)'}
 			stroke-width="1"
 			stroke-dasharray={dashed ? '4 3' : undefined}
 			opacity="0.35"
@@ -174,8 +174,8 @@
 		width="80"
 		height="34"
 		rx="3"
-		fill="rgba(255,205,103,0.09)"
-		stroke="#ffcd67"
+		fill="rgb(from var(--pale-fire) r g b / 0.09)"
+		stroke="var(--pale-fire)"
 		stroke-width="1.4"
 		opacity="0.85"
 	/>
@@ -183,7 +183,7 @@
 		x="260"
 		y="52"
 		text-anchor="middle"
-		fill="#b8821a"
+		fill="var(--yellow)"
 		font-family="JetBrains Mono,monospace"
 		font-size="8"
 		letter-spacing="1">cms</text
@@ -192,11 +192,19 @@
 		x="260"
 		y="63"
 		text-anchor="middle"
-		fill="rgba(184,130,26,0.5)"
+		fill="rgb(from var(--yellow) r g b / 0.5)"
 		font-family="JetBrains Mono,monospace"
 		font-size="6.5">storyblok</text
 	>
-	<line x1="260" y1="70" x2="260" y2="142" stroke="#ffcd67" stroke-width="1" opacity="0.35" />
+	<line
+		x1="260"
+		y1="70"
+		x2="260"
+		y2="142"
+		stroke="var(--pale-fire)"
+		stroke-width="1"
+		opacity="0.35"
+	/>
 
 	<!-- bottom node — seo -->
 	<rect
@@ -206,7 +214,7 @@
 		height="34"
 		rx="3"
 		fill="none"
-		stroke="#01fdf6"
+		stroke="var(--teal)"
 		stroke-width="1.2"
 		opacity="0.6"
 	/>
@@ -214,7 +222,7 @@
 		x="260"
 		y="298"
 		text-anchor="middle"
-		fill="#8a8676"
+		fill="var(--muted-dark)"
 		font-family="JetBrains Mono,monospace"
 		font-size="8"
 		letter-spacing="1">seo</text
@@ -223,7 +231,7 @@
 		x="260"
 		y="309"
 		text-anchor="middle"
-		fill="rgba(138,134,118,0.5)"
+		fill="rgb(from var(--muted-dark) r g b / 0.5)"
 		font-family="JetBrains Mono,monospace"
 		font-size="6.5">structured</text
 	>
@@ -232,26 +240,34 @@
 		y1="282"
 		x2="260"
 		y2="210"
-		stroke="#01fdf6"
+		stroke="var(--teal)"
 		stroke-width="1"
 		stroke-dasharray="4 3"
 		opacity="0.3"
 	/>
 
 	<!-- leaf nodes — corners -->
-	<g fill="#01fdf6" opacity="0.45">
+	<g fill="var(--teal)" opacity="0.45">
 		<rect x="24" y="64" width="12" height="12" rx="1" />
 		<rect x="484" y="64" width="12" height="12" rx="1" />
 		<rect x="24" y="224" width="12" height="12" rx="1" />
 		<rect x="484" y="224" width="12" height="12" rx="1" />
 	</g>
-	<line x1="36" y1="70" x2="60" y2="83" stroke="#01fdf6" stroke-width="0.75" opacity="0.25" />
-	<line x1="484" y1="70" x2="460" y2="83" stroke="#01fdf6" stroke-width="0.75" opacity="0.25" />
-	<line x1="36" y1="230" x2="60" y2="221" stroke="#01fdf6" stroke-width="0.75" opacity="0.25" />
-	<line x1="484" y1="230" x2="460" y2="221" stroke="#01fdf6" stroke-width="0.75" opacity="0.25" />
+	<line x1="36" y1="70" x2="60" y2="83" stroke="var(--teal)" stroke-width="0.75" opacity="0.25" />
+	<line x1="484" y1="70" x2="460" y2="83" stroke="var(--teal)" stroke-width="0.75" opacity="0.25" />
+	<line x1="36" y1="230" x2="60" y2="221" stroke="var(--teal)" stroke-width="0.75" opacity="0.25" />
+	<line
+		x1="484"
+		y1="230"
+		x2="460"
+		y2="221"
+		stroke="var(--teal)"
+		stroke-width="0.75"
+		opacity="0.25"
+	/>
 
 	<!-- corner frame brackets -->
-	<g stroke="#01fdf6" stroke-width="1.5" fill="none" opacity="0.55" stroke-linecap="square">
+	<g stroke="var(--teal)" stroke-width="1.5" fill="none" opacity="0.55" stroke-linecap="square">
 		<path d="M 10 22 L 10 10 L 22 10" />
 		<path d="M 510 22 L 510 10 L 498 10" />
 		<path d="M 10 330 L 10 342 L 22 342" />

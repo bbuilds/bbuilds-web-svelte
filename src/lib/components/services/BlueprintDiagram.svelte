@@ -13,11 +13,11 @@
 </script>
 
 <div
-	class="bp relative overflow-hidden rounded-xl border border-ink bg-paper font-mono shadow-[0_1.5rem_3rem_-1.5rem_rgba(26,26,26,0.25),inset_0_0_0_1px_rgba(26,26,26,0.04)]"
+	class="bp relative overflow-hidden rounded-xl border border-ink bg-paper font-mono shadow-[0_1.5rem_3rem_-1.5rem_var(--ink-25),inset_0_0_0_1px_var(--ink-04)]"
 	aria-hidden="true"
 >
 	<div
-		class="flex items-center gap-3 border-b border-ink bg-[rgba(26,26,26,0.04)] px-3.5 py-2 text-[0.6875rem] tracking-wider"
+		class="flex items-center gap-3 border-b border-ink bg-[color:var(--ink-04)] px-3.5 py-2 text-[0.6875rem] tracking-wider"
 	>
 		<div class="flex gap-1.25">
 			<span class="h-2 w-2 rounded-full border border-ink bg-bp-chrome-red"></span>
@@ -26,8 +26,7 @@
 		</div>
 		<div class="flex-1 font-medium text-charcoal">~ / {diagram.title}</div>
 		<div class="flex items-center gap-1.5 text-muted uppercase">
-			<span
-				class="h-1.75 w-1.75 rounded-full bg-green shadow-[0_0_0_0.1875rem_rgba(123,168,123,0.18)]"
+			<span class="h-1.75 w-1.75 rounded-full bg-green shadow-[0_0_0_0.1875rem_var(--green-18)]"
 			></span>
 			live
 		</div>
@@ -37,7 +36,12 @@
 		<svg viewBox="0 0 520 360" class="block h-auto w-full">
 			<defs>
 				<pattern id="bpgrid" width="20" height="20" patternUnits="userSpaceOnUse">
-					<path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(26,26,26,0.05)" stroke-width="0.5" />
+					<path
+						d="M 20 0 L 0 0 0 20"
+						fill="none"
+						stroke="rgb(from var(--ink) r g b / 0.05)"
+						stroke-width="0.5"
+					/>
 				</pattern>
 				<marker id="bp-arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
 					<path
@@ -274,7 +278,8 @@
 
 	.bp-canvas {
 		background:
-			radial-gradient(circle at 20% 0%, rgba(255, 205, 103, 0.08), transparent 60%), var(--paper);
+			radial-gradient(circle at 20% 0%, rgb(from var(--pale-fire) r g b / 0.08), transparent 60%),
+			var(--paper);
 	}
 
 	.bp-node {
@@ -283,11 +288,11 @@
 	}
 
 	:global(.bp-node-hot rect) {
-		filter: drop-shadow(0 0.25rem 0.625rem rgba(255, 205, 103, 0.45));
+		filter: drop-shadow(0 0.25rem 0.625rem var(--pale-fire-45));
 	}
 
 	:global(.bp-node-warm rect) {
-		filter: drop-shadow(0 0.1875rem 0.5rem rgba(255, 205, 103, 0.22));
+		filter: drop-shadow(0 0.1875rem 0.5rem rgb(from var(--pale-fire) r g b / 0.22));
 	}
 
 	.bp-warm-frame {

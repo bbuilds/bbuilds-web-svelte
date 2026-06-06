@@ -78,7 +78,7 @@
 				{#if page.status !== 404 && page.error?.errorId}
 					<p class="mt-3 font-mono text-xs text-muted">
 						ref: <code
-							class="bg-[rgba(184,130,26,0.14)] text-yellow py-[0.05rem] px-[0.4rem] rounded-[0.3rem] text-[0.95em]"
+							class="bg-[color:var(--yellow-14)] text-yellow py-[0.05rem] px-[0.4rem] rounded-[0.3rem] text-[0.95em]"
 							>{page.error.errorId}</code
 						>
 					</p>

@@ -32,7 +32,7 @@
 				>
 					<path
 						d="M2 14 C 40 4, 80 20, 120 10 S 180 16, 198 8"
-						stroke="#ffcd67"
+						stroke="var(--pale-fire)"
 						stroke-width="8"
 						fill="none"
 						stroke-linecap="round"
@@ -47,7 +47,7 @@
 				<li class="border-b border-paper-line">
 					<a
 						class="grid grid-cols-[auto_1fr_auto] items-center gap-5 px-2 py-6 text-ink no-underline transition-[padding,background] duration-300 {live
-							? 'group hover:bg-[rgba(184,130,26,0.08)] hover:pl-6'
+							? 'group hover:bg-[color:var(--yellow-08)] hover:pl-6'
 							: 'pointer-events-none cursor-default opacity-40'}"
 						href={live ? `/services/${s.slug}` : undefined}
 						aria-disabled={!live || undefined}

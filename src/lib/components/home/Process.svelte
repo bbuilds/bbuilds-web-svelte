@@ -62,13 +62,13 @@
 					<path
 						d="M 40 8 A 32 32 0 1 1 22 14"
 						fill="none"
-						stroke="#ffcd67"
+						stroke="var(--pale-fire)"
 						stroke-width="2"
 						stroke-linecap="round"
 					/>
 					<path
 						d="M 22 14 L 26 8 M 22 14 L 16 16"
-						stroke="#ffcd67"
+						stroke="var(--pale-fire)"
 						stroke-width="2"
 						stroke-linecap="round"
 						fill="none"
@@ -79,7 +79,7 @@
 							startOffset="0"
 							font-family="var(--mono)"
 							font-size="0.5625rem"
-							fill="#8a8676"
+							fill="var(--muted-dark)"
 							letter-spacing="0.125rem"
 						>
 							ITERATE · REPEAT · ITERATE · REPEAT ·
@@ -100,7 +100,7 @@
 					y1="8"
 					x2="500"
 					y2="25"
-					stroke="#ffcd67"
+					stroke="var(--pale-fire)"
 					stroke-width="1.5"
 					stroke-dasharray="5 5"
 					opacity="0.7"
@@ -110,7 +110,7 @@
 					y1="25"
 					x2="875"
 					y2="25"
-					stroke="#ffcd67"
+					stroke="var(--pale-fire)"
 					stroke-width="1.5"
 					stroke-dasharray="5 5"
 					opacity="0.7"
@@ -121,7 +121,7 @@
 						y1="25"
 						x2={x}
 						y2="55"
-						stroke="#ffcd67"
+						stroke="var(--pale-fire)"
 						stroke-width="1.5"
 						stroke-dasharray="5 5"
 						opacity="0.7"
@@ -151,7 +151,7 @@
 							cx={x}
 							cy="55"
 							r="7"
-							fill="#1a1a1a"
+							fill="var(--ink)"
 							style:stroke={nodeActive
 								? 'var(--yellow)'
 								: nodeDone
@@ -160,7 +160,7 @@
 							stroke-width="1.5"
 						/>
 						{#if nodeActive}
-							<circle cx={x} cy="55" r="3.5" fill="#ffcd67" />
+							<circle cx={x} cy="55" r="3.5" fill="var(--pale-fire)" />
 						{/if}
 						{#if nodeDone}
 							<circle cx={x} cy="55" r="3.5" style:fill="var(--green)" />
@@ -195,7 +195,7 @@
 						'hover:-translate-y-1 hover:border-yellow/40 hover:bg-white/4',
 						'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow focus-visible:outline-solid',
 						isActive &&
-							'is-active border-yellow/55 bg-yellow/6 shadow-[0_1.875rem_3.75rem_-1.875rem_rgba(255,205,103,0.25),inset_0_0_0_0.0625rem_rgba(255,205,103,0.18)]',
+							'is-active border-yellow/55 bg-yellow/6 shadow-[0_1.875rem_3.75rem_-1.875rem_var(--pale-fire-25),inset_0_0_0_0.0625rem_var(--pale-fire-18)]',
 						isDone && 'border-white/18',
 						'[animation-delay:calc(var(--i)*90ms)]'
 					]}
@@ -208,7 +208,7 @@
 							class={[
 								"inline-flex items-center gap-2 font-mono text-[0.6875rem] tracking-[0.08em] before:inline-block before:size-2 before:rounded-full before:transition-[background,box-shadow] before:duration-350 before:content-['']",
 								isActive
-									? 'text-yellow before:bg-yellow before:shadow-[0_0_0_0.25rem_rgba(255,205,103,0.18)]'
+									? 'text-yellow before:bg-yellow before:shadow-[0_0_0_0.25rem_var(--pale-fire-18)]'
 									: isDone
 										? 'text-muted-dark before:bg-green'
 										: 'text-muted-dark before:bg-[#3a3a3a]'
@@ -227,7 +227,7 @@
 								'h-full',
 								isDone
 									? 'bg-[color-mix(in_srgb,var(--green)_55%,transparent)] shadow-none'
-									: 'bg-linear-to-r from-yellow to-[#ffd982] shadow-[0_0_0.75rem_rgba(255,205,103,0.4)]'
+									: 'bg-linear-to-r from-yellow to-[#ffd982] shadow-[0_0_0.75rem_var(--pale-fire-40)]'
 							]}
 							style:width={isActive || isDone ? '100%' : '0%'}
 							style:transition={isActive
