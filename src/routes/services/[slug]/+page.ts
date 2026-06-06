@@ -7,6 +7,7 @@ import { SITE_URL, SITE_NAME, SITE_OG_IMAGE } from '$lib/config/site';
 import type { PageLoad } from './$types';
 
 export const entries = async () => {
+	if (!import.meta.env.VITE_STORYBLOK_DELIVERY_API_TOKEN) return [];
 	storyblokInit({
 		accessToken: import.meta.env.VITE_STORYBLOK_DELIVERY_API_TOKEN,
 		apiOptions: {
@@ -15,6 +16,7 @@ export const entries = async () => {
 		use: [apiPlugin]
 	});
 	const api = useStoryblokApi();
+	if (!api) return [];
 	const response = await api.get('cdn/links', {
 		version: 'published',
 		starts_with: 'services/'
