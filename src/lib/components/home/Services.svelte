@@ -68,6 +68,8 @@
 						id={bodyId}
 						role="region"
 						aria-labelledby={titleId}
+						aria-hidden={!isOpen}
+						inert={!isOpen ? true : undefined}
 						data-open={isOpen}
 						class="chapter-body px-2"
 					>
