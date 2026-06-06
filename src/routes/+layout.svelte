@@ -1,7 +1,5 @@
 <script lang="ts">
 	import './layout.css';
-	import favicon from '$lib/assets/favicon.ico';
-	import faviconPng from '$lib/assets/favicon.png';
 	import { page } from '$app/state';
 	import SEO from '$lib/components/SEO.svelte';
 	import Analytics from '$lib/components/Analytics.svelte';
@@ -18,17 +16,6 @@
 	<SEO seo={page.data.seo} />
 {/if}
 <Analytics gaId={import.meta.env.VITE_GA_ID || undefined} />
-<svelte:head>
-	<link rel="icon" type="image/x-icon" href={favicon} />
-	<link rel="icon" type="image/png" href={faviconPng} />
-	<link rel="preconnect" href="https://fonts.googleapis.com" />
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
-	<link
-		href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Caveat:wght@500;700&display=swap"
-		rel="stylesheet"
-	/>
-</svelte:head>
-
 <Header />
 {@render children()}
 <Contact content={data.globals?.content} />
