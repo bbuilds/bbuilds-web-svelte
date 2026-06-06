@@ -166,7 +166,7 @@
 
 	@media (max-width: 47.9375rem) {
 		footer {
-			padding-bottom: calc(1.5rem + 4.5rem + env(safe-area-inset-bottom));
+			padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
 		}
 	}
 

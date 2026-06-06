@@ -79,7 +79,7 @@
 
 <div class="relative">
 	<div
-		class="bg-ink text-paper rounded-[0.875rem] overflow-hidden border border-black/50 font-mono rotate-[-1.2deg] max-[60rem]:rotate-[-0.8deg] [box-shadow:0_2.5rem_5rem_-2rem_rgba(26,26,26,0.5),0_1rem_2rem_-1.5rem_rgba(26,26,26,0.6)]"
+		class="bg-ink text-paper rounded-[0.875rem] overflow-hidden border border-black/50 font-mono rotate-[-1.2deg] max-[60rem]:rotate-[-0.8deg] [box-shadow:0_2.5rem_5rem_-2rem_var(--ink-50),0_1rem_2rem_-1.5rem_var(--ink-60)]"
 		role="img"
 		aria-label="Terminal showing a {status} error"
 	>

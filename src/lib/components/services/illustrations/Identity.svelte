@@ -182,8 +182,8 @@
 				cx={p.x}
 				cy={p.y}
 				r="2.5"
-				fill="rgba(26,26,26,0.2)"
-				stroke="rgba(26,26,26,0.3)"
+				fill="rgb(from var(--ink) r g b / 0.2)"
+				stroke="rgb(from var(--ink) r g b / 0.3)"
 				stroke-width="0.6"
 			/>
 		{/each}
@@ -786,7 +786,7 @@
 					width="48"
 					height="20"
 					rx="2"
-					fill={node.hot ? 'rgba(255,205,103,0.25)' : 'var(--paper)'}
+					fill={node.hot ? 'var(--pale-fire-25)' : 'var(--paper)'}
 					stroke="var(--ink)"
 					stroke-width={node.hot ? 1.3 : 1}
 				/>

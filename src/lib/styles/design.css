@@ -58,6 +58,29 @@
 	--container-gutter: 1.5rem;
 }
 
+/* --- Translucent brand tints. ---
+   Base brand color at a fixed opacity (the numeric suffix = the % alpha).
+   Named here when the tint either recurs across files or appears inside a
+   Tailwind arbitrary value (shadow-[…], bg-[…]) where inline relative-color
+   can't be used. One-off tints in plain CSS/SVG stay inline as
+   `rgb(from var(--base) r g b / .nn)`, which is still bound to the base token. */
+:root {
+	--pale-fire-45: rgb(from var(--pale-fire) r g b / 0.45);
+	--pale-fire-40: rgb(from var(--pale-fire) r g b / 0.4);
+	--pale-fire-25: rgb(from var(--pale-fire) r g b / 0.25);
+	--pale-fire-18: rgb(from var(--pale-fire) r g b / 0.18);
+
+	--ink-60: rgb(from var(--ink) r g b / 0.6);
+	--ink-50: rgb(from var(--ink) r g b / 0.5);
+	--ink-25: rgb(from var(--ink) r g b / 0.25);
+	--ink-04: rgb(from var(--ink) r g b / 0.04);
+
+	--yellow-14: rgb(from var(--yellow) r g b / 0.14);
+	--yellow-08: rgb(from var(--yellow) r g b / 0.08);
+
+	--green-18: rgb(from var(--green) r g b / 0.18);
+}
+
 /* Responsive container sizing */
 @media (min-width: 48rem) {
 	/* Tablet */
@@ -166,11 +189,25 @@
 		z-index: 1;
 	}
 
+	@media (max-width: 47.9375rem) {
+		.container {
+			padding: 0 4vw;
+		}
+	}
+
 	/* Backgrounds */
 	.paper-bg {
 		background:
-			radial-gradient(75rem 37.5rem at 15% 0%, rgba(255, 205, 103, 0.18), transparent 60%),
-			radial-gradient(56.25rem 31.25rem at 85% 20%, rgba(1, 253, 246, 0.06), transparent 60%),
+			radial-gradient(
+				75rem 37.5rem at 15% 0%,
+				rgb(from var(--pale-fire) r g b / 0.18),
+				transparent 60%
+			),
+			radial-gradient(
+				56.25rem 31.25rem at 85% 20%,
+				rgb(from var(--teal) r g b / 0.06),
+				transparent 60%
+			),
 			var(--paper);
 		position: relative;
 	}
@@ -187,8 +224,16 @@
 
 	.ink-bg {
 		background:
-			radial-gradient(75rem 43.75rem at 80% 10%, rgba(1, 253, 246, 0.07), transparent 60%),
-			radial-gradient(56.25rem 31.25rem at 10% 90%, rgba(255, 205, 103, 0.08), transparent 60%),
+			radial-gradient(
+				75rem 43.75rem at 80% 10%,
+				rgb(from var(--teal) r g b / 0.07),
+				transparent 60%
+			),
+			radial-gradient(
+				56.25rem 31.25rem at 10% 90%,
+				rgb(from var(--pale-fire) r g b / 0.08),
+				transparent 60%
+			),
 			var(--ink);
 		color: var(--paper);
 		position: relative;

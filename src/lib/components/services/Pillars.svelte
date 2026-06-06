@@ -41,7 +41,7 @@
 							class="mb-4 inline-flex items-center gap-2 rounded-full border border-ink bg-paper px-2.5 py-1.25 font-mono text-[0.6875rem] tracking-[0.04em] text-ink"
 						>
 							<span
-								class="h-1.75 w-1.75 rounded-full bg-yellow shadow-[0_0_0_0.1875rem_rgba(255,205,103,0.25)]"
+								class="h-1.75 w-1.75 rounded-full bg-yellow shadow-[0_0_0_0.1875rem_var(--pale-fire-25)]"
 							></span>
 							<span class="font-semibold">pillar.{pillar.pillar_id}</span>
 						</div>
@@ -69,8 +69,8 @@
 	.pillar-visual {
 		position: relative;
 		background:
-			linear-gradient(rgba(26, 26, 26, 0.04) 1px, transparent 1px) 0 0 / 1.25rem 1.25rem,
-			linear-gradient(90deg, rgba(26, 26, 26, 0.04) 1px, transparent 1px) 0 0 / 1.25rem 1.25rem,
+			linear-gradient(var(--ink-04) 1px, transparent 1px) 0 0 / 1.25rem 1.25rem,
+			linear-gradient(90deg, var(--ink-04) 1px, transparent 1px) 0 0 / 1.25rem 1.25rem,
 			var(--paper-2);
 		border: 1px solid var(--paper-line);
 		border-radius: 0.625rem;

@@ -86,7 +86,7 @@
 				<svg viewBox="0 0 400 22" preserveAspectRatio="none" aria-hidden="true">
 					<path
 						d="M2 14 C 80 4, 160 20, 240 10 S 360 16, 398 8"
-						stroke="#ffcd67"
+						stroke="var(--pale-fire)"
 						stroke-width="10"
 						fill="none"
 						stroke-linecap="round"
@@ -133,7 +133,11 @@
 		width: 5.5rem;
 		height: 5.5rem;
 		border-radius: 50%;
-		background: radial-gradient(circle at var(--sun-x) var(--sun-y), #fff3bb 0%, #ffcd67 70%);
+		background: radial-gradient(
+			circle at var(--sun-x) var(--sun-y),
+			#fff3bb 0%,
+			var(--pale-fire) 70%
+		);
 		box-shadow:
 			0 0.75rem 2.5rem -0.625rem rgba(0, 0, 0, 0.25),
 			inset 0 0 0 0.125rem var(--ink);
@@ -175,7 +179,7 @@
 		50% {
 			box-shadow:
 				0 0.75rem 3.5rem -0.25rem rgba(0, 0, 0, 0.18),
-				0 0 2rem 0.375rem rgba(255, 205, 103, 0.45),
+				0 0 2rem 0.375rem var(--pale-fire-45),
 				inset 0 0 0 0.125rem var(--ink);
 		}
 	}

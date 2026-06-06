@@ -114,8 +114,8 @@
 		inset: 0;
 		pointer-events: none;
 		background-image:
-			linear-gradient(rgba(26, 26, 26, 0.045) 1px, transparent 1px),
-			linear-gradient(90deg, rgba(26, 26, 26, 0.045) 1px, transparent 1px);
+			linear-gradient(rgb(from var(--ink) r g b / 0.045) 1px, transparent 1px),
+			linear-gradient(90deg, rgb(from var(--ink) r g b / 0.045) 1px, transparent 1px);
 		background-size: 2.5rem 2.5rem;
 		mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, #000 35%, transparent 90%);
 		-webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, #000 35%, transparent 90%);
@@ -132,7 +132,7 @@
 	.svc-hero-lead :global(strong) {
 		color: var(--ink);
 		font-weight: 700;
-		background: linear-gradient(transparent 65%, rgba(255, 205, 103, 0.45) 65%);
+		background: linear-gradient(transparent 65%, var(--pale-fire-45) 65%);
 	}
 
 	@keyframes bpIn {
