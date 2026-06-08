@@ -78,7 +78,10 @@ List the real directories at build time (`src/lib/components`, `src/lib/componen
 - A static component hard-codes its content as a `const` (often `as const`) at the top
   of `<script lang="ts">`, then renders it. No `content` prop, no Storyblok type — that
   is what "static" means here.
-- Keep section-specific CSS in the component's scoped `<style>` block, using tokens.
+- Prefer Tailwind utility classes for layout, spacing, typography, and color. Avoid
+  component-scoped `<style>` rules unless a design requirement cannot be expressed with
+  Tailwind utilities.
+- If you do need component-local CSS, keep it in a scoped `<style>` block using tokens.
   Don't add rules to `design.css`. Use `:global(...)` only to reach into a shared class
   (e.g. overriding `.scribble svg` sizing locally), matching the existing pattern.
 
