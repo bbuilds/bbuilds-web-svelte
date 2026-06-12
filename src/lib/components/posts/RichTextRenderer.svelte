@@ -2,6 +2,7 @@
 	import type { RichTextDoc, RichTextNode } from '$lib/types/post';
 	import RichTextRenderer from './RichTextRenderer.svelte';
 	import RichTextText from './RichTextText.svelte';
+	import Callout from './Callout.svelte';
 	import { headingSlugs } from '$lib/utils/format';
 	import { storyblokImageUrl } from '$lib/utils/storyblokImage';
 
@@ -110,6 +111,15 @@
 		<br />
 	{:else if node.type === 'text'}
 		<RichTextText {node} />
+	{:else if node.type === 'blok'}
+		{#each (node.attrs?.body ?? []) as Array<{ component: string; _uid: string; [key: string]: unknown }> as blok (blok._uid)}
+			{#if blok.component === 'Callout Block'}
+				<Callout
+					callout_type={blok.callout_type as '' | 'info' | 'warning' | 'success' | undefined}
+					content={blok.content as RichTextDoc | undefined}
+				/>
+			{/if}
+		{/each}
 	{/if}
 {/each}
 
