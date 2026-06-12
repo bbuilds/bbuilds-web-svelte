@@ -31,7 +31,7 @@
 	name={story.name}
 	{kicker}
 	{dateDisplay}
-	datetime={story.first_published_at.slice(0, 10)}
+	datetime={story.first_published_at?.slice(0, 10)}
 	updatedDateDisplay={updatedDate ? formatDate(updatedDate) : undefined}
 	updatedDatetime={updatedDate?.slice(0, 10)}
 	readTime={readTimeDisplay}

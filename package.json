@@ -17,7 +17,7 @@
 		"test:e2e:ci": "playwright test",
 		"deploy": "npm run build && wrangler deploy",
 		"cf-typegen": "wrangler types ./src/worker-configuration.d.ts",
-		"types:storyblok": "node --env-file=.env scripts/generate-storyblok-types.mjs",
+		"types:storyblok": "node --env-file=.env scripts/generate-storyblok-types.mjs && prettier --write src/lib/types/storyblok.d.ts",
 		"lint": "prettier --check . && eslint .",
 		"format": "prettier --write ."
 	},
