@@ -1,13 +1,15 @@
 <script lang="ts">
 	import type { RichTextDoc } from '$lib/types/post';
+	import type { StoryblokCalloutBlock } from '$lib/types/storyblok';
 	import RichTextRenderer from './RichTextRenderer.svelte';
 
-	interface Props {
-		callout_type?: '' | 'info' | 'warning' | 'success';
-		content?: RichTextDoc;
-	}
+	type Props = Pick<StoryblokCalloutBlock, 'callout_type' | 'content'>;
 
 	let { callout_type, content }: Props = $props();
+
+	// `content` is Storyblok's loose generated richtext type; the renderer pipeline uses
+	// the richer hand-authored RichTextDoc (same bridge as [slug]/+page.svelte).
+	const doc = $derived(content as RichTextDoc | undefined);
 
 	const variant = $derived(
 		callout_type === 'warning' || callout_type === 'success' ? callout_type : 'info'
@@ -92,7 +94,7 @@
 			{LABELS[variant]}
 		</div>
 		<div class="callout-body text-body leading-[1.68]">
-			<RichTextRenderer doc={content} />
+			<RichTextRenderer {doc} />
 		</div>
 	</div>
 </div>

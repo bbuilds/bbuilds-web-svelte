@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { RichTextDoc, RichTextNode } from '$lib/types/post';
+	import type { StoryblokCalloutBlock } from '$lib/types/storyblok';
 	import RichTextRenderer from './RichTextRenderer.svelte';
 	import RichTextText from './RichTextText.svelte';
 	import Callout from './Callout.svelte';
@@ -26,6 +27,8 @@
 		if (first?.type === 'paragraph') return first.content ?? [];
 		return node.content ?? [];
 	};
+
+	type BlokItem = { component: string; _uid: string; [key: string]: unknown };
 
 	const imgAttrs = (node: RichTextNode) => ({
 		src: String(node.attrs?.src ?? ''),
@@ -112,12 +115,11 @@
 	{:else if node.type === 'text'}
 		<RichTextText {node} />
 	{:else if node.type === 'blok'}
-		{#each (node.attrs?.body ?? []) as Array<{ component: string; _uid: string; [key: string]: unknown }> as blok (blok._uid)}
+		{@const body = (node.attrs?.body ?? []) as BlokItem[]}
+		{#each body as blok (blok._uid)}
 			{#if blok.component === 'Callout Block'}
-				<Callout
-					callout_type={blok.callout_type as '' | 'info' | 'warning' | 'success' | undefined}
-					content={blok.content as RichTextDoc | undefined}
-				/>
+				{@const callout = blok as unknown as StoryblokCalloutBlock}
+				<Callout callout_type={callout.callout_type} content={callout.content} />
 			{/if}
 		{/each}
 	{/if}
