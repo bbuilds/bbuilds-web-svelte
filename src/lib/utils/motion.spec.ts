@@ -8,8 +8,7 @@ afterEach(() => {
 describe('prefersReducedMotion', () => {
 	it('returns false when window is undefined (SSR guard)', () => {
 		const orig = globalThis.window;
-		// @ts-expect-error simulate SSR
-		delete globalThis.window;
+		(globalThis as Record<string, unknown>).window = undefined;
 		expect(prefersReducedMotion()).toBe(false);
 		globalThis.window = orig;
 	});

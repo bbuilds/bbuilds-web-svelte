@@ -36,7 +36,7 @@ describe('organizationLd', () => {
 		expect(ld.hasOfferCatalog['@type']).toBe('OfferCatalog');
 		const offers = ld.hasOfferCatalog.itemListElement;
 		expect(offers.length).toBe(2);
-		expect(offers[0].itemOffered.url).toBe(`${SITE_URL}/services/engineering`);
+		expect(offers[0]?.itemOffered.url).toBe(`${SITE_URL}/services/engineering`);
 		for (const offer of offers) {
 			expect(offer['@type']).toBe('Offer');
 			expect(offer.itemOffered['@type']).toBe('Service');
@@ -76,15 +76,15 @@ describe('breadcrumbLd', () => {
 			{ name: 'Services', url: `${SITE_URL}/services` },
 			{ name: 'Frontend', url: `${SITE_URL}/services/frontend` }
 		]);
-		expect(ld.itemListElement[0].position).toBe(1);
-		expect(ld.itemListElement[1].position).toBe(2);
-		expect(ld.itemListElement[2].position).toBe(3);
+		expect(ld.itemListElement[0]?.position).toBe(1);
+		expect(ld.itemListElement[1]?.position).toBe(2);
+		expect(ld.itemListElement[2]?.position).toBe(3);
 	});
 
 	it('maps name and url onto each ListItem', () => {
 		const ld = breadcrumbLd([{ name: 'Home', url: 'https://example.com' }]);
-		expect(ld.itemListElement[0].name).toBe('Home');
-		expect(ld.itemListElement[0].item).toBe('https://example.com');
-		expect(ld.itemListElement[0]['@type']).toBe('ListItem');
+		expect(ld.itemListElement[0]?.name).toBe('Home');
+		expect(ld.itemListElement[0]?.item).toBe('https://example.com');
+		expect(ld.itemListElement[0]?.['@type']).toBe('ListItem');
 	});
 });
