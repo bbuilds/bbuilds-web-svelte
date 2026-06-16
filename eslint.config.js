@@ -31,8 +31,6 @@ export default defineConfig(
 			globals: { ...globals.browser, ...globals.node },
 			parserOptions: {
 				projectService: {
-					// These root-level files are not included in the SvelteKit-generated tsconfig;
-					// allow them with a default project. vite.config.ts and playwright.config.ts
 					allowDefaultProject: [
 						'eslint.config.js',
 						'commitlint.config.js',
