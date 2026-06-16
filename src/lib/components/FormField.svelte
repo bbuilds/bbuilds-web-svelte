@@ -48,8 +48,7 @@
 			onblur={onBlur}
 			aria-invalid={error ? 'true' : undefined}
 			aria-describedby={error ? errorId : undefined}
-			class="resize-y {inputClass}"
-		></textarea>
+			class="resize-y {inputClass}"></textarea>
 	{:else}
 		<input
 			{id}

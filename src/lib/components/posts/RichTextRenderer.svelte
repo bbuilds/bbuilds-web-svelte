@@ -24,7 +24,9 @@
 
 	const listItemNodes = (node: RichTextNode): RichTextNode[] => {
 		const first = node.content?.[0];
-		if (first?.type === 'paragraph') return first.content ?? [];
+		if (first?.type === 'paragraph') {
+			return [...(first.content ?? []), ...(node.content?.slice(1) ?? [])];
+		}
 		return node.content ?? [];
 	};
 
