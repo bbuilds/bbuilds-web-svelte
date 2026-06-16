@@ -59,13 +59,16 @@
 		let i = 0;
 		function next() {
 			if (i >= lines.length) return;
+			const line = lines[i];
+			if (!line) return;
 			const span = document.createElement('span');
 			span.className = 't-row';
-			span.innerHTML = lines[i].h;
+			span.innerHTML = line.h;
 			el.appendChild(span);
 			i++;
 			if (i < lines.length) {
-				const id = setTimeout(next, lines[i - 1].last ? 0 : 240 + Math.random() * 220);
+				const prev = lines[i - 1];
+				const id = setTimeout(next, prev?.last ? 0 : 240 + Math.random() * 220);
 				timeoutIds.push(id);
 			}
 		}

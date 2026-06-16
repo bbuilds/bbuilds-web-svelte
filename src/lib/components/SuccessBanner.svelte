@@ -53,7 +53,7 @@
 			<button
 				type="button"
 				aria-label="Dismiss"
-				onclick={banner.dismiss}
+				onclick={() => banner.dismiss()}
 				class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-md border border-ink bg-paper p-1.5 text-ink transition-colors hover:bg-white"
 			>
 				<CloseIcon />

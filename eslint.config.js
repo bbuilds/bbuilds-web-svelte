@@ -69,15 +69,7 @@ export default defineConfig(
 			],
 			// Headline type-aware rules: every unawaited promise is a race condition.
 			'@typescript-eslint/no-floating-promises': 'error',
-			'@typescript-eslint/no-misused-promises': 'error',
-			// The no-unsafe-* suite fires on every Storyblok API access because the SDK
-			// types story data as `any`. Fixing requires a full Storyblok typing refactor;
-			// tracked as a follow-up. The floating/misused-promise rules above remain active.
-			'@typescript-eslint/no-unsafe-assignment': 'off',
-			'@typescript-eslint/no-unsafe-call': 'off',
-			'@typescript-eslint/no-unsafe-member-access': 'off',
-			'@typescript-eslint/no-unsafe-argument': 'off',
-			'@typescript-eslint/no-unsafe-return': 'off'
+			'@typescript-eslint/no-misused-promises': 'error'
 		}
 	},
 	{

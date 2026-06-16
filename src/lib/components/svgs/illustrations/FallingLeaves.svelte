@@ -5,7 +5,7 @@
 	const spawnLeaves: Attachment<HTMLElement> = (el) => {
 		if (prefersReducedMotion()) return;
 
-		const greens = ['#7ba87b', '#6f9c6e', '#8ab98a', '#b8821a'];
+		const greens = ['#7ba87b', '#6f9c6e', '#8ab98a', '#b8821a'] as const;
 		const intervalIds: ReturnType<typeof setInterval>[] = [];
 		const timeoutIds: ReturnType<typeof setTimeout>[] = [];
 
@@ -33,7 +33,7 @@
 			tumble.className = 'leaf-tumble';
 			tumble.style.setProperty('--tumble-dur', `${5 + Math.random() * 5}s`);
 			tumble.innerHTML = leafSVG(
-				greens[Math.floor(Math.random() * greens.length)],
+				greens[Math.floor(Math.random() * greens.length)] ?? greens[0],
 				Math.floor(Math.random() * 360)
 			);
 

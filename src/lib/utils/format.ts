@@ -25,8 +25,10 @@ export const readTime = (doc: RichTextDoc): string => {
 
 export const kickerTag = (category: (number | string)[] | undefined, tagList: string[]): string => {
 	const cats = (category ?? []).filter((c): c is string => typeof c === 'string');
-	if (cats.length > 0) return cats[0];
-	if (tagList.length > 0) return tagList[0];
+	const firstCat = cats[0];
+	if (firstCat !== undefined) return firstCat;
+	const firstTag = tagList[0];
+	if (firstTag !== undefined) return firstTag;
 	return 'Writing';
 };
 
@@ -83,7 +85,7 @@ export const parseTitleSegments = (title: string | null | undefined): TitleSegme
 		if (match.index > lastIndex) {
 			segments.push({ text: title.slice(lastIndex, match.index), underline: false, hand: false });
 		}
-		segments.push({ text: match[2], underline: match[1] === 'un', hand: match[1] === 'ha' });
+		segments.push({ text: match[2] ?? '', underline: match[1] === 'un', hand: match[1] === 'ha' });
 		lastIndex = match.index + match[0].length;
 	}
 	if (lastIndex < title.length) {

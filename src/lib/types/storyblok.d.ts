@@ -124,7 +124,6 @@ export interface StoryblokRichtext {
 	text?: string;
 }
 
-import type { StoryblokRichtext, StoryblokMultilink, StoryblokAsset } from '../storyblok.d.ts';
 export interface StoryblokArticleCards {
 	articles?: (ISbStoryData<StoryblokBlogPost> | string)[];
 	component: 'Article Cards';

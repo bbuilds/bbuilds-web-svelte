@@ -13,6 +13,7 @@ if (!token) {
 	process.exit(1);
 }
 
+/** @param {string} cmd */
 const run = (cmd) => execSync(cmd, { stdio: 'inherit' });
 
 execSync('storyblok login', {
