@@ -24,14 +24,10 @@
 
 	const listItemNodes = (node: RichTextNode): RichTextNode[] => {
 		const first = node.content?.[0];
-		if (first?.type === 'paragraph') return first.content ?? [];
+		if (first?.type === 'paragraph') {
+			return [...(first.content ?? []), ...(node.content?.slice(1) ?? [])];
+		}
 		return node.content ?? [];
-	};
-
-	const listItemSubNodes = (node: RichTextNode): RichTextNode[] => {
-		const first = node.content?.[0];
-		if (first?.type === 'paragraph') return node.content?.slice(1) ?? [];
-		return [];
 	};
 
 	type BlokItem = { component: string; _uid: string; [key: string]: unknown };
@@ -73,26 +69,18 @@
 	{:else if node.type === 'bullet_list'}
 		<ul class="mb-5.5 flex flex-col gap-2">
 			{#each node.content ?? [] as item, j (j)}
-				{@const subNodes = listItemSubNodes(item)}
 				<li
 					class="bullet-item relative pl-5.5 font-sans text-base leading-[1.72] text-body before:absolute before:top-0.5 before:left-0 before:font-mono before:text-[0.875rem] before:text-yellow"
 				>
 					<RichTextRenderer nodes={listItemNodes(item)} />
-					{#if subNodes.length > 0}
-						<RichTextRenderer nodes={subNodes} />
-					{/if}
 				</li>
 			{/each}
 		</ul>
 	{:else if node.type === 'ordered_list'}
 		<ol class="mb-5.5 flex list-decimal flex-col gap-2 pl-5.5">
 			{#each node.content ?? [] as item, j (j)}
-				{@const subNodes = listItemSubNodes(item)}
 				<li class="font-sans text-base leading-[1.72] text-body">
 					<RichTextRenderer nodes={listItemNodes(item)} />
-					{#if subNodes.length > 0}
-						<RichTextRenderer nodes={subNodes} />
-					{/if}
 				</li>
 			{/each}
 		</ol>
