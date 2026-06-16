@@ -13,12 +13,16 @@ export const handle: Handle = async ({ event, resolve }) => {
 	return response;
 };
 
-export const handleError: HandleServerError = ({ error, event }) => {
+export const handleError: HandleServerError = ({ error, event, status }) => {
 	const errorId = crypto.randomUUID();
-	console.error(errorId, {
-		message: error instanceof Error ? error.message : String(error),
-		url: event.url.toString(),
-		error
-	});
+	// Expected client errors (e.g. 404 for unknown routes) are not server faults;
+	// only log genuine server-side failures to keep the logs signal-rich.
+	if (status >= 500) {
+		console.error(errorId, {
+			message: error instanceof Error ? error.message : String(error),
+			url: event.url.toString(),
+			error
+		});
+	}
 	return { message: 'Something went wrong on our end.', errorId };
 };

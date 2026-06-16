@@ -61,9 +61,9 @@ export function resolveSEO({
 		try {
 			const jsonStr = extractRichtextText(rawJd);
 			if (jsonStr.trim()) {
-				const parsed = JSON.parse(jsonStr);
-				if (Array.isArray(parsed)) extraLd.push(...parsed);
-				else extraLd.push(parsed);
+				const parsed: unknown = JSON.parse(jsonStr);
+				if (Array.isArray(parsed)) extraLd.push(...(parsed as object[]));
+				else extraLd.push(parsed as object);
 			}
 		} catch {
 			// invalid JSON — drop silently

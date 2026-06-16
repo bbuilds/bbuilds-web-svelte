@@ -67,7 +67,7 @@ describe('parseListItems', () => {
 		const items = parseListItems(
 			doc(bulletList(listItem(paragraph(textNode('Bold.', [{ type: 'bold' }])))))
 		);
-		expect(items[0].runs[0].bold).toBe(true);
+		expect(items[0]?.runs[0]?.bold).toBe(true);
 	});
 
 	it('parses link marks', () => {
@@ -80,7 +80,7 @@ describe('parseListItems', () => {
 				)
 			)
 		);
-		expect(items[0].runs[0].href).toBe('https://example.com');
+		expect(items[0]?.runs[0]?.href).toBe('https://example.com');
 	});
 
 	it('parses mixed bold + plain runs in one item', () => {
@@ -91,7 +91,7 @@ describe('parseListItems', () => {
 				)
 			)
 		);
-		expect(items[0].runs).toEqual([
+		expect(items[0]?.runs).toEqual([
 			{ text: 'Label.', bold: true, href: undefined },
 			{ text: ' description text', bold: false, href: undefined }
 		]);

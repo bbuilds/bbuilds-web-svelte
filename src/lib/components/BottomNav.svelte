@@ -13,14 +13,15 @@
 		if (typeof document === 'undefined') return '';
 
 		const sections = [...document.querySelectorAll<HTMLElement>('section[id]')];
-		if (!sections.length) return '';
+		const first = sections[0];
+		if (!first) return '';
 
 		const atBottom = window.innerHeight + scrollY >= document.documentElement.scrollHeight - 4;
 		const active = atBottom
-			? sections[sections.length - 1]
+			? (sections.at(-1) ?? first)
 			: sections.reduce<HTMLElement>(
 					(cur, s) => (s.getBoundingClientRect().top <= window.innerHeight * 0.35 ? s : cur),
-					sections[0]
+					first
 				);
 		return `/#${active.id}`;
 	});

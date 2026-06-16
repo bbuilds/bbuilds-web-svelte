@@ -27,7 +27,7 @@ describe('handleError (server)', () => {
 
 		expect(result).toEqual({
 			message: 'Something went wrong on our end.',
-			errorId: expect.any(String)
+			errorId: expect.any(String) as string
 		});
 	});
 
@@ -50,12 +50,22 @@ describe('handleError (server)', () => {
 		);
 	});
 
-	it('stringifies non-Error throwables in the log message', () => {
-		handleError(args({ error: 'just a string' }));
+	it('stringifies non-Error throwables in the log message', async () => {
+		await handleError(args({ error: 'just a string' }));
 
 		expect(console.error).toHaveBeenCalledWith(
-			expect.any(String),
+			expect.any(String) as string,
 			expect.objectContaining({ message: 'just a string' })
 		);
+	});
+
+	it('does not log expected client errors (4xx)', () => {
+		const result = handleError(args({ status: 404, message: 'Not Found' })) as App.Error;
+
+		expect(console.error).not.toHaveBeenCalled();
+		expect(result).toEqual({
+			message: 'Something went wrong on our end.',
+			errorId: expect.any(String) as string
+		});
 	});
 });

@@ -76,43 +76,45 @@
 			{/each}
 		</ul>
 
-		<div
-			class="grid grid-cols-1 gap-4 border-t border-dashed border-paper-line pt-8 md:grid-cols-2 md:gap-8"
-		>
-			<a
-				class="flex flex-col gap-1.5 py-4 text-inherit no-underline {isLive(prev.slug)
-					? 'group'
-					: 'pointer-events-none cursor-default opacity-40'}"
-				href={isLive(prev.slug) ? `/services/${prev.slug}` : undefined}
-				aria-disabled={!isLive(prev.slug) || undefined}
+		{#if prev && next}
+			<div
+				class="grid grid-cols-1 gap-4 border-t border-dashed border-paper-line pt-8 md:grid-cols-2 md:gap-8"
 			>
-				<span class="font-mono text-xs tracking-[0.04em] text-muted">← previous pillar</span>
-				<span
-					class="font-sans text-base font-medium text-ink transition-colors duration-200 {isLive(
-						prev.slug
-					)
-						? 'group-hover:text-yellow'
-						: ''}">{prev.n} · {prev.title}</span
+				<a
+					class="flex flex-col gap-1.5 py-4 text-inherit no-underline {isLive(prev.slug)
+						? 'group'
+						: 'pointer-events-none cursor-default opacity-40'}"
+					href={isLive(prev.slug) ? `/services/${prev.slug}` : undefined}
+					aria-disabled={!isLive(prev.slug) || undefined}
 				>
-			</a>
-			<a
-				class="flex flex-col items-end gap-1.5 py-4 text-right text-inherit no-underline {isLive(
-					next.slug
-				)
-					? 'group'
-					: 'pointer-events-none cursor-default opacity-40'}"
-				href={isLive(next.slug) ? `/services/${next.slug}` : undefined}
-				aria-disabled={!isLive(next.slug) || undefined}
-			>
-				<span class="font-mono text-xs tracking-[0.04em] text-muted">next pillar →</span>
-				<span
-					class="font-sans text-base font-medium text-ink transition-colors duration-200 {isLive(
+					<span class="font-mono text-xs tracking-[0.04em] text-muted">← previous pillar</span>
+					<span
+						class="font-sans text-base font-medium text-ink transition-colors duration-200 {isLive(
+							prev.slug
+						)
+							? 'group-hover:text-yellow'
+							: ''}">{prev.n} · {prev.title}</span
+					>
+				</a>
+				<a
+					class="flex flex-col items-end gap-1.5 py-4 text-right text-inherit no-underline {isLive(
 						next.slug
 					)
-						? 'group-hover:text-yellow'
-						: ''}">{next.n} · {next.title}</span
+						? 'group'
+						: 'pointer-events-none cursor-default opacity-40'}"
+					href={isLive(next.slug) ? `/services/${next.slug}` : undefined}
+					aria-disabled={!isLive(next.slug) || undefined}
 				>
-			</a>
-		</div>
+					<span class="font-mono text-xs tracking-[0.04em] text-muted">next pillar →</span>
+					<span
+						class="font-sans text-base font-medium text-ink transition-colors duration-200 {isLive(
+							next.slug
+						)
+							? 'group-hover:text-yellow'
+							: ''}">{next.n} · {next.title}</span
+					>
+				</a>
+			</div>
+		{/if}
 	</div>
 </section>

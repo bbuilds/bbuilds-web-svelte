@@ -97,7 +97,11 @@
 					() => {
 						intervalId = setInterval(() => {
 							currentIndex = (currentIndex + 1) % slotDef.words.length;
-							currentChars = swapWord(el, slotDef.words[currentIndex], currentChars);
+							currentChars = swapWord(
+								el,
+								slotDef.words[currentIndex] ?? slotDef.words[0],
+								currentChars
+							);
 						}, CYCLE_MS);
 					},
 					CYCLE_MS + index * 600

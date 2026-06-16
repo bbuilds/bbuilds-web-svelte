@@ -110,7 +110,6 @@ describe('resolveSEO', () => {
 				og_image: {
 					filename: 'https://a.storyblok.com/f/1/img.jpg',
 					alt: 'Hero image',
-					component: 'asset' as unknown as never,
 					copyright: null,
 					fieldtype: 'asset',
 					id: 1,

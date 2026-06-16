@@ -18,6 +18,7 @@ export default defineConfig({
 			output: {
 				manualChunks(id) {
 					if (id.includes('@tsparticles')) return 'tsparticles';
+					return undefined;
 				}
 			}
 		}

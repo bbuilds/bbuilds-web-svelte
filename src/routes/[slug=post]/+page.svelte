@@ -13,7 +13,7 @@
 	const story = $derived(data.story);
 	const content = $derived(story.content);
 
-	const dateDisplay = $derived(formatDate(story.first_published_at));
+	const dateDisplay = $derived(formatDate(story.first_published_at ?? ''));
 	const updatedDate = $derived(
 		content?.updated_date && !isNaN(new Date(content.updated_date).getTime())
 			? content.updated_date
@@ -31,7 +31,7 @@
 	name={story.name}
 	{kicker}
 	{dateDisplay}
-	datetime={story.first_published_at?.slice(0, 10)}
+	datetime={story.first_published_at?.slice(0, 10) ?? ''}
 	updatedDateDisplay={updatedDate ? formatDate(updatedDate) : undefined}
 	updatedDatetime={updatedDate?.slice(0, 10)}
 	readTime={readTimeDisplay}

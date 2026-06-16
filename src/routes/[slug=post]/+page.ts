@@ -1,42 +1,31 @@
 import { error } from '@sveltejs/kit';
-import { apiPlugin, storyblokInit, useStoryblokApi } from '@storyblok/svelte';
+import { initStoryblok } from '$lib/storyblok/client';
+import { getStory, getAllStories } from '$lib/storyblok/stories';
+import type { StoryblokBlogPost } from '$lib/types/storyblok';
 import { resolveSEO } from '$lib/utils/seo';
 import { breadcrumbLd } from '$lib/utils/jsonLd';
 import { SITE_URL, SITE_NAME, SITE_OG_IMAGE } from '$lib/config/site';
 import type { PageLoad } from './$types';
 
 export const entries = async () => {
-	storyblokInit({
-		accessToken: import.meta.env.VITE_STORYBLOK_DELIVERY_API_TOKEN,
-		apiOptions: {
-			region: (import.meta.env.VITE_STORYBLOK_REGION ?? 'eu') as 'eu' | 'us' | 'cn' | 'ca' | 'ap'
-		},
-		use: [apiPlugin]
-	});
-	const api = useStoryblokApi();
-	// getAll paginates through every page so prerendered entries stay in sync with
-	const stories = await api.getAll('cdn/stories', {
+	const api = initStoryblok();
+	const stories = await getAllStories<StoryblokBlogPost>(api, {
 		version: 'published',
 		starts_with: 'posts/',
 		per_page: 100,
 		is_startpage: false
 	});
-	return ((stories ?? []) as { slug: string }[]).map((s) => ({ slug: s.slug }));
+	return stories.map((s) => ({ slug: s.slug }));
 };
 
 export const load: PageLoad = async ({ params, parent, url }) => {
 	const { storyblokAPI, version, globals } = await parent();
 
-	const storyResponse = await storyblokAPI
-		.get(`cdn/stories/posts/${params.slug}`, { version })
-		.catch((err: unknown) => {
-			// Only swallow Storyblok's real 404; network / 5xx / auth failures
-			// must bubble so handleError logs them and SvelteKit returns 500.
-			if ((err as { status?: number } | null)?.status === 404) return null;
-			throw err;
-		});
+	// getStory returns undefined on 404 and rethrows other errors → 500
+	const story = await getStory<StoryblokBlogPost>(storyblokAPI, `posts/${params.slug}`, {
+		version
+	});
 
-	const story = storyResponse?.data?.story;
 	if (!story) {
 		error(404, 'Post not found');
 	}

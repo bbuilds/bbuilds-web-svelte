@@ -125,19 +125,18 @@
 	});
 
 	$effect(() => {
-		if (isOpen) {
-			document.body.style.overflow = 'hidden';
-			return () => {
-				document.body.style.overflow = '';
-			};
-		}
+		if (!isOpen) return;
+		document.body.style.overflow = 'hidden';
+		return () => {
+			document.body.style.overflow = '';
+		};
 	});
 
 	function close() {
 		dialog?.close();
 	}
 
-	function onDialogClose() {
+	async function onDialogClose() {
 		errors = {};
 		touched = {};
 		submitError = undefined;
@@ -147,11 +146,12 @@
 			trigger?.focus();
 			return;
 		}
-		goto(page.url.pathname + page.url.search, {
+		await goto(page.url.pathname + page.url.search, {
 			replaceState: true,
 			noScroll: true,
 			keepFocus: true
-		}).then(() => trigger?.focus());
+		});
+		trigger?.focus();
 	}
 
 	function onBackdropClick(e: MouseEvent) {
@@ -213,7 +213,7 @@
 						type={fieldType(field.name)}
 						placeholder={field.placeholder}
 						autocomplete={fieldAutocomplete(field.name)}
-						bind:value={values[field.name]}
+						bind:value={() => values[field.name] ?? '', (v: string) => (values[field.name] = v)}
 						error={errors[field.name]}
 						onInput={() => onInput(field)}
 						onBlur={() => onBlur(field)}

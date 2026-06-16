@@ -18,6 +18,10 @@
 		text,
 		marks: marks.slice(0, -1)
 	});
+
+	// Script-level narrowing for discriminated union variants — ESLint can't narrow in template blocks.
+	const textStyleAttrs = $derived(outer?.type === 'textStyle' ? outer.attrs : undefined);
+	const linkAttrs = $derived(outer?.type === 'link' ? outer.attrs : undefined);
 </script>
 
 {#if !outer}
@@ -35,12 +39,12 @@
 		><RichTextText node={inner} /></code
 	>
 {:else if outer.type === 'textStyle'}
-	<span style:color={outer.attrs?.color}><RichTextText node={inner} /></span>
+	<span style:color={textStyleAttrs?.color}><RichTextText node={inner} /></span>
 {:else if outer.type === 'link'}
 	<a
-		href={outer.attrs.href}
-		target={outer.attrs.target ?? undefined}
-		rel={outer.attrs.target === '_blank' ? 'noopener noreferrer' : undefined}
+		href={linkAttrs?.href ?? ''}
+		target={linkAttrs?.target ?? undefined}
+		rel={linkAttrs?.target === '_blank' ? 'noopener noreferrer' : undefined}
 		class="font-semibold text-ink underline decoration-yellow decoration-2 underline-offset-[0.2em] transition-colors hover:bg-yellow/12 hover:decoration-ink"
 		><RichTextText node={inner} /></a
 	>

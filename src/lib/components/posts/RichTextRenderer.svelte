@@ -31,8 +31,8 @@
 	type BlokItem = { component: string; _uid: string; [key: string]: unknown };
 
 	const imgAttrs = (node: RichTextNode) => ({
-		src: String(node.attrs?.src ?? ''),
-		alt: String(node.attrs?.alt ?? ''),
+		src: (node.attrs?.src as string | undefined) ?? '',
+		alt: (node.attrs?.alt as string | undefined) ?? '',
 		caption: node.attrs?.caption as string | undefined,
 		width: node.attrs?.width != null ? Number(node.attrs.width) : undefined,
 		height: node.attrs?.height != null ? Number(node.attrs.height) : undefined

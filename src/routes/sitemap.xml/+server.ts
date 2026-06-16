@@ -1,8 +1,8 @@
-import { apiPlugin, storyblokInit, useStoryblokApi } from '@storyblok/svelte';
-
 export const prerender = true;
 import type { StoryblokMultilinkLink } from '$lib/types/storyblok';
 import { SITE_URL } from '$lib/config/site';
+import { initStoryblok } from '$lib/storyblok/client';
+import { getAllLinks } from '$lib/storyblok/stories';
 
 type SitemapLink = StoryblokMultilinkLink & { published_at?: string };
 
@@ -26,30 +26,22 @@ function pathForSlug(slug: string): string | null {
 }
 
 export async function GET() {
-	storyblokInit({
-		accessToken: import.meta.env.VITE_STORYBLOK_DELIVERY_API_TOKEN,
-		apiOptions: {
-			region: (import.meta.env.VITE_STORYBLOK_REGION ?? 'eu') as 'eu' | 'us' | 'cn' | 'ca' | 'ap'
-		},
-		use: [apiPlugin]
-	});
-
-	const api = useStoryblokApi();
-	const today = new Date().toISOString().split('T')[0];
+	const api = initStoryblok();
+	const today = new Date().toISOString().slice(0, 10);
 
 	const entries = new Map<string, string>();
 	entries.set(SITE_URL + '/', today);
 	entries.set(SITE_URL + '/blog', today);
 
 	try {
-		const params = { version: 'published' as const, include_dates: 1 };
-		const links: SitemapLink[] = await api.getAll('cdn/links', params);
+		const params = { version: 'published' as const, include_dates: 1 as const };
+		const links = await getAllLinks<SitemapLink>(api, params);
 
 		for (const link of links) {
 			if (link.is_folder || !link.published) continue;
 			const path = pathForSlug(link.slug);
 			if (!path) continue;
-			entries.set(SITE_URL + path, link.published_at?.split('T')[0] ?? today);
+			entries.set(SITE_URL + path, link.published_at?.slice(0, 10) ?? today);
 		}
 	} catch {
 		// links endpoint unavailable — fall back to the home URL seeded above

@@ -71,6 +71,53 @@ E2E tests (`*.e2e.ts`) are separate — they run under Playwright and the config
 
 ---
 
+## Testing
+
+### Taxonomy
+
+| Layer            | File pattern                     | Runner     |
+| ---------------- | -------------------------------- | ---------- |
+| Unit / component | `src/**/*.{spec,svelte.spec}.ts` | Vitest     |
+| E2E              | `tests/*.e2e.ts`                 | Playwright |
+
+Use `*.svelte.spec.ts` for components that need DOM rendering. Use `*.spec.ts` for pure logic. E2E specs live in `tests/` and are never picked up by Vitest (Vitest only scans `src/**`).
+
+### E2E rules (see `.claude/skills/playwright-cli/` for the full reference)
+
+- **TDD loop:** write the failing spec first, commit it, then implement.
+- **Locator order:** `getByRole` → `getByLabel` → `getByPlaceholder` → `getByText` → `getByTestId` → never `locator(css)`.
+- **Waiting:** never `waitForTimeout` or `networkidle`; use auto-retrying `expect(locator)` assertions.
+- **CLI over MCP:** use `npx playwright …` only; do not add the `playwright-test` MCP server.
+- **E2E runs in CI, not in git hooks.**
+- **SSR caveat:** Storyblok `load` calls are server-side; `page.route` cannot intercept them. Assert structure and navigation, not CMS copy.
+- **Never edit an assertion to match broken UI** — fix the app or mark with `test.fixme()` + a bug note.
+
+### Agents
+
+- `playwright-test-planner` — explores routes, writes `tests/plans/<feature>.md`.
+- `playwright-test-generator` — authors `tests/<scenario>.e2e.ts` from a plan item, iterates to green.
+- `playwright-test-healer` — runs `--last-failed`, reads the trace, repairs locators/timing.
+
+---
+
+## Static checks
+
+`npm run lint` and `npm run check` must exit zero before any change is "done."
+
+- **`npm run lint`** — Prettier check + ESLint with `--max-warnings 0`. Warnings are errors.
+- **`npm run check`** — `svelte-check` with strict TypeScript. Same as `npm run typecheck`.
+- **No escape hatches:** no `eslint-disable`, no rule downgrades, no `@ts-expect-error`, no `any`. Fix the code.
+
+---
+
+## Git and verification
+
+- **Never use `--no-verify`, `HUSKY=0`, `LEFTHOOK=0`**, or any other hook-skipping flag or env var. The only sanctioned `HUSKY: 0` is in CI to skip hook _installation_ — never to skip verification.
+- **Never weaken hook, CI, or ruleset configuration** to make a failing change pass. Fix the code, or stop and explain the blocker.
+- Changes to hook config, workflow files, or agent/skill files require the same review standard as application code.
+
+---
+
 ## Svelte MCP Tools
 
 You have access to the Svelte MCP server with comprehensive Svelte 5 and SvelteKit documentation.

@@ -13,7 +13,7 @@ export function parseHighlights(input: string): TextSegment[] {
 		if (match.index > lastIndex) {
 			segments.push({ text: input.slice(lastIndex, match.index), highlight: false });
 		}
-		segments.push({ text: match[1], highlight: true });
+		segments.push({ text: match[1] ?? '', highlight: true });
 		lastIndex = regex.lastIndex;
 	}
 

@@ -5,7 +5,8 @@
 	import Quote from '$lib/components/home/Quote.svelte';
 	import Blog from '$lib/components/home/Blog.svelte';
 
-	let { data } = $props();
+	import type { PageProps } from './$types';
+	let { data }: PageProps = $props();
 	const content = $derived(data.story?.content);
 </script>
 

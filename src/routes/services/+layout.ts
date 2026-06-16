@@ -1,4 +1,4 @@
-import type { StoryblokMultilinkLink } from 'storyblok';
+import { getLinks } from '$lib/storyblok/stories';
 import type { LayoutLoad } from './$types';
 
 export const load: LayoutLoad = async ({ parent }) => {
@@ -6,13 +6,8 @@ export const load: LayoutLoad = async ({ parent }) => {
 
 	let liveSlugs: string[] = [];
 	try {
-		const linksResponse = await storyblokAPI.get('cdn/links', {
-			version,
-			starts_with: 'services/'
-		});
-		liveSlugs = (
-			Object.values(linksResponse.data?.links ?? {}) as StoryblokMultilinkLink[]
-		).flatMap((link) =>
+		const links = await getLinks(storyblokAPI, { version, starts_with: 'services/' });
+		liveSlugs = links.flatMap((link) =>
 			link.is_folder || !link.slug ? [] : [link.slug.replace(/^services\//, '')]
 		);
 	} catch {

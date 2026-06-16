@@ -27,7 +27,7 @@ describe('handleError (client)', () => {
 
 		expect(result).toEqual({
 			message: 'Something went wrong on our end.',
-			errorId: expect.any(String)
+			errorId: expect.any(String) as string
 		});
 	});
 
@@ -50,11 +50,11 @@ describe('handleError (client)', () => {
 		);
 	});
 
-	it('stringifies non-Error throwables in the log message', () => {
-		handleError(args({ error: { weird: true } }));
+	it('stringifies non-Error throwables in the log message', async () => {
+		await handleError(args({ error: { weird: true } }));
 
 		expect(console.error).toHaveBeenCalledWith(
-			expect.any(String),
+			expect.any(String) as string,
 			expect.objectContaining({ message: '[object Object]' })
 		);
 	});

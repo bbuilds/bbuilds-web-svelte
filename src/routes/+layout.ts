@@ -1,28 +1,20 @@
-import { apiPlugin, storyblokInit, useStoryblokApi } from '@storyblok/svelte';
 import type { ISbStoryData } from '@storyblok/js';
 import type { StoryblokGlobals } from '$lib/types/storyblok';
 import { resolveSEO } from '$lib/utils/seo';
 import { SITE_NAME, SITE_OG_IMAGE } from '$lib/config/site';
+import { initStoryblok } from '$lib/storyblok/client';
+import { getStory } from '$lib/storyblok/stories';
 import type { LayoutLoad } from './$types';
 
 export const prerender = true;
 
 export const load: LayoutLoad = async ({ url }) => {
-	storyblokInit({
-		accessToken: import.meta.env.VITE_STORYBLOK_DELIVERY_API_TOKEN,
-		apiOptions: {
-			region: (import.meta.env.VITE_STORYBLOK_REGION ?? 'eu') as 'eu' | 'us' | 'cn' | 'ca' | 'ap'
-		},
-		use: [apiPlugin]
-	});
-
-	const storyblokAPI = await useStoryblokApi();
+	const storyblokAPI = initStoryblok();
 	const version: 'draft' | 'published' = import.meta.env.DEV ? 'draft' : 'published';
 
 	let globals: ISbStoryData<StoryblokGlobals> | null = null;
 	try {
-		const response = await storyblokAPI.get('cdn/stories/globals', { version });
-		globals = response.data?.story ?? null;
+		globals = (await getStory<StoryblokGlobals>(storyblokAPI, 'globals', { version })) ?? null;
 	} catch (e) {
 		console.error('Failed to fetch globals:', e);
 	}

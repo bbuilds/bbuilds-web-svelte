@@ -1,5 +1,13 @@
 import adapter from '@sveltejs/adapter-cloudflare';
 
+/**
+ * @param {unknown} value
+ * @returns {value is string[]}
+ */
+function isStringArray(value) {
+	return Array.isArray(value) && value.every((item) => typeof item === 'string');
+}
+
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
 	compilerOptions: {
@@ -8,6 +16,18 @@ const config = {
 	},
 	kit: {
 		adapter: adapter(),
+		typescript: {
+			// Augment (don't override) the generated include so the SvelteKit-managed
+			// list — ambient.d.ts, non-ambient.d.ts, generated $types — stays intact.
+			// Paths are relative to .svelte-kit/tsconfig.json. tests/** and vite.config
+			// are already covered by the generated config; only playwright.config needs adding.
+			config: (config) => {
+				if (isStringArray(config.include)) {
+					config.include = [...config.include, '../playwright.config.ts'];
+				}
+				return config;
+			}
+		},
 		prerender: {
 			handleMissingId: 'warn'
 		},

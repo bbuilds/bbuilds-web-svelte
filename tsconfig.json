@@ -10,12 +10,17 @@
 		"skipLibCheck": true,
 		"sourceMap": true,
 		"strict": true,
+		"noUncheckedIndexedAccess": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"noImplicitReturns": true,
+		"noFallthroughCasesInSwitch": true,
 		"moduleResolution": "bundler",
 		"types": ["./src/worker-configuration.d.ts", "node", "gtag.js"]
 	}
 	// Path aliases are handled by https://svelte.dev/docs/kit/configuration#alias
 	// except $lib which is handled by https://svelte.dev/docs/kit/configuration#files
 	//
-	// To make changes to top-level options such as include and exclude, we recommend extending
-	// the generated config; see https://svelte.dev/docs/kit/configuration#typescript
+	// `include`/`exclude` are intentionally not set here so this config inherits the
+	// generated `.svelte-kit/tsconfig.json
 }
