@@ -9,7 +9,8 @@
 	import Contact from '$lib/components/Contact.svelte';
 	import ContactModal from '$lib/components/ContactModal.svelte';
 	import SuccessBanner from '$lib/components/SuccessBanner.svelte';
-	let { children, data } = $props();
+	import type { LayoutProps } from './$types';
+	let { children, data }: LayoutProps = $props();
 </script>
 
 {#if !page.error}

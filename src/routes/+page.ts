@@ -4,25 +4,20 @@ import { resolveSEO } from '$lib/utils/seo';
 import { organizationLd, webSiteLd } from '$lib/utils/jsonLd';
 import { fetchServiceLinks } from '$lib/utils/services';
 import { SITE_NAME, SITE_OG_IMAGE } from '$lib/config/site';
+import { getStory, getStories } from '$lib/storyblok/stories';
 import type { PageLoad } from './$types';
 
 export const load: PageLoad = async ({ parent, url }) => {
 	const { storyblokAPI, version, globals } = await parent();
 	const services = await fetchServiceLinks(storyblokAPI, version);
 
-	const story = await storyblokAPI
-		.get('cdn/stories/home-page', {
-			version,
-			resolve_relations: ['Home Page.featured_services', 'Article Cards.articles']
-		})
-		.then((res) => res.data?.story as ISbStoryData<StoryblokHomePage> | undefined)
-		.catch((err: unknown) => {
-			// Don't noise the logs when the CMS entry is genuinely missing; do log real outages.
-			if ((err as { status?: number } | null)?.status !== 404) {
-				console.error('Failed to fetch home-page story:', err);
-			}
-			return undefined;
-		});
+	const story = await getStory<StoryblokHomePage>(storyblokAPI, 'home-page', {
+		version,
+		resolve_relations: ['Home Page.featured_services', 'Article Cards.articles']
+	}).catch((err: unknown) => {
+		console.error('Failed to fetch home-page story:', err);
+		return undefined;
+	});
 
 	const block = story?.content?.articles?.[0];
 	const explicit = (block?.articles ?? []).filter(
@@ -32,21 +27,16 @@ export const load: PageLoad = async ({ parent, url }) => {
 	let posts: ISbStoryData<StoryblokBlogPost>[] = explicit.slice(0, 3);
 
 	if (posts.length < 3) {
-		const recent = await storyblokAPI
-			.get('cdn/stories', {
-				version,
-				starts_with: 'posts/',
-				sort_by: 'published_at:desc',
-				per_page: 3,
-				is_startpage: false
-			})
-			.then((res) => (res.data?.stories ?? []) as ISbStoryData<StoryblokBlogPost>[])
-			.catch((err: unknown) => {
-				if ((err as { status?: number } | null)?.status !== 404) {
-					console.error('Failed to fetch recent posts:', err);
-				}
-				return [];
-			});
+		const recent = await getStories<StoryblokBlogPost>(storyblokAPI, {
+			version,
+			starts_with: 'posts/',
+			sort_by: 'published_at:desc',
+			per_page: 3,
+			is_startpage: false
+		}).catch((err: unknown) => {
+			console.error('Failed to fetch recent posts:', err);
+			return [];
+		});
 
 		const effectiveTime = (s: ISbStoryData<StoryblokBlogPost>): number => {
 			const updated =
