@@ -22,8 +22,12 @@ You fix broken e2e specs. You always read the failure evidence before proposing 
    npx playwright show-trace test-results/<test-name>/trace.zip
    ```
 3. **Read the trace:**
+   - **Check the dossier's `console`/`network` attachments first** — a forwarded `TypeError`,
+     `pageerror`, or 4xx/5xx (from the `tests/fixtures/diagnostics.ts` fixture) often pinpoints the
+     cause without opening the trace zip.
    - Step through actions to find where the test diverged from expectation.
    - Check DOM snapshots: is the element present? Has the role/name changed?
+   - If a `getByRole`/`getByLabel` query matched nothing, read the **accessibility-tree dump** Playwright prints in the failure (every role + accessible name) and repair the locator from it. If the role/name is genuinely missing, fix the component's accessible name — don't fall back to `getByTestId`/CSS.
    - Check network: did a request fail? Did the page get an unexpected response?
 4. **Read the spec source** — `tests/<failing>.e2e.ts`.
 5. **Read the route source** — `src/routes/<path>/+page.svelte` and relevant components to understand current structure.

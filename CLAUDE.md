@@ -82,6 +82,24 @@ E2E tests (`*.e2e.ts`) are separate — they run under Playwright and the config
 
 Use `*.svelte.spec.ts` for components that need DOM rendering. Use `*.spec.ts` for pure logic. E2E specs live in `tests/` and are never picked up by Vitest (Vitest only scans `src/**`).
 
+### Shared test data
+
+E2E support files live in three sibling dirs, each with a single purpose:
+
+| Dir               | Holds                                           |
+| ----------------- | ----------------------------------------------- |
+| `tests/data/`     | Seed JSON (fixtures the specs read as input)    |
+| `tests/fixtures/` | Playwright fixtures + recorded artifacts (HARs) |
+| `tests/helpers/`  | Shared TypeScript helpers                       |
+
+**Import shared data and helpers — never duplicate literals across specs.** If two specs need the
+same value, it belongs in `tests/data/` or `tests/helpers/`, imported by both.
+
+**E2E specs import `test`/`expect` from [`tests/fixtures/diagnostics.ts`](tests/fixtures/diagnostics.ts), not `@playwright/test`.** That
+fixture overrides `page` to forward console errors/warnings, uncaught `pageerror`s, and failed /
+4xx–5xx network as text attachments (`console`, `network`) **on failure only** — signal the binary
+trace hides, surfaced to the failure dossier and the agent.
+
 ### E2E rules (see `.claude/skills/playwright-cli/` for the full reference)
 
 - **TDD loop:** write the failing spec first, commit it, then implement.
@@ -100,13 +118,43 @@ Use `*.svelte.spec.ts` for components that need DOM rendering. Use `*.spec.ts` f
 
 ---
 
-## Static checks
+## Definition of done
 
-`npm run lint` and `npm run check` must exit zero before any change is "done."
+A change is not done until these exit zero, in this order. Each names the hook that enforces it — so
+you know what a reviewer or CI will re-run if you skip it locally:
 
-- **`npm run lint`** — Prettier check + ESLint with `--max-warnings 0`. Warnings are errors.
-- **`npm run check`** — `svelte-check` with strict TypeScript. Same as `npm run typecheck`.
+1. **`npm run lint`** — Prettier check + ESLint with `--max-warnings 0`. Warnings are errors.
+   _Partially_ enforced on staged files by the `pre-commit` hook (lint-staged runs `eslint --fix` +
+   `prettier --write`); fully enforced in CI.
+2. **`npm run check`** — `svelte-check` with strict TypeScript. Same as `npm run typecheck`. Enforced
+   by the `pre-push` hook.
+3. **`npm run test:unit:run`** — Vitest single run. Enforced by the `pre-push` hook.
+4. **`npm run test:e2e`** — Playwright. **CI only, and gated:** it runs on push to `main` or on PRs
+   labeled `run-e2e` ([.github/workflows/ci.yml:66](.github/workflows/ci.yml#L66)) — **not** on every
+   PR, and not in any git hook. Run it locally when your change touches routes, navigation, or
+   rendering.
+
 - **No escape hatches:** no `eslint-disable`, no rule downgrades, no `@ts-expect-error`, no `any`. Fix the code.
+
+### Turning recurring corrections into lint rules
+
+When you find yourself making the same correction more than once, mechanize it so the linter
+catches it instead of a reviewer. **[eslint.config.js](eslint.config.js) is agent-denied** (see
+`permissions.deny` in [.claude/settings.json](.claude/settings.json)) — the agent cannot edit it.
+So _propose_ the rule and hand it off; a human applies the edit:
+
+- **Prefer a dedicated plugin rule when one exists.** For Playwright, reach for
+  `eslint-plugin-playwright` first (e.g. `playwright/prefer-web-first-assertions` already bans
+  `expect(await locator.isVisible()).toBe(true)`).
+- **Otherwise propose a `no-restricted-syntax` entry** for the relevant block of
+  [eslint.config.js](eslint.config.js). The e2e block already bans `locator.all()` (no auto-waiting)
+  and `toPass()` with no args (0 ms default timeout).
+- **Write the `message` as a fix-prompt** — state what to do _instead_, not just "don't". The agent
+  reads the message, so it should be enough to act on.
+- **No `eslint-disable` to route around it.** If a banned pattern is genuinely needed, that's a
+  conversation about the rule, not a local escape hatch.
+- `console.log` in tests is already banned by the global `no-console` rule
+  ([eslint.config.js:49](eslint.config.js#L49)) — no e2e-specific seed needed.
 
 ---
 
@@ -114,7 +162,8 @@ Use `*.svelte.spec.ts` for components that need DOM rendering. Use `*.spec.ts` f
 
 - **Never use `--no-verify`, `HUSKY=0`, `LEFTHOOK=0`**, or any other hook-skipping flag or env var. The only sanctioned `HUSKY: 0` is in CI to skip hook _installation_ — never to skip verification.
 - **Never weaken hook, CI, or ruleset configuration** to make a failing change pass. Fix the code, or stop and explain the blocker.
-- Changes to hook config, workflow files, or agent/skill files require the same review standard as application code.
+- **Hook scripts (`.husky/**`), workflow files (`.github/workflows/**`), and the `commitlint.config.js`/`svelte.config.js`/`eslint.config.js` config are agent-denied** — see `permissions.deny` in [.claude/settings.json](.claude/settings.json). The agent cannot edit them (the deny blocks even a reviewed change); they are edited manually only. For `eslint.config.js`, propose the rule change and a human applies it (see "Turning recurring corrections into lint rules" above). Generated files (`src/worker-configuration.d.ts`, `.svelte-kit/**`) and real secrets (`.env`, `.env.local`, `.env.production`) are denied the same way.
+- Changes to agent/skill files require the same review standard as application code.
 
 ---
 

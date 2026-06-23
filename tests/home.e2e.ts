@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures/diagnostics';
 
 test.describe('Home page', () => {
 	test('primary navigation is visible', async ({ page }) => {

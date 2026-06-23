@@ -1,4 +1,18 @@
 {
+	"permissions": {
+		"deny": [
+			"Edit(/src/worker-configuration.d.ts)",
+			"Edit(/.svelte-kit/**)",
+			"Edit(/.husky/**)",
+			"Edit(/commitlint.config.js)",
+			"Edit(/svelte.config.js)",
+			"Edit(/.github/workflows/**)",
+			"Read(/.env)",
+			"Read(/.env.local)",
+			"Read(/.env.production)",
+			"Edit(/eslint.config.js)"
+		]
+	},
 	"hooks": {
 		"PostToolUse": [
 			{
@@ -6,8 +20,18 @@
 				"hooks": [
 					{
 						"type": "command",
-						"command": "jq -r '.tool_input.file_path // .tool_response.filePath' | { read -r f; npm run format -- \"$f\"; } 2>/dev/null || true",
+						"command": "f=$(jq -r '.tool_input.file_path // .tool_response.filePath'); npm run format -- \"$f\" 2>/dev/null || true",
 						"statusMessage": "Formatting code..."
+					}
+				]
+			},
+			{
+				"matcher": "Bash",
+				"hooks": [
+					{
+						"type": "command",
+						"command": ".claude/hooks/playwright-dossier.sh",
+						"statusMessage": "Building failure dossier..."
 					}
 				]
 			}
