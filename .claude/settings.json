@@ -24,6 +24,16 @@
 						"statusMessage": "Formatting code..."
 					}
 				]
+			},
+			{
+				"matcher": "Bash",
+				"hooks": [
+					{
+						"type": "command",
+						"command": ".claude/hooks/playwright-dossier.sh",
+						"statusMessage": "Building failure dossier..."
+					}
+				]
 			}
 		]
 	},
