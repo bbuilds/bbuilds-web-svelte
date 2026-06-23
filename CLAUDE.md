@@ -82,6 +82,19 @@ E2E tests (`*.e2e.ts`) are separate — they run under Playwright and the config
 
 Use `*.svelte.spec.ts` for components that need DOM rendering. Use `*.spec.ts` for pure logic. E2E specs live in `tests/` and are never picked up by Vitest (Vitest only scans `src/**`).
 
+### Shared test data
+
+E2E support files live in three sibling dirs, each with a single purpose:
+
+| Dir               | Holds                                           |
+| ----------------- | ----------------------------------------------- |
+| `tests/data/`     | Seed JSON (fixtures the specs read as input)    |
+| `tests/fixtures/` | Playwright fixtures + recorded artifacts (HARs) |
+| `tests/helpers/`  | Shared TypeScript helpers                       |
+
+**Import shared data and helpers — never duplicate literals across specs.** If two specs need the
+same value, it belongs in `tests/data/` or `tests/helpers/`, imported by both.
+
 ### E2E rules (see `.claude/skills/playwright-cli/` for the full reference)
 
 - **TDD loop:** write the failing spec first, commit it, then implement.
@@ -100,12 +113,22 @@ Use `*.svelte.spec.ts` for components that need DOM rendering. Use `*.spec.ts` f
 
 ---
 
-## Static checks
+## Definition of done
 
-`npm run lint` and `npm run check` must exit zero before any change is "done."
+A change is not done until these exit zero, in this order. Each names the hook that enforces it — so
+you know what a reviewer or CI will re-run if you skip it locally:
 
-- **`npm run lint`** — Prettier check + ESLint with `--max-warnings 0`. Warnings are errors.
-- **`npm run check`** — `svelte-check` with strict TypeScript. Same as `npm run typecheck`.
+1. **`npm run lint`** — Prettier check + ESLint with `--max-warnings 0`. Warnings are errors.
+   _Partially_ enforced on staged files by the `pre-commit` hook (lint-staged runs `eslint --fix` +
+   `prettier --write`); fully enforced in CI.
+2. **`npm run check`** — `svelte-check` with strict TypeScript. Same as `npm run typecheck`. Enforced
+   by the `pre-push` hook.
+3. **`npm run test:unit:run`** — Vitest single run. Enforced by the `pre-push` hook.
+4. **`npm run test:e2e`** — Playwright. **CI only, and gated:** it runs on push to `main` or on PRs
+   labeled `run-e2e` ([.github/workflows/ci.yml:66](.github/workflows/ci.yml#L66)) — **not** on every
+   PR, and not in any git hook. Run it locally when your change touches routes, navigation, or
+   rendering.
+
 - **No escape hatches:** no `eslint-disable`, no rule downgrades, no `@ts-expect-error`, no `any`. Fix the code.
 
 ### Turning recurring corrections into lint rules

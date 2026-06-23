@@ -57,3 +57,5 @@ test.describe('<Feature>', () => {
 - **CLI over MCP** — `npx playwright …` only; never reference MCP tools.
 - **Git and verification policy** — never skip hooks (`--no-verify`, `HUSKY=0`); never weaken lint/CI config to pass.
 - **SSR caveat** — `page.route` cannot mock Storyblok SSR requests; assert structure only.
+- **Shared test data** — import seed data from `tests/data/`, fixtures from `tests/fixtures/`, and
+  helpers from `tests/helpers/`. Don't redefine literals across specs.
