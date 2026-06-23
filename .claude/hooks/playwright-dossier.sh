@@ -11,7 +11,8 @@
 #   1. the Bash command was a `playwright test` run,
 #   2. playwright-report/results.json reports failures (.stats.unexpected/.flaky),
 #   3. that results.json is FRESH — its mtime is strictly newer than the last one
-#      this hook processed (persisted in test-results/.dossier-seen). This ignores
+#      this hook processed (persisted in ./.dossier-seen at the project root, which
+#      Playwright never wipes — see note at the marker below). This ignores
 #      a stale results.json left when the webServer build aborts before tests run.
 #
 # jq-only and `|| true`-resilient: a parse miss exits 0 silently, never breaking
@@ -43,7 +44,13 @@ fi
 # 3. Freshness via a marker file (NOT mtime-vs-hook-start, which can never hold:
 #    the hook runs after the run wrote results.json). Emit only when results.json
 #    is strictly newer than the last mtime we processed, then advance the marker.
-marker="$root/test-results/.dossier-seen"
+#    The marker lives at the project root, NOT under test-results/ or
+#    playwright-report/ — Playwright wipes outputDir (test-results) at the start of
+#    every run and the HTML reporter regenerates playwright-report, either of which
+#    would erase the marker and defeat this guard: on an aborted build the marker
+#    would be gone while a stale results.json survived, so the stale report would
+#    pass the freshness check — exactly the case this guards against.
+marker="$root/.dossier-seen"
 mtime="$(stat -f %m "$report" 2>/dev/null || stat -c %Y "$report" 2>/dev/null || echo 0)"
 case "$mtime" in '' | *[!0-9]*) mtime=0 ;; esac
 seen=0
@@ -57,26 +64,37 @@ fi
 mkdir -p "$(dirname "$marker")" 2>/dev/null || true
 printf '%s' "$mtime" >"$marker" 2>/dev/null || true
 
-# Flatten every failing attempt into one record per failure.
+# One record per test, classified by the test's FINAL status — NOT per attempt.
+# A flaky test (failed once, passed on retry) has status "flaky" and must not be
+# framed as "failing"; a hard failure has status "unexpected". Diagnostics come
+# from that test's first failing attempt either way.
 failures="$(jq -c '
   [ .. | objects | select(has("tests") and has("file") and has("line")) ] as $specs
   | [ $specs[]
       | . as $spec
       | $spec.tests[]?
       | . as $test
-      | $test.results[]?
-      | select(.status == "unexpected" or .status == "failed" or .status == "timedOut")
-      | { title: $spec.title,
+      | select(.status == "unexpected" or .status == "flaky")
+      | ( [ $test.results[]?
+            | select(.status == "unexpected" or .status == "failed" or .status == "timedOut") ]
+          | first ) as $r
+      | { kind: $test.status,
+          title: $spec.title,
           file: $spec.file,
           line: $spec.line,
           project: ($test.projectName // ""),
-          error: (.error.message // ((.errors // []) | map(.message) | join("\n\n")) // ""),
-          attachments: (.attachments // []) } ]
+          error: (($r.error.message) // (($r.errors // []) | map(.message) | join("\n\n")) // ""),
+          attachments: ($r.attachments // []) } ]
 ' "$report" 2>/dev/null || echo '[]')"
 
 count="$(printf '%s' "$failures" | jq 'length' 2>/dev/null || echo 0)"
 case "$count" in '' | *[!0-9]*) count=0 ;; esac
 [ "$count" -gt 0 ] || exit 0
+
+failed_count="$(printf '%s' "$failures" | jq '[.[] | select(.kind == "unexpected")] | length' 2>/dev/null || echo 0)"
+flaky_count="$(printf '%s' "$failures" | jq '[.[] | select(.kind == "flaky")] | length' 2>/dev/null || echo 0)"
+case "$failed_count" in '' | *[!0-9]*) failed_count=0 ;; esac
+case "$flaky_count" in '' | *[!0-9]*) flaky_count=0 ;; esac
 
 # Resolve an attachment reference to its text, reading the on-disk file (the JSON
 # reporter references text attachments by `path`) or decoding an inline `body`.
@@ -94,10 +112,19 @@ attachment_text() {
 	fi
 }
 
-dossier="# Playwright failure dossier — $count failing"
+# Header reflects the mix: hard failures and flaky (recovered-on-retry) are
+# distinct outcomes, never lumped together as "failing".
+if [ "$failed_count" -gt 0 ] && [ "$flaky_count" -gt 0 ]; then
+	dossier="# Playwright triage dossier — $failed_count failing, $flaky_count flaky (recovered on retry)"
+elif [ "$failed_count" -gt 0 ]; then
+	dossier="# Playwright failure dossier — $failed_count failing"
+else
+	dossier="# Playwright flaky dossier — $flaky_count flaky (passed on retry, suite is green)"
+fi
 i=0
 while [ "$i" -lt "$count" ]; do
 	item="$(printf '%s' "$failures" | jq -c ".[$i]" 2>/dev/null || echo '{}')"
+	kind="$(printf '%s' "$item" | jq -r '.kind // ""' 2>/dev/null || true)"
 	title="$(printf '%s' "$item" | jq -r '.title // ""' 2>/dev/null || true)"
 	file="$(printf '%s' "$item" | jq -r '.file // ""' 2>/dev/null || true)"
 	line="$(printf '%s' "$item" | jq -r '.line // ""' 2>/dev/null || true)"
@@ -106,9 +133,14 @@ while [ "$i" -lt "$count" ]; do
 	screenshot="$(printf '%s' "$item" | jq -r 'first(.attachments[]? | select(.name == "screenshot") | .path) // ""' 2>/dev/null || true)"
 	trace="$(printf '%s' "$item" | jq -r 'first(.attachments[]? | select(.name == "trace") | .path) // ""' 2>/dev/null || true)"
 
+	if [ "$kind" = "flaky" ]; then
+		heading="${title} — flaky (passed on retry)"
+	else
+		heading="${title}"
+	fi
 	dossier="$dossier
 
-## ${title}
+## ${heading}
 - spec: ${file}:${line}
 - project: ${project}
 - repro: npx playwright test --project=${project} ${file} -g \"${title}\""

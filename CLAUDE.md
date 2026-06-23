@@ -139,12 +139,14 @@ you know what a reviewer or CI will re-run if you skip it locally:
 ### Turning recurring corrections into lint rules
 
 When you find yourself making the same correction more than once, mechanize it so the linter
-catches it instead of a reviewer:
+catches it instead of a reviewer. **[eslint.config.js](eslint.config.js) is agent-denied** (see
+`permissions.deny` in [.claude/settings.json](.claude/settings.json)) — the agent cannot edit it.
+So _propose_ the rule and hand it off; a human applies the edit:
 
 - **Prefer a dedicated plugin rule when one exists.** For Playwright, reach for
   `eslint-plugin-playwright` first (e.g. `playwright/prefer-web-first-assertions` already bans
   `expect(await locator.isVisible()).toBe(true)`).
-- **Otherwise add a `no-restricted-syntax` entry** in the relevant block of
+- **Otherwise propose a `no-restricted-syntax` entry** for the relevant block of
   [eslint.config.js](eslint.config.js). The e2e block already bans `locator.all()` (no auto-waiting)
   and `toPass()` with no args (0 ms default timeout).
 - **Write the `message` as a fix-prompt** — state what to do _instead_, not just "don't". The agent
@@ -160,8 +162,8 @@ catches it instead of a reviewer:
 
 - **Never use `--no-verify`, `HUSKY=0`, `LEFTHOOK=0`**, or any other hook-skipping flag or env var. The only sanctioned `HUSKY: 0` is in CI to skip hook _installation_ — never to skip verification.
 - **Never weaken hook, CI, or ruleset configuration** to make a failing change pass. Fix the code, or stop and explain the blocker.
-- **Hook scripts (`.husky/**`), workflow files (`.github/workflows/**`), and the `commitlint.config.js`/`svelte.config.js` config are agent-denied** — see `permissions.deny` in [.claude/settings.json](.claude/settings.json). The agent cannot edit them (the deny blocks even a reviewed change); they are edited manually only. Generated files (`src/worker-configuration.d.ts`, `.svelte-kit/**`) and real secrets (`.env`, `.env.local`, `.env.production`) are denied the same way.
-- Changes to agent/skill files, or to lint config the agent _is_ allowed to touch (e.g. `eslint.config.js`), require the same review standard as application code.
+- **Hook scripts (`.husky/**`), workflow files (`.github/workflows/**`), and the `commitlint.config.js`/`svelte.config.js`/`eslint.config.js` config are agent-denied** — see `permissions.deny` in [.claude/settings.json](.claude/settings.json). The agent cannot edit them (the deny blocks even a reviewed change); they are edited manually only. For `eslint.config.js`, propose the rule change and a human applies it (see "Turning recurring corrections into lint rules" above). Generated files (`src/worker-configuration.d.ts`, `.svelte-kit/**`) and real secrets (`.env`, `.env.local`, `.env.production`) are denied the same way.
+- Changes to agent/skill files require the same review standard as application code.
 
 ---
 
