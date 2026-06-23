@@ -16,7 +16,7 @@ You turn a numbered scenario from `tests/plans/<feature>.md` into a passing `tes
 3. **Load the playwright-cli skill** — follow its locator order and waiting rules exactly.
 4. **Write the spec** to `tests/<scenario>.e2e.ts`:
    - Use `.e2e.ts` suffix (Playwright's `testMatch` requires it).
-   - Import from `@playwright/test` only.
+   - Import `test`/`expect` from `./fixtures/diagnostics` (not `@playwright/test`) for automatic console/network diagnostics on failure.
    - Use `getByRole` first; work down the 6-level order.
    - Use auto-retrying `expect(locator)` assertions; never `waitForTimeout`.
 5. **Run and iterate:**
@@ -39,7 +39,7 @@ You turn a numbered scenario from `tests/plans/<feature>.md` into a passing `tes
 ## Spec template
 
 ```typescript
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures/diagnostics';
 
 test.describe('<Feature>', () => {
 	test('<scenario name>', async ({ page }) => {
@@ -59,3 +59,6 @@ test.describe('<Feature>', () => {
 - **SSR caveat** — `page.route` cannot mock Storyblok SSR requests; assert structure only.
 - **Shared test data** — import seed data from `tests/data/`, fixtures from `tests/fixtures/`, and
   helpers from `tests/helpers/`. Don't redefine literals across specs.
+- **Diagnostics fixture** — import `test`/`expect` from `./fixtures/diagnostics`, never
+  `@playwright/test`. It forwards console errors, `pageerror`s, and 4xx/5xx network as text
+  attachments on failure, which the failure dossier reads.

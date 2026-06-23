@@ -95,6 +95,11 @@ E2E support files live in three sibling dirs, each with a single purpose:
 **Import shared data and helpers — never duplicate literals across specs.** If two specs need the
 same value, it belongs in `tests/data/` or `tests/helpers/`, imported by both.
 
+**E2E specs import `test`/`expect` from [`tests/fixtures/diagnostics.ts`](tests/fixtures/diagnostics.ts), not `@playwright/test`.** That
+fixture overrides `page` to forward console errors/warnings, uncaught `pageerror`s, and failed /
+4xx–5xx network as text attachments (`console`, `network`) **on failure only** — signal the binary
+trace hides, surfaced to the failure dossier and the agent.
+
 ### E2E rules (see `.claude/skills/playwright-cli/` for the full reference)
 
 - **TDD loop:** write the failing spec first, commit it, then implement.

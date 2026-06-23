@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures/diagnostics';
 
 test.describe('Site navigation', () => {
 	test('skip link is the first focusable element and targets main content', async ({ page }) => {
