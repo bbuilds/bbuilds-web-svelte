@@ -155,7 +155,8 @@ catches it instead of a reviewer:
 
 - **Never use `--no-verify`, `HUSKY=0`, `LEFTHOOK=0`**, or any other hook-skipping flag or env var. The only sanctioned `HUSKY: 0` is in CI to skip hook _installation_ — never to skip verification.
 - **Never weaken hook, CI, or ruleset configuration** to make a failing change pass. Fix the code, or stop and explain the blocker.
-- Changes to hook config, workflow files, or agent/skill files require the same review standard as application code.
+- **Hook scripts (`.husky/**`), workflow files (`.github/workflows/**`), and the `commitlint.config.js`/`svelte.config.js` config are agent-denied** — see `permissions.deny` in [.claude/settings.json](.claude/settings.json). The agent cannot edit them (the deny blocks even a reviewed change); they are edited manually only. Generated files (`src/worker-configuration.d.ts`, `.svelte-kit/**`) and real secrets (`.env`, `.env.local`, `.env.production`) are denied the same way.
+- Changes to agent/skill files, or to lint config the agent _is_ allowed to touch (e.g. `eslint.config.js`), require the same review standard as application code.
 
 ---
 
