@@ -11,3 +11,4 @@ bun.lockb
 # Playwright
 playwright-report/
 test-results/
+.claude/plans/*

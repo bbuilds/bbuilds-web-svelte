@@ -108,6 +108,24 @@ Use `*.svelte.spec.ts` for components that need DOM rendering. Use `*.spec.ts` f
 - **`npm run check`** — `svelte-check` with strict TypeScript. Same as `npm run typecheck`.
 - **No escape hatches:** no `eslint-disable`, no rule downgrades, no `@ts-expect-error`, no `any`. Fix the code.
 
+### Turning recurring corrections into lint rules
+
+When you find yourself making the same correction more than once, mechanize it so the linter
+catches it instead of a reviewer:
+
+- **Prefer a dedicated plugin rule when one exists.** For Playwright, reach for
+  `eslint-plugin-playwright` first (e.g. `playwright/prefer-web-first-assertions` already bans
+  `expect(await locator.isVisible()).toBe(true)`).
+- **Otherwise add a `no-restricted-syntax` entry** in the relevant block of
+  [eslint.config.js](eslint.config.js). The e2e block already bans `locator.all()` (no auto-waiting)
+  and `toPass()` with no args (0 ms default timeout).
+- **Write the `message` as a fix-prompt** — state what to do _instead_, not just "don't". The agent
+  reads the message, so it should be enough to act on.
+- **No `eslint-disable` to route around it.** If a banned pattern is genuinely needed, that's a
+  conversation about the rule, not a local escape hatch.
+- `console.log` in tests is already banned by the global `no-console` rule
+  ([eslint.config.js:49](eslint.config.js#L49)) — no e2e-specific seed needed.
+
 ---
 
 ## Git and verification

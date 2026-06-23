@@ -123,7 +123,21 @@ export default defineConfig(
 			'playwright/no-force-option': 'error',
 			'playwright/no-page-pause': 'error',
 			'playwright/prefer-web-first-assertions': 'error',
-			'playwright/valid-expect': 'error'
+			'playwright/valid-expect': 'error',
+			'no-restricted-syntax': [
+				'error',
+				{
+					selector:
+						"CallExpression[callee.property.name='all']:not([callee.object.name='Promise'])",
+					message:
+						'locator.all() has no auto-waiting — use `await expect(locator).toHaveCount(n)` (it retries), then `locator.evaluateAll(...)` if you need the elements. See CLAUDE.md > Turning recurring corrections into lint rules.'
+				},
+				{
+					selector: "CallExpression[callee.property.name='toPass'][arguments.length=0]",
+					message:
+						'toPass() defaults to a 0ms timeout (retries once, never waits) — pass an explicit timeout, e.g. `.toPass({ timeout: 5000 })`. See CLAUDE.md > Turning recurring corrections into lint rules.'
+				}
+			]
 		}
 	}
 );
