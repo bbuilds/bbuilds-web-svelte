@@ -1,161 +1,40 @@
 <script lang="ts">
-	import { page } from '$app/state';
-	import { goto } from '$app/navigation';
 	import Button from '$lib/components/Button.svelte';
 	import FormField from '$lib/components/FormField.svelte';
 	import CloseIcon from '$lib/components/svgs/icons/CloseIcon.svelte';
-	import {
-		validateName,
-		validateEmail,
-		validateMessage,
-		type ValidationMessages
-	} from '$lib/utils/validation';
 	import { banner } from '$lib/state/banner.svelte';
-	import type { StoryblokContactForm, StoryblokFormInput } from '$lib/types/storyblok';
-	import type { HTMLInputAttributes } from 'svelte/elements';
+	import { createContactForm } from '$lib/state/contactForm.svelte';
+	import { createHashDialog } from '$lib/state/hashDialog.svelte';
+	import { prepareFields } from '$lib/utils/contactFields';
+	import type { StoryblokContactForm } from '$lib/types/storyblok';
 
 	interface Props {
 		content?: StoryblokContactForm;
 	}
 	let { content }: Props = $props();
 
-	type NamedField = StoryblokFormInput & { name: string };
+	const MODAL_HASH = '#contact-modal';
 
-	let dialog = $state<HTMLDialogElement | undefined>(undefined);
-	let triggerEl = $state<HTMLElement | null>(null);
-	const isOpen = $derived(page.url.hash === '#contact-modal');
+	const fields = $derived(prepareFields(content));
 
-	const fields = $derived(
-		(content?.fields ?? []).filter((f): f is NamedField => typeof f.name === 'string' && !!f.name)
-	);
-
-	let values = $state<Record<string, string>>({});
-	let errors = $state<Record<string, string | undefined>>({});
-	let touched = $state<Record<string, boolean>>({});
-	let submitting = $state(false);
-	let submitError = $state<string | undefined>(undefined);
-
-	const validators: Record<string, (v: string, m?: ValidationMessages) => string | undefined> = {
-		name: validateName,
-		email: validateEmail,
-		message: validateMessage
-	};
-
-	function fieldType(name: string): 'text' | 'email' | 'textarea' {
-		const n = name.toLowerCase();
-		if (n === 'email') return 'email';
-		if (n === 'message') return 'textarea';
-		return 'text';
-	}
-
-	function fieldAutocomplete(name: string): HTMLInputAttributes['autocomplete'] {
-		const n = name.toLowerCase();
-		if (n === 'name') return 'name';
-		if (n === 'email') return 'email';
-		return undefined;
-	}
-
-	function runValidation(field: NamedField) {
-		const validate = validators[field.name.toLowerCase()];
-		errors[field.name] = validate
-			? validate(values[field.name] ?? '', {
-					required: field.error_message_required,
-					invalid: field.error_message_invalid
-				})
-			: undefined;
-	}
-
-	function onBlur(field: NamedField) {
-		touched[field.name] = true;
-		runValidation(field);
-	}
-
-	function onInput(field: NamedField) {
-		if (touched[field.name]) runValidation(field);
-	}
-
-	function resetForm() {
-		values = {};
-		errors = {};
-		touched = {};
-	}
-
-	async function onSubmit(e: SubmitEvent) {
-		e.preventDefault();
-		fields.forEach((field) => {
-			touched[field.name] = true;
-			runValidation(field);
-		});
-		if (fields.some((field) => errors[field.name])) return;
-
-		submitting = true;
-		submitError = undefined;
-		try {
-			const res = await fetch(import.meta.env.VITE_FORMSPREE_URL, {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-				body: JSON.stringify(values)
-			});
-			const data: { errors?: { message: string }[] } = await res.json();
-			if (!res.ok) {
-				submitError = data.errors?.[0]?.message ?? 'Something went wrong. Please try again.';
-			} else {
-				resetForm();
-				banner.success(
-					content?.success_message ?? "Message sent! I'll be in touch soon.",
-					content?.success_eyebrow ?? ''
-				);
-				close();
-			}
-		} catch {
-			submitError = 'Network error. Please check your connection and try again.';
-		} finally {
-			submitting = false;
-		}
-	}
-
-	$effect(() => {
-		if (!dialog) return;
-		if (isOpen && !dialog.open) {
-			triggerEl = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-			dialog.showModal();
-		} else if (!isOpen && dialog.open) {
-			dialog.close();
+	let dialog = $state<HTMLDialogElement>();
+	const modal = createHashDialog(MODAL_HASH, () => dialog);
+	const form = createContactForm({
+		action: import.meta.env.VITE_FORMSPREE_URL,
+		getFields: () => fields,
+		onSuccess: () => {
+			banner.success(
+				content?.success_message ?? "Message sent! I'll be in touch soon.",
+				content?.success_eyebrow ?? ''
+			);
+			modal.close();
 		}
 	});
 
-	$effect(() => {
-		if (!isOpen) return;
-		document.body.style.overflow = 'hidden';
-		return () => {
-			document.body.style.overflow = '';
-		};
-	});
-
-	function close() {
-		dialog?.close();
-	}
-
-	async function onDialogClose() {
-		errors = {};
-		touched = {};
-		submitError = undefined;
-		const trigger = triggerEl;
-		triggerEl = null;
-		if (page.url.hash !== '#contact-modal') {
-			trigger?.focus();
-			return;
-		}
-		await goto(page.url.pathname + page.url.search, {
-			replaceState: true,
-			noScroll: true,
-			keepFocus: true
-		});
-		trigger?.focus();
-	}
-
-	function onBackdropClick(e: MouseEvent) {
-		if (e.target === dialog) close();
+	// On close, clear validation state (keeping typed values) then strip the hash and restore focus.
+	function handleDialogClose() {
+		form.dismissErrors();
+		return modal.handleClose();
 	}
 </script>
 
@@ -163,8 +42,8 @@
 	<dialog
 		id="contact-modal"
 		bind:this={dialog}
-		onclose={onDialogClose}
-		onclick={onBackdropClick}
+		onclose={handleDialogClose}
+		onclick={modal.handleBackdropClick}
 		aria-modal="true"
 		aria-labelledby={content.title ? 'contact-modal-title' : undefined}
 		class="fixed inset-0 m-auto h-fit max-h-[calc(100dvh-2rem)] w-full max-w-xl rounded-xl"
@@ -197,33 +76,40 @@
 				<button
 					type="button"
 					aria-label="Close"
-					onclick={close}
+					onclick={modal.close}
 					class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-md border border-paper bg-transparent p-1.5 text-white transition-colors hover:bg-charcoal"
 				>
 					<CloseIcon />
 				</button>
 			</div>
 
-			<form onsubmit={onSubmit} class="flex flex-col gap-4">
+			<form onsubmit={form.submit} class="flex flex-col gap-4">
 				{#each fields as field (field._uid)}
 					<FormField
-						id="contact-{field.name}"
-						name={field.name}
-						label={field.label ?? field.name}
-						type={fieldType(field.name)}
+						id="contact-{field.key}"
+						name={field.key}
+						label={field.label}
+						type={field.type}
 						placeholder={field.placeholder}
-						autocomplete={fieldAutocomplete(field.name)}
-						bind:value={() => values[field.name] ?? '', (v: string) => (values[field.name] = v)}
-						error={errors[field.name]}
-						onInput={() => onInput(field)}
-						onBlur={() => onBlur(field)}
+						autocomplete={field.autocomplete}
+						bind:value={
+							() => form.values[field.key] ?? '', (v: string) => (form.values[field.key] = v)
+						}
+						error={form.errors[field.key]}
+						onInput={() => form.handleInput(field)}
+						onBlur={() => form.handleBlur(field)}
 					/>
 				{/each}
-				<Button type="submit" disabled={submitting} rounded="lg" class="btn-yellow mt-1 w-full">
-					{submitting ? 'Sending…' : (content.cta_text ?? 'Send message')}
+				<Button
+					type="submit"
+					disabled={form.submitting}
+					rounded="lg"
+					class="btn-yellow mt-1 w-full"
+				>
+					{form.submitting ? 'Sending…' : (content.cta_text ?? 'Send message')}
 				</Button>
-				{#if submitError}
-					<p class="font-mono text-xs text-red-400">{submitError}</p>
+				{#if form.submitError}
+					<p class="font-mono text-xs text-red-400">{form.submitError}</p>
 				{/if}
 			</form>
 		</div>
