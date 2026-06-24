@@ -1,13 +1,21 @@
-import type { Locator } from '@playwright/test';
+import type { Locator, Page } from '@playwright/test';
 import { test, expect } from './fixtures/diagnostics';
 
 const SUBMIT_BUTTON_NAME = /send/i;
 
+// Clicks the submit button and asserts the form actually POSTs to Formspree.
+async function submitAndAssertEndpoint(page: Page, submitButton: Locator): Promise<void> {
+	const submitRequest = page.waitForRequest((req) => req.method() === 'POST');
+	await submitButton.click();
+	const request = await submitRequest;
+	expect(
+		request.url(),
+		'Contact form must POST to Formspree — is VITE_FORMSPREE_URL set at build time?'
+	).toContain('formspree.io');
+}
+
 /**
- * Fills every visible field in the dialog with a value that passes validation. The email,
- * message, and name fields are matched by accessible name (per `contactFields.ts` keyword
- * classification: email → message → name), so this stays valid regardless of how many fields
- * the CMS defines (see the plan's "out of scope" note on field-set variation). Returns each
+ * Fills every visible field in the dialog with a value that passes validation. Returns each
  * filled field's locator alongside its value, for asserting values persist after a failed submit.
  */
 async function fillValidContactForm(dialog: Locator): Promise<{ field: Locator; value: string }[]> {
@@ -198,7 +206,7 @@ test.describe('Contact modal', () => {
 		await fillValidContactForm(dialog);
 
 		const submitButton = dialog.getByRole('button', { name: SUBMIT_BUTTON_NAME });
-		await submitButton.click();
+		await submitAndAssertEndpoint(page, submitButton);
 
 		await expect(dialog).toBeHidden();
 		await expect(page).toHaveURL(/^[^#]*$/);
@@ -230,7 +238,7 @@ test.describe('Contact modal', () => {
 		const filledFields = await fillValidContactForm(dialog);
 
 		const submitButton = dialog.getByRole('button', { name: SUBMIT_BUTTON_NAME });
-		await submitButton.click();
+		await submitAndAssertEndpoint(page, submitButton);
 
 		await expect(page.getByText(errorMessage)).toBeVisible();
 		await expect(dialog).toBeVisible();
