@@ -11,6 +11,7 @@ concurrency:
 
 env:
   HUSKY: 0
+  VITE_FORMSPREE_URL: https://formspree.io/f/xjvjpbqb
 
 jobs:
   static:
@@ -63,7 +64,7 @@ jobs:
     name: E2E (Playwright)
     runs-on: ubuntu-latest
     needs: build
-    if: github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'run-e2e')
+    if: github.event_name == 'push' || github.base_ref == 'main' || contains(github.event.pull_request.labels.*.name, 'run-e2e')
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
