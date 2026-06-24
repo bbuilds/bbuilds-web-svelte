@@ -18,7 +18,7 @@ jobs:
     name: Lint & Type Check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
@@ -32,14 +32,14 @@ jobs:
     name: Unit Tests (vitest)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
       - name: Cache Playwright browsers
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ~/.cache/ms-playwright
           key: pw-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
@@ -50,7 +50,7 @@ jobs:
     name: Build (Cloudflare adapter)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
@@ -66,14 +66,14 @@ jobs:
     needs: build
     if: github.event_name == 'push' || github.base_ref == 'main' || contains(github.event.pull_request.labels.*.name, 'run-e2e')
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
       - name: Cache Playwright browsers
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ~/.cache/ms-playwright
           key: pw-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
