@@ -268,8 +268,6 @@ export interface StoryblokSEO {
 	og_image?: StoryblokAsset;
 	meta_title?: string;
 	meta_description?: string;
-	canonical_url?: string;
-	og_url?: string;
 	no_index?: boolean;
 	no_follow?: boolean;
 	json_structured_data?: StoryblokRichtext;
