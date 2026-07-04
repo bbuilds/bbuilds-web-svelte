@@ -17,10 +17,19 @@
 		"noFallthroughCasesInSwitch": true,
 		"moduleResolution": "bundler",
 		"types": ["./src/worker-configuration.d.ts", "node", "gtag.js"]
-	}
+	},
 	// Path aliases are handled by https://svelte.dev/docs/kit/configuration#alias
 	// except $lib which is handled by https://svelte.dev/docs/kit/configuration#files
-	//
-	// `include`/`exclude` are intentionally not set here so this config inherits the
-	// generated `.svelte-kit/tsconfig.json
+	"exclude": [
+		"node_modules/**",
+		"src/service-worker.js",
+		"src/service-worker/**/*.js",
+		"src/service-worker.ts",
+		"src/service-worker/**/*.ts",
+		"src/service-worker.d.ts",
+		"src/service-worker/**/*.d.ts",
+		".svelte-kit/output/**",
+		".svelte-kit/cloudflare/**",
+		".svelte-kit/cloudflare-tmp/**"
+	]
 }
