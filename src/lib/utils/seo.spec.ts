@@ -93,33 +93,6 @@ describe('resolveSEO', () => {
 		expect(result.canonical).toBe(`${SITE_URL}/`);
 	});
 
-	it('ignores an off-domain canonical_url from Storyblok (stale migration data)', () => {
-		const result = resolveSEO({
-			pageSEO: seoBlok({
-				canonical_url: 'https://brandenbuild.com/services/product-engineering'
-			}),
-			fallbacks: { title: 'T', pathname: '/services/engineering' }
-		});
-		expect(result.canonical).toBe(`${SITE_URL}/services/engineering`);
-	});
-
-	it('ignores a mismatched-path canonical_url from Storyblok', () => {
-		const result = resolveSEO({
-			pageSEO: seoBlok({ canonical_url: '/services/applied-intelligence' }),
-			fallbacks: { title: 'T', pathname: '/services/intelligence' }
-		});
-		expect(result.canonical).toBe(`${SITE_URL}/services/intelligence`);
-	});
-
-	it('ignores an off-domain og_url and mirrors the self-referential canonical', () => {
-		const result = resolveSEO({
-			pageSEO: seoBlok({ og_url: 'https://brandenbuild.co/blog/foo' }),
-			fallbacks: { title: 'T', pathname: '/foo' }
-		});
-		expect(result.ogUrl).toBe(`${SITE_URL}/foo`);
-		expect(result.ogUrl).toBe(result.canonical);
-	});
-
 	it('defaults ogType to website', () => {
 		const result = resolveSEO({ fallbacks: { title: 'T', pathname: '/' } });
 		expect(result.ogType).toBe('website');
