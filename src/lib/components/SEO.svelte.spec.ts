@@ -7,6 +7,7 @@ import { SITE_URL, SITE_NAME, DEFAULT_OG_LOCALE } from '$lib/config/site';
 const baseSEO = (overrides: Partial<ResolvedSEO> = {}): ResolvedSEO => ({
 	title: 'Test Page',
 	ogTitle: 'Test OG Title',
+	ogType: 'website',
 	description: 'Test description',
 	canonical: `${SITE_URL}/test`,
 	ogUrl: `${SITE_URL}/test`,
@@ -50,6 +51,13 @@ describe('SEO component', () => {
 		).toBe(SITE_NAME);
 		expect(document.head.querySelector('meta[property="og:locale"]')?.getAttribute('content')).toBe(
 			DEFAULT_OG_LOCALE
+		);
+	});
+
+	it('renders og:type from the resolved ogType (e.g. article)', async () => {
+		render(SEO, { seo: baseSEO({ ogType: 'article' }) });
+		expect(document.head.querySelector('meta[property="og:type"]')?.getAttribute('content')).toBe(
+			'article'
 		);
 	});
 

@@ -35,7 +35,11 @@ const config = {
 			mode: 'auto',
 			directives: {
 				'default-src': ['self'],
-				'script-src': ['self', 'https://www.googletagmanager.com'],
+				'script-src': [
+					'self',
+					'https://www.googletagmanager.com',
+					'https://static.cloudflareinsights.com'
+				],
 				'style-src': ['self', 'unsafe-inline', 'https://fonts.googleapis.com'],
 				'font-src': ['self', 'https://fonts.gstatic.com'],
 				'img-src': [
@@ -52,6 +56,7 @@ const config = {
 					'https://www.google-analytics.com',
 					'https://*.google-analytics.com',
 					'https://*.analytics.google.com',
+					'https://cloudflareinsights.com',
 					'https://formspree.io'
 				],
 				'manifest-src': ['self'],
