@@ -40,7 +40,7 @@ base = base
 	.replace(/^type /gm, 'export type ');
 
 // Drop the generated header and cross-file import from the component file
-components = components.replace(/^(\/\/.*\n)*import type .+;\n/, '').trimStart();
+components = components.replace(/^(?:(?:\/\/.*|import type .+;)\n)+/, '').trimStart();
 
 const merged = base.trimEnd() + (components ? '\n\n' + components : '\n');
 
