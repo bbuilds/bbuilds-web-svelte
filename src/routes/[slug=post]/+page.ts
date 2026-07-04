@@ -42,7 +42,7 @@ export const load: PageLoad = async ({ params, parent, url }) => {
 		extraJsonLd: [
 			breadcrumbLd([
 				{ name: 'Home', url: SITE_URL },
-				{ name: 'Blog', url: `${SITE_URL}/#blog` },
+				{ name: 'Blog', url: `${SITE_URL}/blog` },
 				{ name: story.name, url: new URL(url.pathname, SITE_URL).href }
 			])
 		]
