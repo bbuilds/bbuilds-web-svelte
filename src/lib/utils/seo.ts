@@ -14,6 +14,7 @@ interface ResolveSEOArgs {
 		pathname: string;
 		ogImagePath?: string;
 	};
+	ogType?: string;
 	extraJsonLd?: object[];
 }
 
@@ -26,6 +27,7 @@ export function resolveSEO({
 	pageSEO,
 	globalSEO,
 	fallbacks,
+	ogType = 'website',
 	extraJsonLd = []
 }: ResolveSEOArgs): ResolvedSEO {
 	const metaTitle = pageSEO?.meta_title ?? globalSEO?.meta_title ?? fallbacks.title;
@@ -73,6 +75,7 @@ export function resolveSEO({
 	return {
 		title: metaTitle,
 		ogTitle,
+		ogType,
 		description: description || undefined,
 		canonical,
 		ogUrl,

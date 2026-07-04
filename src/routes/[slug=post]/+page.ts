@@ -39,6 +39,7 @@ export const load: PageLoad = async ({ params, parent, url }) => {
 			pathname: url.pathname,
 			ogImagePath: SITE_OG_IMAGE
 		},
+		ogType: 'article',
 		extraJsonLd: [
 			breadcrumbLd([
 				{ name: 'Home', url: SITE_URL },

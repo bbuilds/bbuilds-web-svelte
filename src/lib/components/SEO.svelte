@@ -28,7 +28,7 @@
 		<meta property="og:description" content={seo.description} />
 	{/if}
 	<meta property="og:url" content={seo.ogUrl} />
-	<meta property="og:type" content="website" />
+	<meta property="og:type" content={seo.ogType} />
 	<meta property="og:site_name" content={SITE_NAME} />
 	<meta property="og:locale" content={DEFAULT_OG_LOCALE} />
 	{#if seo.ogImage}
