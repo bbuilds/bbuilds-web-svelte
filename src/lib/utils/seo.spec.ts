@@ -81,27 +81,56 @@ describe('resolveSEO', () => {
 		expect(result.ogTitle).toBe('OG Title');
 	});
 
-	it('builds canonical from pathname when not set in Storyblok', () => {
+	it('builds canonical from pathname', () => {
 		const result = resolveSEO({
 			fallbacks: { title: 'T', pathname: '/services/foo' }
 		});
 		expect(result.canonical).toBe(`${SITE_URL}/services/foo`);
 	});
 
-	it('uses absolute canonical_url from Storyblok verbatim', () => {
-		const result = resolveSEO({
-			pageSEO: seoBlok({ canonical_url: 'https://example.com/custom' }),
-			fallbacks: { title: 'T', pathname: '/' }
-		});
-		expect(result.canonical).toBe('https://example.com/custom');
+	it('canonical is self-referential — homepage keeps its trailing slash (sitemap parity)', () => {
+		const result = resolveSEO({ fallbacks: { title: 'T', pathname: '/' } });
+		expect(result.canonical).toBe(`${SITE_URL}/`);
 	});
 
-	it('resolves relative canonical_url against SITE_URL', () => {
+	it('ignores an off-domain canonical_url from Storyblok (stale migration data)', () => {
 		const result = resolveSEO({
-			pageSEO: seoBlok({ canonical_url: '/my-page' }),
-			fallbacks: { title: 'T', pathname: '/' }
+			pageSEO: seoBlok({
+				canonical_url: 'https://brandenbuild.com/services/product-engineering'
+			}),
+			fallbacks: { title: 'T', pathname: '/services/engineering' }
 		});
-		expect(result.canonical).toBe(`${SITE_URL}/my-page`);
+		expect(result.canonical).toBe(`${SITE_URL}/services/engineering`);
+	});
+
+	it('ignores a mismatched-path canonical_url from Storyblok', () => {
+		const result = resolveSEO({
+			pageSEO: seoBlok({ canonical_url: '/services/applied-intelligence' }),
+			fallbacks: { title: 'T', pathname: '/services/intelligence' }
+		});
+		expect(result.canonical).toBe(`${SITE_URL}/services/intelligence`);
+	});
+
+	it('ignores an off-domain og_url and mirrors the self-referential canonical', () => {
+		const result = resolveSEO({
+			pageSEO: seoBlok({ og_url: 'https://brandenbuild.co/blog/foo' }),
+			fallbacks: { title: 'T', pathname: '/foo' }
+		});
+		expect(result.ogUrl).toBe(`${SITE_URL}/foo`);
+		expect(result.ogUrl).toBe(result.canonical);
+	});
+
+	it('defaults ogType to website', () => {
+		const result = resolveSEO({ fallbacks: { title: 'T', pathname: '/' } });
+		expect(result.ogType).toBe('website');
+	});
+
+	it('returns the ogType passed by the caller (e.g. article for blog posts)', () => {
+		const result = resolveSEO({
+			ogType: 'article',
+			fallbacks: { title: 'T', pathname: '/my-post' }
+		});
+		expect(result.ogType).toBe('article');
 	});
 
 	it('converts og_image asset to 1200x630 storyblok URL', () => {

@@ -35,11 +35,8 @@ export function resolveSEO({
 	const description =
 		pageSEO?.meta_description ?? globalSEO?.meta_description ?? fallbacks.description;
 
-	const rawCanonical = pageSEO?.canonical_url ?? globalSEO?.canonical_url;
-	const canonical = rawCanonical ? absoluteUrl(rawCanonical) : absoluteUrl(fallbacks.pathname);
-
-	const rawOgUrl = pageSEO?.og_url ?? globalSEO?.og_url;
-	const ogUrl = rawOgUrl ? absoluteUrl(rawOgUrl) : canonical;
+	const canonical = absoluteUrl(fallbacks.pathname);
+	const ogUrl = canonical;
 
 	let ogImage: ResolvedSEO['ogImage'];
 	const ogImageAsset = pageSEO?.og_image ?? globalSEO?.og_image;
