@@ -71,7 +71,7 @@
 		"wrangler": "^4.101.0"
 	},
 	"dependencies": {
-		"@storyblok/svelte": "^6.1.10",
+		"@storyblok/svelte": "^7.0.0",
 		"@tsparticles/engine": "^4.2.0",
 		"@tsparticles/plugin-emitters": "^4.2.0",
 		"@tsparticles/plugin-emitters-shape-square": "^4.2.0",
