@@ -108,7 +108,7 @@
 					<button
 						type="button"
 						onclick={reset}
-						class="mt-4 block w-full text-yellow hover:text-yellow/70 transition-colors cursor-pointer"
+						class="mt-4 block w-full cursor-pointer text-yellow transition-colors hover:text-yellow/70"
 					>
 						clear filters
 					</button>

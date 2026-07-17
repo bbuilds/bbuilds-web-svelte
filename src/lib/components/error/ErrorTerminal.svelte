@@ -82,21 +82,21 @@
 
 <div class="relative">
 	<div
-		class="bg-ink text-paper rounded-[0.875rem] overflow-hidden border border-black/50 font-mono rotate-[-1.2deg] max-[60rem]:rotate-[-0.8deg] [box-shadow:0_2.5rem_5rem_-2rem_var(--ink-50),0_1rem_2rem_-1.5rem_var(--ink-60)]"
+		class="rotate-[-1.2deg] overflow-hidden rounded-[0.875rem] border border-black/50 bg-ink font-mono text-paper [box-shadow:0_2.5rem_5rem_-2rem_var(--ink-50),0_1rem_2rem_-1.5rem_var(--ink-60)] max-[60rem]:rotate-[-0.8deg]"
 		role="img"
 		aria-label="Terminal showing a {status} error"
 	>
-		<div class="flex items-center gap-2 px-4 py-3 bg-white/4 border-b border-white/8">
-			<span class="w-2.75 h-2.75 rounded-full bg-[#e06b56]"></span>
-			<span class="w-2.75 h-2.75 rounded-full bg-[#e0b756]"></span>
-			<span class="w-2.75 h-2.75 rounded-full bg-green"></span>
+		<div class="flex items-center gap-2 border-b border-white/8 bg-white/4 px-4 py-3">
+			<span class="h-2.75 w-2.75 rounded-full bg-[#e06b56]"></span>
+			<span class="h-2.75 w-2.75 rounded-full bg-[#e0b756]"></span>
+			<span class="h-2.75 w-2.75 rounded-full bg-green"></span>
 			<span
-				class="ml-3 text-[0.6875rem] tracking-[0.04em] text-muted-dark inline-flex items-center gap-[0.4rem]"
+				class="ml-3 inline-flex items-center gap-[0.4rem] text-[0.6875rem] tracking-[0.04em] text-muted-dark"
 				>zsh — branden@builds — ~/site</span
 			>
 		</div>
 		<div
-			class="px-5 pt-5 pb-6 text-[0.78125rem] leading-[1.85] whitespace-pre-wrap wrap-break-word"
+			class="px-5 pt-5 pb-6 text-[0.78125rem] leading-[1.85] wrap-break-word whitespace-pre-wrap"
 			{@attach typeRows}
 		></div>
 	</div>
