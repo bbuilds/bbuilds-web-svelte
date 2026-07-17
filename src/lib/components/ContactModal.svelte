@@ -59,7 +59,7 @@
 								></span>
 								<span class="relative inline-flex h-2 w-2 rounded-full bg-pale-fire"></span>
 							</span>
-							<span class="font-mono text-xs uppercase tracking-widest text-pale-fire"
+							<span class="font-mono text-xs tracking-widest text-pale-fire uppercase"
 								>{content.eyebrow}</span
 							>
 						</div>
@@ -67,7 +67,7 @@
 					{#if content.title}
 						<h2
 							id="contact-modal-title"
-							class="mt-3 text-[1.85rem] font-bold leading-[1.02] tracking-tight text-white"
+							class="mt-3 text-[1.85rem] leading-[1.02] font-bold tracking-tight text-white"
 						>
 							{content.title}
 						</h2>

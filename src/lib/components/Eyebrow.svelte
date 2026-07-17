@@ -16,7 +16,7 @@
 
 <div
 	class={[
-		"font-mono uppercase tracking-wider before:mr-2 before:text-yellow before:content-['●']",
+		"font-mono tracking-wider uppercase before:mr-2 before:text-yellow before:content-['●']",
 		color,
 		className
 	]}

@@ -61,7 +61,7 @@
 </script>
 
 <div
-	class="absolute inset-0 z-0 overflow-hidden opacity-50 pointer-events-none"
+	class="pointer-events-none absolute inset-0 z-0 overflow-hidden opacity-50"
 	aria-hidden="true"
 	{@attach spawnLeaves}
 ></div>

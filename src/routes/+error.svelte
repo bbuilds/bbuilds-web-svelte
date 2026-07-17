@@ -34,28 +34,28 @@
 </svelte:head>
 
 <section
-	class="flex flex-1 relative overflow-hidden items-center pt-14 pb-20 max-[47.9375rem]:pt-8"
+	class="relative flex flex-1 items-center overflow-hidden pt-14 pb-20 max-[47.9375rem]:pt-8"
 >
 	<FallingLeaves />
-	<div class="container z-2">
-		<div class="grid gap-12 items-center min-[60rem]:grid-cols-[1.05fr_0.95fr] min-[60rem]:gap-16">
+	<div class="z-2 container">
+		<div class="grid items-center gap-12 min-[60rem]:grid-cols-[1.05fr_0.95fr] min-[60rem]:gap-16">
 			<!-- left column -->
 			<div>
 				<div
-					class="inline-flex items-center gap-2 mb-6 font-mono text-[0.8125rem] tracking-[0.06em] uppercase text-muted meta-dot"
+					class="meta-dot mb-6 inline-flex items-center gap-2 font-mono text-[0.8125rem] tracking-[0.06em] text-muted uppercase"
 				>
 					{copy.eyebrow}
 				</div>
 
 				<div
-					class="font-sans font-bold tracking-[-0.04em] leading-[0.86] text-[clamp(6rem,18vw,12rem)] flex items-start"
+					class="flex items-start font-sans text-[clamp(6rem,18vw,12rem)] leading-[0.86] font-bold tracking-[-0.04em]"
 					aria-label={statusStr}
 				>
 					{statusStr}
 				</div>
 
 				<h1
-					class="text-[clamp(1.6rem,3.4vw,2.6rem)] font-semibold tracking-[-0.02em] leading-[1.05] mt-7 max-w-[22ch]"
+					class="mt-7 max-w-[22ch] text-[clamp(1.6rem,3.4vw,2.6rem)] leading-[1.05] font-semibold tracking-[-0.02em]"
 				>
 					{copy.headlinePre}<span class="scribble"
 						>{copy.headlineHighlight}<svg
@@ -73,18 +73,18 @@
 					>{copy.headlinePost}
 				</h1>
 
-				<p class="mt-6 max-w-136 font-mono text-sm text-body leading-[1.7]">{copy.lead}</p>
+				<p class="mt-6 max-w-136 font-mono text-sm leading-[1.7] text-body">{copy.lead}</p>
 
 				{#if page.status !== 404 && page.error?.errorId}
 					<p class="mt-3 font-mono text-xs text-muted">
 						ref: <code
-							class="bg-[color:var(--yellow-14)] text-yellow py-[0.05rem] px-[0.4rem] rounded-[0.3rem] text-[0.95em]"
+							class="rounded-[0.3rem] bg-[color:var(--yellow-14)] px-[0.4rem] py-[0.05rem] text-[0.95em] text-yellow"
 							>{page.error.errorId}</code
 						>
 					</p>
 				{/if}
 
-				<div class="flex flex-wrap gap-3.5 mt-9">
+				<div class="mt-9 flex flex-wrap gap-3.5">
 					<Button href="/" variant="primary">home</Button>
 					<Button href="/blog" variant="ghost">browse the blog</Button>
 				</div>

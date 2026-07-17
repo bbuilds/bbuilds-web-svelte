@@ -31,14 +31,14 @@
 </script>
 
 <div
-	class="callout grid grid-cols-[auto_1fr] items-start gap-x-3 my-8 px-4.25 py-4 md:gap-x-3.75 md:px-5.5 md:py-4.5 md:pl-4.5"
+	class="callout my-8 grid grid-cols-[auto_1fr] items-start gap-x-3 px-4.25 py-4 md:gap-x-3.75 md:px-5.5 md:py-4.5 md:pl-4.5"
 	style:--c-accent={palette.accent}
 	style:--c-label={palette.label}
 	role="note"
 	aria-label={LABELS[variant]}
 >
 	<span
-		class="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-lg mt-px bg-(--c-accent) text-paper md:h-7 md:w-7"
+		class="mt-px inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-(--c-accent) text-paper md:h-7 md:w-7"
 		aria-hidden="true"
 	>
 		{#if variant === 'info'}
@@ -89,11 +89,11 @@
 	</span>
 	<div class="min-w-0">
 		<div
-			class="font-mono text-[0.6875rem] font-semibold uppercase tracking-[0.09em] leading-none mt-1.25 mb-2 text-(--c-label)"
+			class="mt-1.25 mb-2 font-mono text-[0.6875rem] leading-none font-semibold tracking-[0.09em] text-(--c-label) uppercase"
 		>
 			{LABELS[variant]}
 		</div>
-		<div class="callout-body text-body leading-[1.68]">
+		<div class="callout-body leading-[1.68] text-body">
 			<RichTextRenderer {doc} />
 		</div>
 	</div>
