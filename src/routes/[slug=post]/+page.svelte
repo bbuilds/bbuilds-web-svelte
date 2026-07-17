@@ -45,16 +45,18 @@
 
 	<article class="min-w-0 pt-8 pb-12 md:pt-11 md:pb-16">
 		{#if hero?.filename}
-			<div class="relative mb-11 aspect-16/7 overflow-hidden rounded-2xl border border-paper-line">
+			<div
+				class="relative mb-11 aspect-video overflow-hidden rounded-2xl border border-paper-line bg-paper-2"
+			>
 				<img
-					src={storyblokImageUrl(hero.filename, { width: 1200, height: 525 })}
+					src={storyblokImageUrl(hero.filename, { width: 1200, height: 675 })}
 					srcset={storyblokImageSrcset(hero.filename, [600, 900, 1200, 1800], {
-						aspectRatio: 16 / 7
+						aspectRatio: 16 / 9
 					})}
 					sizes="(min-width: 64rem) 60vw, 100vw"
 					alt={hero.alt || story.name}
 					width={1200}
-					height={525}
+					height={675}
 					loading="eager"
 					decoding="async"
 					fetchpriority="high"
