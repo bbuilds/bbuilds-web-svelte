@@ -63,7 +63,7 @@
 			</div>
 		{/if}
 
-		<div class="post-body max-w-184">
+		<div class="post-body md:px-6">
 			{#if richTextDoc}
 				<RichTextRenderer doc={richTextDoc} />
 			{/if}
