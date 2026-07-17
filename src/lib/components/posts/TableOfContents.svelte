@@ -37,12 +37,14 @@
 		<ul
 			class="relative before:absolute before:top-1.5 before:bottom-1.5 before:left-0 before:w-px before:bg-paper-line before:content-['']"
 		>
-			{#each headings as { id, text } (id)}
+			{#each headings as { id, text, level } (id)}
 				<li>
 					<a
 						href="#{id}"
-						class="-ml-px block border-l-2 py-1.75 pl-3.5 text-[0.8125rem] leading-snug no-underline transition-colors hover:text-ink {active ===
-						id
+						class="-ml-px block border-l-2 py-1.75 text-[0.8125rem] leading-snug no-underline transition-colors hover:text-ink {level ===
+						3
+							? 'pl-7'
+							: 'pl-3.5'} {active === id
 							? 'border-yellow font-semibold text-ink'
 							: 'border-transparent text-charcoal'}"
 					>

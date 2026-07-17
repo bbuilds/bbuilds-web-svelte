@@ -35,6 +35,7 @@ export const kickerTag = (category: (number | string)[] | undefined, tagList: st
 export interface TocHeading {
 	id: string;
 	text: string;
+	level: 2 | 3;
 }
 
 export const slugify = (s: string): string =>
@@ -49,7 +50,8 @@ export const slugify = (s: string): string =>
 export const headingSlugs = (nodes: RichTextNode[]): (string | null)[] => {
 	const counts = new Map<string, number>();
 	return nodes.map((node) => {
-		if (node.type !== 'heading' || (node.attrs?.level as number) !== 2) return null;
+		const level = node.attrs?.level as number;
+		if (node.type !== 'heading' || (level !== 2 && level !== 3)) return null;
 		const parts: string[] = [];
 		collectText(node, parts);
 		const base = slugify(parts.join(' '));
@@ -67,7 +69,8 @@ export const extractHeadings = (nodes: RichTextNode[] | undefined): TocHeading[]
 		if (!id) return [];
 		const parts: string[] = [];
 		collectText(node, parts);
-		return [{ id, text: parts.join(' ') }];
+		const level = (node.attrs?.level as number) === 3 ? 3 : 2;
+		return [{ id, text: parts.join(' '), level }];
 	});
 };
 

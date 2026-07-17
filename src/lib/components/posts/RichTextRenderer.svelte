@@ -63,7 +63,11 @@
 			<RichTextRenderer nodes={node.content ?? []} />
 		</h2>
 	{:else if node.type === 'heading'}
-		<h3 class="mt-8 mb-2.5 text-lg font-semibold tracking-[-0.015em] text-ink">
+		{@const id = anchors[i]}
+		<h3
+			id={id ?? undefined}
+			class="mt-8 mb-2.5 scroll-mt-20 text-lg font-semibold tracking-[-0.015em] text-ink"
+		>
 			<RichTextRenderer nodes={node.content ?? []} />
 		</h3>
 	{:else if node.type === 'bullet_list'}
