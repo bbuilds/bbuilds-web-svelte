@@ -5,17 +5,17 @@ import Quote from './Quote.svelte';
 
 describe('Quote', () => {
 	it('renders the eyebrow text', async () => {
-		render(Quote);
+		await render(Quote);
 		await expect.element(page.getByText('// 04.proof')).toBeInTheDocument();
 	});
 
 	it('renders the quote body', async () => {
-		render(Quote);
+		await render(Quote);
 		await expect.element(page.getByText(/work with Branden for 4\+ years/i)).toBeInTheDocument();
 	});
 
 	it('renders the attribution name as an external link to LinkedIn', async () => {
-		render(Quote);
+		await render(Quote);
 		const link = page.getByRole('link', { name: /kat williams/i });
 		await expect
 			.element(link)
@@ -28,7 +28,7 @@ describe('Quote', () => {
 	});
 
 	it('renders the role', async () => {
-		render(Quote);
+		await render(Quote);
 		await expect
 			.element(page.getByText('Sr. Manager, Digital Experience at The Trade Desk'))
 			.toBeInTheDocument();

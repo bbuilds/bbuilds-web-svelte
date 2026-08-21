@@ -26,26 +26,26 @@ const content: StoryblokHomePage = {
 
 describe('Process', () => {
 	it('renders the eyebrow from content', async () => {
-		render(Process, { props: { content } });
+		await render(Process, { props: { content } });
 		await expect.element(page.getByText('// 03.process')).toBeInTheDocument();
 	});
 
 	it('renders the lede from content', async () => {
-		render(Process, { props: { content } });
+		await render(Process, { props: { content } });
 		await expect
 			.element(page.getByText(/every engagement runs the same loop/i))
 			.toBeInTheDocument();
 	});
 
 	it('renders the h2', async () => {
-		render(Process, { props: { content } });
+		await render(Process, { props: { content } });
 		await expect
 			.element(page.getByRole('heading', { level: 2, name: /the runtime loop/i }))
 			.toBeInTheDocument();
 	});
 
 	it('renders all phase titles as h3s', async () => {
-		render(Process, { props: { content } });
+		await render(Process, { props: { content } });
 		await expect
 			.element(page.getByRole('heading', { level: 3, name: /discover/i }))
 			.toBeInTheDocument();
@@ -61,13 +61,13 @@ describe('Process', () => {
 	});
 
 	it('first phase is active by default', async () => {
-		render(Process, { props: { content } });
+		await render(Process, { props: { content } });
 		const cards = page.getByRole('group', { name: /phase cards/i });
 		await expect.element(cards.getByRole('button').nth(0)).toHaveClass('is-active');
 	});
 
 	it('clicking a different phase makes it active and deactivates the first', async () => {
-		render(Process, { props: { content } });
+		await render(Process, { props: { content } });
 		const cards = page.getByRole('group', { name: /phase cards/i });
 		const firstCard = cards.getByRole('button').nth(0);
 		const secondCard = cards.getByRole('button').nth(1);
@@ -79,7 +79,7 @@ describe('Process', () => {
 	});
 
 	it('clicking a dot activates that phase', async () => {
-		render(Process, { props: { content } });
+		await render(Process, { props: { content } });
 		await page.getByRole('button', { name: /go to step 03 create/i }).click();
 		const cards = page.getByRole('group', { name: /phase cards/i });
 		await expect.element(cards.getByRole('button').nth(2)).toHaveClass('is-active');

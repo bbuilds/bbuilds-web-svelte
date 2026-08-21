@@ -90,26 +90,26 @@ const fiveChapterContent: StoryblokHomePage = {
 
 describe('Services', () => {
 	it('renders the eyebrow text', async () => {
-		render(Services);
+		await render(Services);
 		await expect.element(page.getByText('// 02.services')).toBeInTheDocument();
 	});
 
 	it('renders the h2', async () => {
-		render(Services);
+		await render(Services);
 		await expect
 			.element(page.getByRole('heading', { level: 2, name: /diving deep into digital/i }))
 			.toBeInTheDocument();
 	});
 
 	it('renders the lede', async () => {
-		render(Services);
+		await render(Services);
 		await expect
 			.element(page.getByText(/bridge the gap between creative discovery/i))
 			.toBeInTheDocument();
 	});
 
 	it('renders all five practice titles as h3s', async () => {
-		render(Services, { content: fiveChapterContent });
+		await render(Services, { content: fiveChapterContent });
 		await expect
 			.element(page.getByRole('heading', { level: 3, name: /discovery & transformation/i }))
 			.toBeInTheDocument();
@@ -128,13 +128,13 @@ describe('Services', () => {
 	});
 
 	it('first practice is open by default', async () => {
-		render(Services, { content: mockContent });
+		await render(Services, { content: mockContent });
 		const btn = page.getByRole('button', { name: /mock practice one/i });
 		await expect.element(btn).toHaveAttribute('aria-expanded', 'true');
 	});
 
 	it('clicking a different practice opens it and closes the first', async () => {
-		render(Services, { content: mockContent });
+		await render(Services, { content: mockContent });
 		const first = page.getByRole('button', { name: /mock practice one/i });
 		const second = page.getByRole('button', { name: /mock practice two/i });
 
@@ -145,7 +145,7 @@ describe('Services', () => {
 	});
 
 	it('clicking an open practice closes it', async () => {
-		render(Services, { content: mockContent });
+		await render(Services, { content: mockContent });
 		const first = page.getByRole('button', { name: /mock practice one/i });
 		await expect.element(first).toHaveAttribute('aria-expanded', 'true');
 		await first.click();
@@ -153,7 +153,7 @@ describe('Services', () => {
 	});
 
 	it('renders chapter titles and richtext bullets from Storyblok content when provided', async () => {
-		render(Services, { content: mockContent });
+		await render(Services, { content: mockContent });
 
 		await expect
 			.element(page.getByRole('heading', { level: 3, name: /mock practice one/i }))

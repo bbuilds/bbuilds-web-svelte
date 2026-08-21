@@ -9,8 +9,8 @@ const doc = (...nodes: RichTextNode[]): RichTextDoc => ({ type: 'doc', content: 
 
 describe('RichTextRenderer', () => {
 	describe('paragraph', () => {
-		it('renders a <p> element', () => {
-			const { container } = render(RichTextRenderer, {
+		it('renders a <p> element', async () => {
+			const { container } = await render(RichTextRenderer, {
 				nodes: [{ type: 'paragraph', content: [textNode('hello')] }]
 			});
 			expect(container.querySelector('p')).not.toBeNull();
@@ -19,8 +19,8 @@ describe('RichTextRenderer', () => {
 	});
 
 	describe('heading', () => {
-		it('renders <h2> when level is 2', () => {
-			const { container } = render(RichTextRenderer, {
+		it('renders <h2> when level is 2', async () => {
+			const { container } = await render(RichTextRenderer, {
 				nodes: [{ type: 'heading', attrs: { level: 2 }, content: [textNode('Title')] }]
 			});
 			const h2 = container.querySelector('h2');
@@ -31,15 +31,15 @@ describe('RichTextRenderer', () => {
 			expect(clone.textContent?.trim()).toBe('Title');
 		});
 
-		it('renders <h2> as default when level is not 3', () => {
-			const { container } = render(RichTextRenderer, {
+		it('renders <h2> as default when level is not 3', async () => {
+			const { container } = await render(RichTextRenderer, {
 				nodes: [{ type: 'heading', attrs: { level: 4 }, content: [textNode('Title')] }]
 			});
 			expect(container.querySelector('h2')).not.toBeNull();
 		});
 
-		it('renders <h3> when level is 3', () => {
-			const { container } = render(RichTextRenderer, {
+		it('renders <h3> when level is 3', async () => {
+			const { container } = await render(RichTextRenderer, {
 				nodes: [{ type: 'heading', attrs: { level: 3 }, content: [textNode('Sub')] }]
 			});
 			expect(container.querySelector('h3')).not.toBeNull();
@@ -48,8 +48,8 @@ describe('RichTextRenderer', () => {
 	});
 
 	describe('bullet_list', () => {
-		it('renders <ul> with <li> items', () => {
-			const { container } = render(RichTextRenderer, {
+		it('renders <ul> with <li> items', async () => {
+			const { container } = await render(RichTextRenderer, {
 				nodes: [
 					{
 						type: 'bullet_list',
@@ -64,8 +64,8 @@ describe('RichTextRenderer', () => {
 			expect(container.querySelectorAll('li')).toHaveLength(2);
 		});
 
-		it('unwraps paragraph inside list_item', () => {
-			const { container } = render(RichTextRenderer, {
+		it('unwraps paragraph inside list_item', async () => {
+			const { container } = await render(RichTextRenderer, {
 				nodes: [
 					{
 						type: 'bullet_list',
@@ -84,8 +84,8 @@ describe('RichTextRenderer', () => {
 	});
 
 	describe('ordered_list', () => {
-		it('renders <ol> with <li> items', () => {
-			const { container } = render(RichTextRenderer, {
+		it('renders <ol> with <li> items', async () => {
+			const { container } = await render(RichTextRenderer, {
 				nodes: [
 					{
 						type: 'ordered_list',
@@ -102,8 +102,8 @@ describe('RichTextRenderer', () => {
 	});
 
 	describe('code_block', () => {
-		it('renders <pre><code> with text content', () => {
-			const { container } = render(RichTextRenderer, {
+		it('renders <pre><code> with text content', async () => {
+			const { container } = await render(RichTextRenderer, {
 				nodes: [
 					{
 						type: 'code_block',
@@ -116,8 +116,8 @@ describe('RichTextRenderer', () => {
 			expect(code?.textContent).toBe('const x = 1;');
 		});
 
-		it('sets data-language attribute on <pre>', () => {
-			const { container } = render(RichTextRenderer, {
+		it('sets data-language attribute on <pre>', async () => {
+			const { container } = await render(RichTextRenderer, {
 				nodes: [
 					{
 						type: 'code_block',
@@ -131,8 +131,8 @@ describe('RichTextRenderer', () => {
 	});
 
 	describe('blockquote', () => {
-		it('renders <blockquote>', () => {
-			const { container } = render(RichTextRenderer, {
+		it('renders <blockquote>', async () => {
+			const { container } = await render(RichTextRenderer, {
 				nodes: [{ type: 'blockquote', content: [textNode('a quote')] }]
 			});
 			expect(container.querySelector('blockquote')).not.toBeNull();
@@ -140,8 +140,8 @@ describe('RichTextRenderer', () => {
 	});
 
 	describe('image', () => {
-		it('renders <img> with src and alt', () => {
-			const { container } = render(RichTextRenderer, {
+		it('renders <img> with src and alt', async () => {
+			const { container } = await render(RichTextRenderer, {
 				nodes: [{ type: 'image', attrs: { src: '/img.png', alt: 'a photo' } }]
 			});
 			const img = container.querySelector('img');
@@ -149,8 +149,8 @@ describe('RichTextRenderer', () => {
 			expect(img?.getAttribute('alt')).toBe('a photo');
 		});
 
-		it('renders <figcaption> when caption is present', () => {
-			const { container } = render(RichTextRenderer, {
+		it('renders <figcaption> when caption is present', async () => {
+			const { container } = await render(RichTextRenderer, {
 				nodes: [{ type: 'image', attrs: { src: '/img.png', alt: '', caption: 'My caption' } }]
 			});
 			const caption = container.querySelector('figcaption');
@@ -158,8 +158,8 @@ describe('RichTextRenderer', () => {
 			expect(caption?.textContent).toBe('My caption');
 		});
 
-		it('omits <figcaption> when caption is absent', () => {
-			const { container } = render(RichTextRenderer, {
+		it('omits <figcaption> when caption is absent', async () => {
+			const { container } = await render(RichTextRenderer, {
 				nodes: [{ type: 'image', attrs: { src: '/img.png', alt: '' } }]
 			});
 			expect(container.querySelector('figcaption')).toBeNull();
@@ -167,8 +167,8 @@ describe('RichTextRenderer', () => {
 	});
 
 	describe('horizontal_rule', () => {
-		it('renders <hr>', () => {
-			const { container } = render(RichTextRenderer, {
+		it('renders <hr>', async () => {
+			const { container } = await render(RichTextRenderer, {
 				nodes: [{ type: 'horizontal_rule' }]
 			});
 			expect(container.querySelector('hr')).not.toBeNull();
@@ -176,8 +176,8 @@ describe('RichTextRenderer', () => {
 	});
 
 	describe('hard_break', () => {
-		it('renders <br>', () => {
-			const { container } = render(RichTextRenderer, {
+		it('renders <br>', async () => {
+			const { container } = await render(RichTextRenderer, {
 				nodes: [{ type: 'hard_break' }]
 			});
 			expect(container.querySelector('br')).not.toBeNull();
@@ -185,8 +185,8 @@ describe('RichTextRenderer', () => {
 	});
 
 	describe('doc prop', () => {
-		it('accepts a doc object and renders its content', () => {
-			const { container } = render(RichTextRenderer, {
+		it('accepts a doc object and renders its content', async () => {
+			const { container } = await render(RichTextRenderer, {
 				doc: doc({ type: 'paragraph', content: [textNode('from doc')] })
 			});
 			expect(container.querySelector('p')?.textContent).toBe('from doc');
@@ -194,8 +194,8 @@ describe('RichTextRenderer', () => {
 	});
 
 	describe('unknown node type', () => {
-		it('renders no visible elements for unrecognised node types', () => {
-			const { container } = render(RichTextRenderer, {
+		it('renders no visible elements for unrecognised node types', async () => {
+			const { container } = await render(RichTextRenderer, {
 				nodes: [{ type: 'custom_widget' }]
 			});
 			expect(container.children).toHaveLength(0);
