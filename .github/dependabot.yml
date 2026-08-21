@@ -8,6 +8,11 @@ updates:
     groups:
       minor-and-patch:
         update-types: [minor, patch]
+    ignore:
+      # TS 7 is blocked by svelte-check (peer ^5 || ^6) and typescript-eslint (peer
+      # >=4.8.4 <6.1.0) -- see CLAUDE.md. Remove once both ship TS 7 peer support.
+      - dependency-name: 'typescript'
+        update-types: ['version-update:semver-major']
 
   - package-ecosystem: github-actions
     directory: '/'

@@ -6,24 +6,24 @@ import { SITE_NAME } from '$lib/config/site';
 
 describe('Hero', () => {
 	it('renders the first rotating word on mount', async () => {
-		render(Hero);
+		await render(Hero);
 		await expect.element(page.getByText('hardened systems')).toBeInTheDocument();
 	});
 
 	it('renders the heading', async () => {
-		render(Hero);
+		await render(Hero);
 		await expect.element(page.getByRole('heading', { level: 1 })).toBeInTheDocument();
 	});
 
 	it('renders the CTA button linking to #contact', async () => {
-		render(Hero);
+		await render(Hero);
 		const link = page.getByRole('link', { name: /start a project/i });
 		await expect.element(link).toBeInTheDocument();
 		await expect.element(link).toHaveAttribute('href', '#contact');
 	});
 
 	it('renders the intro label', async () => {
-		render(Hero);
+		await render(Hero);
 		await expect.element(page.getByText(`greetings, I'm ${SITE_NAME}`)).toBeInTheDocument();
 	});
 });

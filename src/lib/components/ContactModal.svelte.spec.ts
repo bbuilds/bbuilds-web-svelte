@@ -48,32 +48,32 @@ describe('ContactModal', () => {
 		vi.restoreAllMocks();
 	});
 
-	it('renders the eyebrow from content', () => {
-		render(ContactModal, { content: mockContent });
+	it('renders the eyebrow from content', async () => {
+		await render(ContactModal, { content: mockContent });
 		const eyebrow = document.querySelector('.font-mono.uppercase');
 		expect(eyebrow?.textContent?.trim()).toBe('Start a project');
 	});
 
-	it('renders the heading from content', () => {
-		render(ContactModal, { content: mockContent });
+	it('renders the heading from content', async () => {
+		await render(ContactModal, { content: mockContent });
 		const heading = document.querySelector('h2');
 		expect(heading?.textContent?.trim()).toBe("Let's build something good.");
 	});
 
-	it('renders a field for each configured input', () => {
-		render(ContactModal, { content: mockContent });
+	it('renders a field for each configured input', async () => {
+		await render(ContactModal, { content: mockContent });
 		expect(document.querySelector('label[for="contact-name"]')?.textContent).toBe('Name');
 		expect(document.querySelector('label[for="contact-email"]')?.textContent).toBe('Email');
 		expect(document.querySelector('label[for="contact-message"]')?.textContent).toBe('Message');
 	});
 
-	it('renders nothing when content is not provided', () => {
-		const { container } = render(ContactModal);
+	it('renders nothing when content is not provided', async () => {
+		const { container } = await render(ContactModal);
 		expect(container.querySelector('dialog')).toBeNull();
 	});
 
 	it('shows aria-invalid and error message on blur with empty field', async () => {
-		render(ContactModal, { content: mockContent });
+		await render(ContactModal, { content: mockContent });
 		openDialog();
 		const input = document.querySelector('input[name="name"]') as HTMLInputElement;
 		input.focus();
@@ -86,7 +86,7 @@ describe('ContactModal', () => {
 	});
 
 	it('uses the Storyblok required error message when provided', async () => {
-		render(ContactModal, {
+		await render(ContactModal, {
 			content: {
 				...mockContent,
 				fields: [
@@ -107,15 +107,15 @@ describe('ContactModal', () => {
 		await expect.element(page.getByText('Please tell me your name')).toBeInTheDocument();
 	});
 
-	it('does not set aria-invalid when no error', () => {
-		render(ContactModal, { content: mockContent });
+	it('does not set aria-invalid when no error', async () => {
+		await render(ContactModal, { content: mockContent });
 		const input = document.querySelector('input[name="name"]') as HTMLInputElement;
 		expect(input.getAttribute('aria-invalid')).toBeNull();
 	});
 
 	it('does not call fetch when form is submitted with empty fields', async () => {
 		const fetchSpy = vi.spyOn(globalThis, 'fetch');
-		render(ContactModal, { content: mockContent });
+		await render(ContactModal, { content: mockContent });
 		openDialog();
 		await page.getByRole('button', { name: /send message/i }).click();
 		expect(fetchSpy).not.toHaveBeenCalled();
@@ -126,7 +126,7 @@ describe('ContactModal', () => {
 			new Response(JSON.stringify({}), { status: 200 })
 		);
 		const successSpy = vi.spyOn(banner, 'success');
-		render(ContactModal, { content: mockContent });
+		await render(ContactModal, { content: mockContent });
 		openDialog();
 
 		await page.getByLabelText('Name').fill('Alice');
@@ -146,7 +146,7 @@ describe('ContactModal', () => {
 		vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce(
 			new Response(JSON.stringify({ errors: [{ message: 'Invalid email' }] }), { status: 422 })
 		);
-		render(ContactModal, { content: mockContent });
+		await render(ContactModal, { content: mockContent });
 		openDialog();
 
 		await page.getByLabelText('Name').fill('Bob');
@@ -159,7 +159,7 @@ describe('ContactModal', () => {
 
 	it('shows network error message when fetch throws', async () => {
 		vi.spyOn(globalThis, 'fetch').mockRejectedValueOnce(new Error('Network failure'));
-		render(ContactModal, { content: mockContent });
+		await render(ContactModal, { content: mockContent });
 		openDialog();
 
 		await page.getByLabelText('Name').fill('Carol');
@@ -172,8 +172,8 @@ describe('ContactModal', () => {
 			.toBeInTheDocument();
 	});
 
-	it('close button has aria-label="Close"', () => {
-		render(ContactModal, { content: mockContent });
+	it('close button has aria-label="Close"', async () => {
+		await render(ContactModal, { content: mockContent });
 		expect(document.querySelector('button[aria-label="Close"]')).not.toBeNull();
 	});
 });

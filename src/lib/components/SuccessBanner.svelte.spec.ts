@@ -14,30 +14,30 @@ describe('SuccessBanner', () => {
 		vi.restoreAllMocks();
 	});
 
-	it('is not visible when banner.visible is false', () => {
-		const { container } = render(SuccessBanner);
+	it('is not visible when banner.visible is false', async () => {
+		const { container } = await render(SuccessBanner);
 		const wrap = container.querySelector('[role="status"]') as HTMLElement;
 		expect(wrap).not.toBeNull();
 		expect(wrap.classList.contains('visible')).toBe(false);
 	});
 
 	it('becomes visible and shows message after banner.success()', async () => {
-		render(SuccessBanner);
+		await render(SuccessBanner);
 		banner.success('All done!');
 		await expect.element(page.getByText('All done!')).toBeInTheDocument();
 		const wrap = document.querySelector('[role="status"]') as HTMLElement;
 		expect(wrap.classList.contains('visible')).toBe(true);
 	});
 
-	it('has role="status", aria-live="polite", aria-atomic="true"', () => {
-		const { container } = render(SuccessBanner);
+	it('has role="status", aria-live="polite", aria-atomic="true"', async () => {
+		const { container } = await render(SuccessBanner);
 		const el = container.querySelector('[role="status"]');
 		expect(el?.getAttribute('aria-live')).toBe('polite');
 		expect(el?.getAttribute('aria-atomic')).toBe('true');
 	});
 
 	it('dismiss button calls banner.dismiss()', async () => {
-		render(SuccessBanner);
+		await render(SuccessBanner);
 		banner.success('Test message');
 		await expect.element(page.getByText('Test message')).toBeInTheDocument();
 		await page.getByRole('button', { name: 'Dismiss' }).click();
@@ -46,7 +46,7 @@ describe('SuccessBanner', () => {
 	});
 
 	it('is visible immediately after banner.success() and hidden after banner.dismiss()', async () => {
-		render(SuccessBanner);
+		await render(SuccessBanner);
 		banner.success('Roundtrip');
 		await expect.element(page.getByText('Roundtrip')).toBeInTheDocument();
 		banner.dismiss();
@@ -54,7 +54,7 @@ describe('SuccessBanner', () => {
 	});
 
 	it('Escape key dismisses the banner', async () => {
-		render(SuccessBanner);
+		await render(SuccessBanner);
 		banner.success('Press Escape');
 		await expect.element(page.getByText('Press Escape')).toBeInTheDocument();
 		document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));

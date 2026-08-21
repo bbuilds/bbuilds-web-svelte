@@ -135,6 +135,10 @@ you know what a reviewer or CI will re-run if you skip it locally:
    rendering.
 
 - **No escape hatches:** no `eslint-disable`, no rule downgrades, no `@ts-expect-error`, no `any`. Fix the code.
+- **`typescript` is pinned to `^6` on purpose.** TypeScript 7 (7.0.2) is blocked by `svelte-check`
+  (peer `^5 || ^6`) and `typescript-eslint` (peer `>=4.8.4 <6.1.0`), which back the `check` and
+  `lint` gates above. Revisit when both ship TS 7 peer support — forcing it via `overrides` is not
+  an acceptable workaround.
 
 ### Turning recurring corrections into lint rules
 

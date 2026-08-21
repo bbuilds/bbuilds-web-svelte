@@ -5,7 +5,7 @@ import FormField from './FormField.svelte';
 
 describe('FormField', () => {
 	it('renders label associated to input via for/id', async () => {
-		render(FormField, { id: 'f-name', name: 'name', label: 'Name', value: '' });
+		await render(FormField, { id: 'f-name', name: 'name', label: 'Name', value: '' });
 		const label = document.querySelector('label[for="f-name"]');
 		expect(label).not.toBeNull();
 		expect(label?.textContent).toBe('Name');
@@ -13,7 +13,7 @@ describe('FormField', () => {
 	});
 
 	it('renders a textarea when type=textarea', async () => {
-		const { container } = render(FormField, {
+		const { container } = await render(FormField, {
 			id: 'f-msg',
 			name: 'message',
 			label: 'Message',
@@ -25,7 +25,7 @@ describe('FormField', () => {
 	});
 
 	it('renders an input with correct type for type=email', async () => {
-		const { container } = render(FormField, {
+		const { container } = await render(FormField, {
 			id: 'f-email',
 			name: 'email',
 			label: 'Email',
@@ -37,7 +37,7 @@ describe('FormField', () => {
 	});
 
 	it('sets aria-invalid and renders error message when error prop is provided', async () => {
-		render(FormField, {
+		await render(FormField, {
 			id: 'f-name',
 			name: 'name',
 			label: 'Name',
@@ -51,21 +51,21 @@ describe('FormField', () => {
 	});
 
 	it('does not set aria-invalid when no error', async () => {
-		render(FormField, { id: 'f-name', name: 'name', label: 'Name', value: '' });
+		await render(FormField, { id: 'f-name', name: 'name', label: 'Name', value: '' });
 		const input = document.querySelector('input');
 		expect(input?.getAttribute('aria-invalid')).toBeNull();
 	});
 
 	it('calls onInput when input fires', async () => {
 		const onInput = vi.fn();
-		render(FormField, { id: 'f-name', name: 'name', label: 'Name', value: '', onInput });
+		await render(FormField, { id: 'f-name', name: 'name', label: 'Name', value: '', onInput });
 		await page.getByLabelText('Name').fill('test');
 		expect(onInput).toHaveBeenCalled();
 	});
 
 	it('calls onBlur when input loses focus', async () => {
 		const onBlur = vi.fn();
-		const { container } = render(FormField, {
+		const { container } = await render(FormField, {
 			id: 'f-name',
 			name: 'name',
 			label: 'Name',
