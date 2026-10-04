@@ -59,7 +59,7 @@
 		"prettier": "^3.9.9",
 		"prettier-plugin-svelte": "^4.1.1",
 		"prettier-plugin-tailwindcss": "^0.8.1",
-		"storyblok": "^4.22.2",
+		"storyblok": "^4.23.4",
 		"svelte": "^5.57.1",
 		"svelte-check": "^4.7.6",
 		"tailwindcss": "^4.3.3",
@@ -68,13 +68,13 @@
 		"vite": "^8.3.2",
 		"vitest": "^4.1.11",
 		"vitest-browser-svelte": "^3.1.0",
-		"wrangler": "^4.125.0"
+		"wrangler": "^4.147.0"
 	},
 	"dependencies": {
-		"@storyblok/svelte": "^7.3.0",
-		"@tsparticles/engine": "^4.3.2",
-		"@tsparticles/plugin-emitters": "^4.3.2",
-		"@tsparticles/plugin-emitters-shape-square": "^4.3.2",
-		"@tsparticles/slim": "^4.3.2"
+		"@storyblok/svelte": "^7.3.2",
+		"@tsparticles/engine": "^4.4.0",
+		"@tsparticles/plugin-emitters": "^4.4.0",
+		"@tsparticles/plugin-emitters-shape-square": "^4.4.0",
+		"@tsparticles/slim": "^4.4.0"
 	}
 }
