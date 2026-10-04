@@ -19,7 +19,7 @@
 		"test:e2e:report": "playwright show-report",
 		"test:e2e:codegen": "playwright codegen http://localhost:4173",
 		"deploy": "npm run build && wrangler deploy",
-		"cf-typegen": "wrangler types ./src/worker-configuration.d.ts",
+		"cf-typegen": "rm -rf .svelte-kit/cloudflare && wrangler types ./src/worker-configuration.d.ts && prettier --write src/worker-configuration.d.ts",
 		"types:storyblok": "node --env-file=.env scripts/generate-storyblok-types.mjs && prettier --write src/lib/types/storyblok.d.ts",
 		"typecheck": "npm run check",
 		"lint": "prettier --check . && eslint . --max-warnings 0",
