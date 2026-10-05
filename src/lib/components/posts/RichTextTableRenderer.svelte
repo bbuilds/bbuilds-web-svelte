@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { RichTextNode } from '$lib/types/post';
 	import RichTextTableRenderer from './RichTextTableRenderer.svelte';
-	import RichTextTableText from './RichTextTableText.svelte';
+	import RichTextText from './RichTextText.svelte';
 
 	interface Props {
 		nodes: RichTextNode[];
@@ -43,7 +43,7 @@
 	{:else if node.type === 'hard_break'}
 		<br />
 	{:else if node.type === 'text'}
-		<RichTextTableText {node} />
+		<RichTextText {node} variant="table" />
 	{/if}
 {/each}
 
