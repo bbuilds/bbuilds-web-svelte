@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { RichTextNode } from '$lib/types/post';
-	import RichTextRenderer from './RichTextRenderer.svelte';
+	import type { RichTextMark, RichTextNode } from '$lib/types/post';
+	import RichTextTableRenderer from './RichTextTableRenderer.svelte';
 
 	interface Props {
 		node: RichTextNode;
@@ -31,28 +31,48 @@
 	};
 
 	const isHeader = (cell: RichTextNode): boolean => cell.type === 'tableHeader';
+
+	const textNodes = (n: RichTextNode): RichTextNode[] =>
+		n.type === 'text' ? [n] : (n.content ?? []).flatMap(textNodes);
+
+	const isTextStyle = (mark: RichTextMark): mark is Extract<RichTextMark, { type: 'textStyle' }> =>
+		mark.type === 'textStyle';
+
+	// RichTextTableRenderer drops the <strong>/<span> wrappers for these marks, so their styling
+	// lands on the cell instead: if any text in the cell carries the mark, the whole cell gets it.
+	const cellMarks = (cell: RichTextNode) => {
+		const marks = textNodes(cell).flatMap((n) => n.marks ?? []);
+		return {
+			bold: marks.some((m) => m.type === 'bold'),
+			underline: marks.some((m) => m.type === 'underline'),
+			color: marks.find(isTextStyle)?.attrs?.color || undefined
+		};
+	};
 </script>
 
 {#snippet tableCell(cell: RichTextNode, scope: 'col' | 'row')}
+	{@const marks = cellMarks(cell)}
 	<svelte:element
 		this={isHeader(cell) ? 'th' : 'td'}
 		scope={isHeader(cell) ? scope : undefined}
 		colspan={span(cell.attrs?.colspan)}
 		rowspan={span(cell.attrs?.rowspan)}
 		style:background-color={bg(cell)}
+		style:color={marks.color}
 		class={[
 			'border-b border-paper-line px-4 py-3 align-top',
-			isHeader(cell) &&
-				'font-mono text-[0.75rem] font-semibold tracking-[0.06em] text-ink uppercase'
+			isHeader(cell) && 'font-mono text-[0.75rem] tracking-[0.06em] text-ink uppercase',
+			marks.bold ? 'font-bold text-ink' : isHeader(cell) && 'font-semibold',
+			marks.underline && 'underline underline-offset-[0.2em]'
 		]}
 	>
-		<RichTextRenderer nodes={cell.content ?? []} />
+		<RichTextTableRenderer nodes={cell.content ?? []} />
 	</svelte:element>
 {/snippet}
 
-<div class="rt-table my-8 overflow-x-auto rounded-lg border border-paper-line">
+<div class="my-8 overflow-x-auto rounded-lg border border-paper-line">
 	<table
-		class="min-w-full border-collapse text-left font-sans text-[0.9375rem] leading-[1.6] text-body"
+		class="rt-table w-full min-w-xl border-collapse text-left font-sans text-[0.9375rem] leading-[1.6] text-body"
 	>
 		{#if headerRows.length}
 			<thead class="bg-paper-2">
@@ -80,29 +100,7 @@
 </div>
 
 <style>
-	/* Compact the renderer's article-sized block styles inside cells. */
 	.rt-table :global(tbody tr:last-child > *) {
 		border-bottom: 0;
-	}
-
-	.rt-table :global(p) {
-		margin: 0 0 0.5rem;
-		font-size: inherit;
-		line-height: inherit;
-	}
-
-	.rt-table :global(:is(th, td) > :last-child) {
-		margin-bottom: 0;
-	}
-
-	.rt-table :global(ul),
-	.rt-table :global(ol) {
-		margin-bottom: 0;
-		gap: 0.25rem;
-	}
-
-	.rt-table :global(li) {
-		font-size: inherit;
-		line-height: inherit;
 	}
 </style>

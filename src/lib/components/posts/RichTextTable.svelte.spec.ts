@@ -144,10 +144,100 @@ describe('RichTextTable', () => {
 				)
 			)
 		});
-		expect(container.querySelector('td strong')?.textContent).toBe('Category');
+		const [bold] = container.querySelectorAll('td');
+		expect(bold?.querySelector('strong')).toBeNull();
+		expect(bold?.classList.contains('font-bold')).toBe(true);
+		expect(bold?.textContent?.trim()).toBe('Category');
 		expect(container.querySelectorAll('td ul > li')).toHaveLength(2);
 		const link = container.querySelector('td a');
 		expect(link?.getAttribute('href')).toBe('https://example.com/search');
 		expect(link?.textContent).toBe('Search the web');
+	});
+
+	describe('cell-scoped rich text', () => {
+		const marked = (text: string, marks: RichTextNode['marks']): RichTextNode => ({
+			type: 'tableCell',
+			attrs: { colspan: 1, rowspan: 1 },
+			content: [{ type: 'paragraph', content: [{ type: 'text', text, marks }] }]
+		});
+
+		it('renders no <p>, <span> or <strong> inside cells', async () => {
+			const { container } = await render(RichTextTable, {
+				node: table(
+					row(
+						marked('styled', [
+							{ type: 'bold' },
+							{ type: 'underline' },
+							{ type: 'textStyle', attrs: { color: '#ff0000' } }
+						]),
+						cell('plain')
+					)
+				)
+			});
+			expect(container.querySelector('table :is(p, span, strong)')).toBeNull();
+			expect(container.querySelector('td')?.textContent?.trim()).toBe('styled');
+		});
+
+		it('hoists underline and textStyle color onto the cell', async () => {
+			const { container } = await render(RichTextTable, {
+				node: table(
+					row(
+						marked('under', [{ type: 'underline' }]),
+						marked('red', [{ type: 'textStyle', attrs: { color: '#ff0000' } }]),
+						cell('plain')
+					)
+				)
+			});
+			const [under, red, plain] = container.querySelectorAll('td');
+			expect(under?.classList.contains('underline')).toBe(true);
+			expect(red?.style.color).toBe('rgb(255, 0, 0)');
+			expect(plain?.classList.contains('underline')).toBe(false);
+			expect(plain?.classList.contains('font-bold')).toBe(false);
+			expect(plain?.style.color).toBe('');
+		});
+
+		it('uses font-bold instead of font-semibold on a bold header', async () => {
+			const { container } = await render(RichTextTable, {
+				node: table(
+					row({ ...marked('Bold', [{ type: 'bold' }]), type: 'tableHeader' }, header('Plain'))
+				)
+			});
+			const [bold, plain] = container.querySelectorAll('th');
+			expect(bold?.classList.contains('font-bold')).toBe(true);
+			expect(bold?.classList.contains('font-semibold')).toBe(false);
+			expect(plain?.classList.contains('font-semibold')).toBe(true);
+			expect(plain?.classList.contains('font-bold')).toBe(false);
+		});
+
+		it('renders links without bold', async () => {
+			const { container } = await render(RichTextTable, {
+				node: table(
+					row(marked('docs', [{ type: 'link', attrs: { href: '/docs', target: '_blank' } }]))
+				)
+			});
+			const link = container.querySelector('td a');
+			expect(link?.getAttribute('href')).toBe('/docs');
+			expect(link?.getAttribute('rel')).toBe('noopener noreferrer');
+			expect(link?.classList.contains('font-semibold')).toBe(false);
+		});
+
+		it('separates consecutive paragraphs with a single <br>', async () => {
+			const { container } = await render(RichTextTable, {
+				node: table(
+					row({
+						type: 'tableCell',
+						attrs: { colspan: 1, rowspan: 1 },
+						content: [
+							{ type: 'paragraph', content: [textNode('first')] },
+							{ type: 'paragraph', content: [textNode('second')] }
+						]
+					})
+				)
+			});
+			const td = container.querySelector('td');
+			expect(td?.querySelectorAll('br')).toHaveLength(1);
+			expect(td?.textContent).toContain('first');
+			expect(td?.textContent).toContain('second');
+		});
 	});
 });
