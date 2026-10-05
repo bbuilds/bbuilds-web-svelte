@@ -1,4 +1,8 @@
-import type { StoryblokRichtext, StoryblokSEO } from '$lib/types/storyblok';
+import type {
+	RichTextFieldValueRichTextNode,
+	StoryblokRichTextDoc,
+	StoryblokSEO
+} from '$lib/types/storyblok';
 import type { ResolvedSEO } from '$lib/types/seo';
 import { storyblokImageUrl } from './storyblokImage';
 import { SITE_URL } from '$lib/config/site';
@@ -83,8 +87,8 @@ export function resolveSEO({
 	};
 }
 
-function extractRichtextText(rt: StoryblokRichtext): string {
-	if (rt.text) return rt.text;
-	if (!rt.content) return '';
-	return rt.content.map(extractRichtextText).join('');
+function extractRichtextText(node: StoryblokRichTextDoc | RichTextFieldValueRichTextNode): string {
+	if (node.type === 'text') return node.text;
+	if (!('content' in node) || !node.content) return '';
+	return node.content.map(extractRichtextText).join('');
 }
