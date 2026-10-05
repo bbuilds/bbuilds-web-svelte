@@ -130,6 +130,31 @@ describe('RichTextRenderer', () => {
 		});
 	});
 
+	describe('table', () => {
+		it('renders <table> for a table node', async () => {
+			const { container } = await render(RichTextRenderer, {
+				nodes: [
+					{
+						type: 'table',
+						content: [
+							{
+								type: 'tableRow',
+								content: [
+									{
+										type: 'tableCell',
+										attrs: { colspan: 1, rowspan: 1 },
+										content: [{ type: 'paragraph', content: [textNode('cell')] }]
+									}
+								]
+							}
+						]
+					}
+				]
+			});
+			expect(container.querySelector('table td')?.textContent).toBe('cell');
+		});
+	});
+
 	describe('blockquote', () => {
 		it('renders <blockquote>', async () => {
 			const { container } = await render(RichTextRenderer, {

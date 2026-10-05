@@ -4,6 +4,7 @@
 	import RichTextRenderer from './RichTextRenderer.svelte';
 	import RichTextText from './RichTextText.svelte';
 	import Callout from './Callout.svelte';
+	import RichTextTable from './RichTextTable.svelte';
 	import { headingSlugs } from '$lib/utils/format';
 	import { storyblokImageUrl } from '$lib/utils/storyblokImage';
 
@@ -92,6 +93,8 @@
 		<pre
 			class="my-6 overflow-x-auto rounded-lg border border-paper-line bg-paper-2 p-4 font-mono text-[0.8125rem] leading-[1.55]"
 			data-language={node.attrs?.language as string | undefined}><code>{codeText(node)}</code></pre>
+	{:else if node.type === 'table'}
+		<RichTextTable {node} />
 	{:else if node.type === 'blockquote'}
 		<blockquote
 			class="my-8 rounded-r-lg border-l-[3px] border-pale-fire bg-yellow/5 px-6 py-4.5 font-mono text-[0.9375rem] leading-[1.65] text-body italic"

@@ -84,6 +84,34 @@ describe('RichTextText', () => {
 		expect(span?.style.color).toBe('rgb(255, 0, 0)');
 	});
 
+	it('renders prose links semibold', async () => {
+		const { container } = await render(RichTextText, {
+			node: textNode('click', [{ type: 'link', attrs: { href: 'https://example.com' } }])
+		});
+		expect(container.querySelector('a')?.classList.contains('font-semibold')).toBe(true);
+	});
+
+	it('renders table links unbolded', async () => {
+		const { container } = await render(RichTextText, {
+			node: textNode('click', [{ type: 'link', attrs: { href: 'https://example.com' } }]),
+			variant: 'table'
+		});
+		expect(container.querySelector('a')?.classList.contains('font-semibold')).toBe(false);
+	});
+
+	it('carries the table variant through nested marks', async () => {
+		const { container } = await render(RichTextText, {
+			node: textNode('click', [
+				{ type: 'link', attrs: { href: 'https://example.com' } },
+				{ type: 'bold' }
+			]),
+			variant: 'table'
+		});
+		const a = container.querySelector('strong > a');
+		expect(a).not.toBeNull();
+		expect(a?.classList.contains('font-semibold')).toBe(false);
+	});
+
 	it('nests marks — bold wrapping italic renders <strong><em>', async () => {
 		const { container } = await render(RichTextText, {
 			node: textNode('hi', [{ type: 'italic' }, { type: 'bold' }])
