@@ -7,7 +7,7 @@
 		"dev": "vite dev",
 		"build": "vite build",
 		"preview": "npm run build && wrangler dev",
-		"prepare": "husky",
+		"prepare": "svelte-kit sync || echo '' && husky",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"test:unit": "vitest",
@@ -22,7 +22,7 @@
 		"cf-typegen": "rm -rf .svelte-kit/cloudflare && wrangler types ./src/worker-configuration.d.ts && prettier --write src/worker-configuration.d.ts",
 		"types:storyblok": "node --env-file=.env scripts/generate-storyblok-types.mjs && prettier --write src/lib/types/storyblok.d.ts",
 		"typecheck": "npm run check",
-		"lint": "prettier --check . && eslint . --max-warnings 0",
+		"lint": "svelte-kit sync && prettier --check . && eslint . --max-warnings 0",
 		"format": "prettier --write ."
 	},
 	"lint-staged": {
