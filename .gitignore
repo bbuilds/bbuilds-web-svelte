@@ -36,3 +36,4 @@ src/lib/types/components.*.json
 
 #LLM scratch
 /llm_docs
+.zed
