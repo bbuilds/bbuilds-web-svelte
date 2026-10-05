@@ -20,21 +20,28 @@
 	});
 
 	// Script-level narrowing for discriminated union variants — ESLint can't narrow in template blocks.
+	const textStyleAttrs = $derived(outer?.type === 'textStyle' ? outer.attrs : undefined);
 	const linkAttrs = $derived(outer?.type === 'link' ? outer.attrs : undefined);
 </script>
 
-<!-- bold, underline and textStyle are hoisted onto the enclosing <td>/<th> by RichTextTable,
-     so they render their text bare instead of wrapping it in <strong>/<span>. -->
+<!-- RichTextTable hoists bold, underline and textStyle onto the <td>/<th> when the whole cell
+     carries them and strips them here; the ones that reach this component are partial. -->
 {#if !outer}
 	{text}
+{:else if outer.type === 'bold'}
+	<strong class="font-bold text-ink"><RichTextTableText node={inner} /></strong>
 {:else if outer.type === 'italic'}
 	<em><RichTextTableText node={inner} /></em>
+{:else if outer.type === 'underline'}
+	<span class="underline underline-offset-[0.2em]"><RichTextTableText node={inner} /></span>
 {:else if outer.type === 'strike'}
 	<s><RichTextTableText node={inner} /></s>
 {:else if outer.type === 'code'}
 	<code class="rounded bg-paper-2 px-1.5 py-0.5 font-mono text-[0.875em] text-ink-soft"
 		><RichTextTableText node={inner} /></code
 	>
+{:else if outer.type === 'textStyle'}
+	<span style:color={textStyleAttrs?.color}><RichTextTableText node={inner} /></span>
 {:else if outer.type === 'link'}
 	<a
 		href={linkAttrs?.href ?? ''}

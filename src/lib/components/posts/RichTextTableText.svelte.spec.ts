@@ -16,16 +16,27 @@ describe('RichTextTableText', () => {
 		expect(container.querySelector('strong, em, s, code, a, span')).toBeNull();
 	});
 
-	it('renders bold, underline and textStyle as bare text', async () => {
+	// Marks shared by the whole cell are stripped by RichTextTable before reaching this component,
+	// so the ones that remain are partial and render inline.
+	it('wraps bold mark in <strong>', async () => {
 		const { container } = await render(RichTextTableText, {
-			node: textNode('hi', [
-				{ type: 'bold' },
-				{ type: 'underline' },
-				{ type: 'textStyle', attrs: { color: '#ff0000' } }
-			])
+			node: textNode('hi', [{ type: 'bold' }])
 		});
-		expect(container.textContent).toBe('hi');
-		expect(container.querySelector('strong, span')).toBeNull();
+		expect(container.querySelector('strong')?.textContent).toBe('hi');
+	});
+
+	it('wraps underline mark in an underlined <span>', async () => {
+		const { container } = await render(RichTextTableText, {
+			node: textNode('hi', [{ type: 'underline' }])
+		});
+		expect(container.querySelector('span')?.classList.contains('underline')).toBe(true);
+	});
+
+	it('applies textStyle color on a <span>', async () => {
+		const { container } = await render(RichTextTableText, {
+			node: textNode('hi', [{ type: 'textStyle', attrs: { color: '#ff0000' } }])
+		});
+		expect(container.querySelector('span')?.style.color).toBe('rgb(255, 0, 0)');
 	});
 
 	it('wraps italic mark in <em>', async () => {
@@ -49,12 +60,11 @@ describe('RichTextTableText', () => {
 		expect(container.querySelector('code')).not.toBeNull();
 	});
 
-	it('keeps inner marks when a stripped mark is outermost', async () => {
+	it('applies marks innermost-first', async () => {
 		const { container } = await render(RichTextTableText, {
 			node: textNode('hi', [{ type: 'italic' }, { type: 'bold' }])
 		});
-		expect(container.querySelector('strong')).toBeNull();
-		expect(container.querySelector('em')?.textContent).toBe('hi');
+		expect(container.querySelector('strong > em')?.textContent).toBe('hi');
 	});
 
 	it('wraps link mark in an unbolded <a>', async () => {

@@ -8,15 +8,20 @@
 	}
 
 	let { nodes }: Props = $props();
+
+	const STRUCTURED = new Set(['bullet_list', 'ordered_list', 'hard_break', 'text']);
+
+	// Paragraphs, and blocks with no cell markup of their own (heading, code_block, blockquote…),
+	// flatten to inline content so a cell never loses text.
+	const flattens = (n: RichTextNode | undefined): boolean =>
+		n !== undefined && (n.type === 'paragraph' || (!!n.content && !STRUCTURED.has(n.type)));
 </script>
 
-<!-- Cell-scoped renderer: no <p>, <span> or <strong> — paragraphs render inline and the
-     styling of bold/underline/textStyle marks is hoisted onto the cell by RichTextTable. -->
+<!-- Cell-scoped renderer: no <p> — paragraphs and other text blocks render inline, separated by
+     <br>. Marks shared by the whole cell are hoisted onto it by RichTextTable. -->
 {#each nodes as node, i (i)}
-	{#if node.type === 'paragraph'}
-		{#if nodes[i - 1]?.type === 'paragraph'}<br />{/if}<RichTextTableRenderer
-			nodes={node.content ?? []}
-		/>
+	{#if flattens(node)}
+		{#if flattens(nodes[i - 1])}<br />{/if}<RichTextTableRenderer nodes={node.content ?? []} />
 	{:else if node.type === 'bullet_list'}
 		<ul class="flex flex-col gap-1">
 			{#each node.content ?? [] as item, j (j)}

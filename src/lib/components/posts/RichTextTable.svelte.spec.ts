@@ -55,6 +55,19 @@ describe('RichTextTable', () => {
 		expect(container.querySelector('tbody td')?.getAttribute('scope')).toBeNull();
 	});
 
+	it('renders a header-only table as <thead> with no <tbody>', async () => {
+		const { container } = await render(RichTextTable, {
+			node: table(row(header('Category'), header('Role')))
+		});
+		expect(container.querySelectorAll('thead > tr > th')).toHaveLength(2);
+		expect(container.querySelector('tbody')).toBeNull();
+	});
+
+	it('renders nothing for a table with no rows', async () => {
+		const { container } = await render(RichTextTable, { node: table() });
+		expect(container.querySelector('table')).toBeNull();
+	});
+
 	it('does not promote a row that mixes tableHeader and tableCell', async () => {
 		const { container } = await render(RichTextTable, {
 			node: table(row(header('h'), cell('c')), row(cell('x'), cell('y')))
@@ -219,6 +232,110 @@ describe('RichTextTable', () => {
 			expect(link?.getAttribute('href')).toBe('/docs');
 			expect(link?.getAttribute('rel')).toBe('noopener noreferrer');
 			expect(link?.classList.contains('font-semibold')).toBe(false);
+		});
+
+		const run = (text: string, marks: RichTextNode['marks'] = []): RichTextNode => ({
+			type: 'text',
+			text,
+			marks
+		});
+
+		const cellOf = (...content: RichTextNode[]): RichTextNode => ({
+			type: 'tableCell',
+			attrs: { colspan: 1, rowspan: 1 },
+			content
+		});
+
+		it('keeps a partial mark inline instead of styling the whole cell', async () => {
+			const { container } = await render(RichTextTable, {
+				node: table(
+					row(
+						cellOf({
+							type: 'paragraph',
+							content: [run('Note:', [{ type: 'bold' }]), run(' read-only')]
+						})
+					)
+				)
+			});
+			const td = container.querySelector('td');
+			expect(td?.classList.contains('font-bold')).toBe(false);
+			expect(td?.querySelector('strong')?.textContent).toBe('Note:');
+		});
+
+		it('hoists a mark every run carries and keeps the other marks inline', async () => {
+			const { container } = await render(RichTextTable, {
+				node: table(
+					row(
+						cellOf({
+							type: 'paragraph',
+							content: [
+								run('plain ', [{ type: 'bold' }]),
+								run('slanted', [{ type: 'bold' }, { type: 'italic' }])
+							]
+						})
+					)
+				)
+			});
+			const td = container.querySelector('td');
+			expect(td?.classList.contains('font-bold')).toBe(true);
+			expect(td?.querySelector('strong')).toBeNull();
+			expect(td?.querySelector('em')?.textContent).toBe('slanted');
+		});
+
+		it('keeps differing textStyle colors inline', async () => {
+			const { container } = await render(RichTextTable, {
+				node: table(
+					row(
+						cellOf({
+							type: 'paragraph',
+							content: [
+								run('red', [{ type: 'textStyle', attrs: { color: '#ff0000' } }]),
+								run('blue', [{ type: 'textStyle', attrs: { color: '#0000ff' } }])
+							]
+						})
+					)
+				)
+			});
+			const td = container.querySelector('td');
+			expect(td?.style.color).toBe('');
+			const spans = td?.querySelectorAll('span');
+			expect(spans).toHaveLength(2);
+			expect(spans?.[0]?.style.color).toBe('rgb(255, 0, 0)');
+		});
+
+		it('takes the cell color from a later textStyle when the first has none', async () => {
+			const { container } = await render(RichTextTable, {
+				node: table(
+					row(
+						marked('red', [
+							{ type: 'textStyle', attrs: {} },
+							{ type: 'textStyle', attrs: { color: '#ff0000' } }
+						])
+					)
+				)
+			});
+			const td = container.querySelector('td');
+			expect(td?.style.color).toBe('rgb(255, 0, 0)');
+			expect(td?.querySelector('span')).toBeNull();
+		});
+
+		it('keeps the text of headings and code blocks, rendered inline', async () => {
+			const { container } = await render(RichTextTable, {
+				node: table(
+					row(
+						cellOf(
+							{ type: 'paragraph', content: [textNode('intro')] },
+							{ type: 'heading', attrs: { level: 3 }, content: [textNode('Heading')] },
+							{ type: 'code_block', content: [textNode('npm i')] }
+						)
+					)
+				)
+			});
+			const td = container.querySelector('td');
+			expect(td?.querySelector('h1, h2, h3, h4, pre, p')).toBeNull();
+			expect(td?.querySelectorAll('br')).toHaveLength(2);
+			expect(td?.textContent).toContain('Heading');
+			expect(td?.textContent).toContain('npm i');
 		});
 
 		it('separates consecutive paragraphs with a single <br>', async () => {
