@@ -18,7 +18,12 @@
 	const list = $derived<RichTextNode[]>(nodes ?? doc?.content ?? []);
 	const anchors = $derived(headingSlugs(list));
 
-	const headingLevel = (node: RichTextNode): 2 | 3 => ((node.attrs?.level as number) === 3 ? 3 : 2);
+	// The page owns <h1> (post title), so clamp CMS levels into h2–h4.
+	const headingLevel = (node: RichTextNode): 2 | 3 | 4 => {
+		const level = Number(node.attrs?.level);
+		if (level >= 4) return 4;
+		return level === 3 ? 3 : 2;
+	};
 
 	const codeText = (node: RichTextNode): string =>
 		(node.content ?? []).map((c) => c.text ?? '').join('');
@@ -63,7 +68,7 @@
 			{/if}
 			<RichTextRenderer nodes={node.content ?? []} />
 		</h2>
-	{:else if node.type === 'heading'}
+	{:else if node.type === 'heading' && headingLevel(node) === 3}
 		{@const id = anchors[i]}
 		<h3
 			id={id ?? undefined}
@@ -71,6 +76,12 @@
 		>
 			<RichTextRenderer nodes={node.content ?? []} />
 		</h3>
+	{:else if node.type === 'heading'}
+		<h4
+			class="mt-6 mb-2 scroll-mt-20 text-base font-semibold tracking-[-0.01em] text-ink md:text-[1.0625rem]"
+		>
+			<RichTextRenderer nodes={node.content ?? []} />
+		</h4>
 	{:else if node.type === 'bullet_list'}
 		<ul class="mb-5.5 flex flex-col gap-2">
 			{#each node.content ?? [] as item, j (j)}
