@@ -31,11 +31,29 @@ describe('RichTextRenderer', () => {
 			expect(clone.textContent?.trim()).toBe('Title');
 		});
 
-		it('renders <h2> as default when level is not 3', async () => {
+		it('renders <h2> when level is 1', async () => {
+			const { container } = await render(RichTextRenderer, {
+				nodes: [{ type: 'heading', attrs: { level: 1 }, content: [textNode('Title')] }]
+			});
+			expect(container.querySelector('h2')).not.toBeNull();
+			expect(container.querySelector('h1')).toBeNull();
+		});
+
+		it('renders <h4> when level is 4', async () => {
 			const { container } = await render(RichTextRenderer, {
 				nodes: [{ type: 'heading', attrs: { level: 4 }, content: [textNode('Title')] }]
 			});
-			expect(container.querySelector('h2')).not.toBeNull();
+			expect(container.querySelector('h4')?.textContent?.trim()).toBe('Title');
+			expect(container.querySelector('h2')).toBeNull();
+			expect(container.querySelector('h3')).toBeNull();
+		});
+
+		it('renders <h4> when level is 6', async () => {
+			const { container } = await render(RichTextRenderer, {
+				nodes: [{ type: 'heading', attrs: { level: 6 }, content: [textNode('Title')] }]
+			});
+			expect(container.querySelector('h4')).not.toBeNull();
+			expect(container.querySelector('h6')).toBeNull();
 		});
 
 		it('renders <h3> when level is 3', async () => {
